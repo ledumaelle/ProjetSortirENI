@@ -1,9 +1,0 @@
-{% extends 'base.html.twig' %}
-{% block body %}
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        Bonjour {{ app.user.username }} !
-        <a class="nav-link" href="{{ path('app_logout') }}">Déconnectez-vous !</a>
-    {% else %}
-        <a class="nav-link" href="{{ path('app_login') }}">Connectez-vous !</a>
-    {% endif %}
-{% endblock %}

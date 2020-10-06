@@ -6,6 +6,7 @@ security:
         class: 'App\Entity\Participant'
         property: 'mail'
     users_in_memory: { memory: null }
+
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -19,7 +20,7 @@ security:
       logout:
         path: app_logout
         # where to redirect after logout
-        target: home
+        target: app_login
       remember_me:
         secret: '411374ee863efcb8d74c9d9cdd2617ec' # env.APP_SECRET
         lifetime: 36000 # 10 heures

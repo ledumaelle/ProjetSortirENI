@@ -18,6 +18,6 @@ class MainController extends AbstractController
      */
     public function home()
     {
-        return $this->render("index.html.twig");
+        return $this->redirectToRoute('app_login');
     }
 }

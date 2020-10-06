@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Sortir.com {% endblock %}</title>
+    <link rel="icon" href="{{ asset('image/favicon.png') }}">
+
+    {% block stylesheets %}
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- Material Design Bootstrap -->
+        <link href="{{ asset('bootstrap/css/mdb.min.css') }}" rel="stylesheet">
+        <!-- Your custom styles (optional) -->
+        <link href="{{ asset('bootstrap/css/style.css') }}" rel="stylesheet">
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <!--Navbar -->
+        <nav class="mb-1 navbar navbar-expand-lg navbar-dark default-color">
+            <img src="{{ asset('image/favicon.png') }}" alt="Bucket-List" class="img-fluid mr-2" width="64px" height="64px">
+            <a class="navbar-brand" href="#">Sortir.com</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
+                    aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
+                <ul class="navbar-nav mr-auto">
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#" title="Sortir.com | Accueil">Accueil
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" title="Sortir.com | Villes">Villes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" title="Sortir.com | Campus">Campus</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                <ul class="navbar-nav ml-auto nav-flex-icons">
+                    <li class="nav-item avatar dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0"
+                                 alt="avatar image">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg-right dropdown-default"
+                             aria-labelledby="navbarDropdownMenuLink-55">
+                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                <a class="dropdown-item" href="#" title="Sortir.com | Mon profil">Mon profil</a>
+                                <a class="dropdown-item" href="#" title="Sortir.com | Se déconnecter">Se déconnecter</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </nav>
+        <!--/.Navbar -->
+    </header>
+    <main>
+
+        {# read and display all flash messages #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash-{{ label }}">
+                    {{ message|raw }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="container-fluid mt-5">
+            {% block body %} {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer font-small default-color fixed-bottom">
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">&copy {{"now"|date("Y")}} Sortir.com</div>
+        <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
+
+    {% block javascripts %}
+        <!-- SCRIPTS -->
+        <!-- JQuery -->
+        <script type="text/javascript" src="{{ asset('bootstrap/js/jquery-3.4.1.min.js') }}"></script>
+        <!-- Bootstrap tooltips -->
+        <script type="text/javascript" src="{{ asset('bootstrap/js/popper.min.js') }}"></script>
+        <!-- Bootstrap core JavaScript -->
+        <script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+        <!-- MDB core JavaScript -->
+        <script type="text/javascript" src="{{ asset('bootstrap/js/mdb.min.js') }}"></script>
+    {% endblock %}
+    </body>
+</html>
