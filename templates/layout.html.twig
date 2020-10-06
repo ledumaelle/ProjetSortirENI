@@ -33,7 +33,7 @@
                 <ul class="navbar-nav mr-auto">
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                         <li class="nav-item active">
-                            <a class="nav-link" href="#" title="Sortir.com | Accueil">Accueil
+                            <a class="nav-link" href="{{ path('app_homepage') }}" title="Sortir.com | Accueil">Accueil
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
@@ -56,8 +56,8 @@
                         <div class="dropdown-menu dropdown-menu-lg-right dropdown-default"
                              aria-labelledby="navbarDropdownMenuLink-55">
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                                <a class="dropdown-item" href="#" title="Sortir.com | Mon profil">Mon profil</a>
-                                <a class="dropdown-item" href="#" title="Sortir.com | Se déconnecter">Se déconnecter</a>
+                                <a class="dropdown-item" href="{{ path('participant_profil') }}" title="Sortir.com | Mon profil">Mon profil</a>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}" title="Sortir.com | Se déconnecter">Se déconnecter</a>
                             {% endif %}
                         </div>
                     </li>
