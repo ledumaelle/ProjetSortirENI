@@ -29,6 +29,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setNom('LE ROUX');
         $participant->setPrenom('Angélique');
         $participant->setTelephone('0606060606');
+        $participant->setPseudo('angelique.le-roux');
         $participant->setMail('angelique.le-roux@cooperl.com');
         $participant->setMotPasse('leroux');
         $participant->setAdministrateur(true);
@@ -43,6 +44,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setNom('LE DU');
         $participant->setPrenom('Maëlle');
         $participant->setTelephone('0606060606');
+        $participant->setPseudo('maelle.le-du');
         $participant->setMail('maelle.le-du@cooperl.com');
         $participant->setMotPasse('ledu');
         $participant->setAdministrateur(true);
@@ -56,6 +58,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setNom('COLLIN');
         $participant->setPrenom('Thomas');
         $participant->setTelephone('0606060606');
+        $participant->setPseudo('thomas.collin');
         $participant->setMail('thomas.collin@gmail.com');
         $participant->setMotPasse('collin');
         $participant->setAdministrateur(false);
@@ -69,6 +72,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setNom('VANDAMME');
         $participant->setPrenom('Julien');
         $participant->setTelephone('0606060606');
+        $participant->setPseudo('julien.vandamme');
         $participant->setMail('julien.vandamme@gmail.com');
         $participant->setMotPasse('vandamme');
         $participant->setAdministrateur(false);
@@ -82,6 +86,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setNom('INACTIF');
         $participant->setPrenom('User');
         $participant->setTelephone('0606060606');
+        $participant->setPseudo('user.inactif');
         $participant->setMail('user.inactif@gmail.com');
         $participant->setMotPasse('inactif');
         $participant->setAdministrateur(false);
