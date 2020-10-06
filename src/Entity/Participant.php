@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,12 +20,12 @@ class Participant
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=55)
+     * @ORM\Column(type="string", length=125)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=55)
+     * @ORM\Column(type="string", length=125)
      */
     private $prenom;
 
@@ -33,7 +35,7 @@ class Participant
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=55, nullable=true)
+     * @ORM\Column(type="string", length=125)
      */
     private $mail;
 
@@ -51,6 +53,28 @@ class Participant
      * @ORM\Column(type="boolean")
      */
     private $actif;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="participants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="organisateur", orphanRemoval=true)
+     */
+    private $sortiesOrganisees;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Sortie::class, mappedBy="inscriptions")
+     */
+    private $sortiesInscrites;
+
+    public function __construct()
+    {
+        $this->sortiesOrganisees = new ArrayCollection();
+        $this->sortiesInscrites = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -98,7 +122,7 @@ class Participant
         return $this->mail;
     }
 
-    public function setMail(?string $mail): self
+    public function setMail(string $mail): self
     {
         $this->mail = $mail;
 
@@ -137,6 +161,77 @@ class Participant
     public function setActif(bool $actif): self
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSortiesOrganisees(): Collection
+    {
+        return $this->sortiesOrganisees;
+    }
+
+    public function addSortiesOrganisees(Sortie $sorty): self
+    {
+        if (!$this->sortiesOrganisees->contains($sorty)) {
+            $this->sortiesOrganisees[] = $sorty;
+            $sorty->setOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSortiesOrganisees(Sortie $sorty): self
+    {
+        if ($this->sortiesOrganisees->contains($sorty)) {
+            $this->sortiesOrganisees->removeElement($sorty);
+            // set the owning side to null (unless already changed)
+            if ($sorty->getOrganisateur() === $this) {
+                $sorty->setOrganisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getSortiesInscrites(): Collection
+    {
+        return $this->sortiesInscrites;
+    }
+
+    public function addSortiesInscrite(Sortie $sortiesInscrite): self
+    {
+        if (!$this->sortiesInscrites->contains($sortiesInscrite)) {
+            $this->sortiesInscrites[] = $sortiesInscrite;
+            $sortiesInscrite->addInscription($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSortiesInscrite(Sortie $sortiesInscrite): self
+    {
+        if ($this->sortiesInscrites->contains($sortiesInscrite)) {
+            $this->sortiesInscrites->removeElement($sortiesInscrite);
+            $sortiesInscrite->removeInscription($this);
+        }
 
         return $this;
     }

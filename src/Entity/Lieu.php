@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LieuRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,12 +20,12 @@ class Lieu
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=55)
+     * @ORM\Column(type="string", length=125)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $rue;
 
@@ -36,6 +38,16 @@ class Lieu
      * @ORM\Column(type="float", nullable=true)
      */
     private $longitude;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Ville::class)
+     */
+    private $ville;
+
+    public function __construct()
+    {
+        $this->sorties = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,7 +71,7 @@ class Lieu
         return $this->rue;
     }
 
-    public function setRue(?string $rue): self
+    public function setRue(string $rue): self
     {
         $this->rue = $rue;
 
@@ -86,6 +98,18 @@ class Lieu
     public function setLongitude(?float $longitude): self
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getVille(): ?Ville
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?Ville $ville): self
+    {
+        $this->ville = $ville;
 
         return $this;
     }
