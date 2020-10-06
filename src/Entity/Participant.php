@@ -40,6 +40,11 @@ class Participant implements UserInterface
     /**
      * @ORM\Column(type="string", length=125)
      */
+    private $pseudo;
+
+    /**
+     * @ORM\Column(type="string", length=125)
+     */
     private $mail;
 
     /**
@@ -69,14 +74,14 @@ class Participant implements UserInterface
     private $sortiesOrganisees;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Sortie::class, mappedBy="inscriptions")
+     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="participant", orphanRemoval=true)
      */
-    private $sortiesInscrites;
+    private $inscriptions;
 
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
-        $this->sortiesInscrites = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,6 +123,22 @@ class Participant implements UserInterface
         $this->telephone = $telephone;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPseudo()
+    {
+        return $this->pseudo;
+    }
+
+    /**
+     * @param mixed $pseudo
+     */
+    public function setPseudo($pseudo): void
+    {
+        $this->pseudo = $pseudo;
     }
 
     public function getMail(): ?string
@@ -212,28 +233,31 @@ class Participant implements UserInterface
     }
 
     /**
-     * @return Collection|Sortie[]
+     * @return Collection|Inscription[]
      */
-    public function getSortiesInscrites(): Collection
+    public function getInscriptions(): Collection
     {
-        return $this->sortiesInscrites;
+        return $this->inscriptions;
     }
 
-    public function addSortiesInscrite(Sortie $sortiesInscrite): self
+    public function addInscription(Inscription $inscription): self
     {
-        if (!$this->sortiesInscrites->contains($sortiesInscrite)) {
-            $this->sortiesInscrites[] = $sortiesInscrite;
-            $sortiesInscrite->addInscription($this);
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setParticipant($this);
         }
 
         return $this;
     }
 
-    public function removeSortiesInscrite(Sortie $sortiesInscrite): self
+    public function removeInscription(Inscription $inscription): self
     {
-        if ($this->sortiesInscrites->contains($sortiesInscrite)) {
-            $this->sortiesInscrites->removeElement($sortiesInscrite);
-            $sortiesInscrite->removeInscription($this);
+        if ($this->inscriptions->contains($inscription)) {
+            $this->inscriptions->removeElement($inscription);
+            // set the owning side to null (unless already changed)
+            if ($inscription->getParticipant() === $this) {
+                $inscription->setParticipant(null);
+            }
         }
 
         return $this;
