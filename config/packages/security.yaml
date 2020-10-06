@@ -20,6 +20,10 @@ security:
         path: app_logout
         # where to redirect after logout
         target: home
+      remember_me:
+        secret: '411374ee863efcb8d74c9d9cdd2617ec' # env.APP_SECRET
+        lifetime: 36000 # 10 heures
+        path: /
   encoders:
     App\Entity\Participant:
       algorithm: auto
