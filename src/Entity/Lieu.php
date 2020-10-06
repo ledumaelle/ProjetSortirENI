@@ -41,13 +41,9 @@ class Lieu
 
     /**
      * @ORM\ManyToOne(targetEntity=Ville::class)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $ville;
-
-    public function __construct()
-    {
-        $this->sorties = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
