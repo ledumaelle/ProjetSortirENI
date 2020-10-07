@@ -28,6 +28,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $lieu->setRue('3 rue de la pomme verte');
         $lieu->setLatitude(48.862725);
         $lieu->setLongitude(2.287592);
+        $lieu->setDateCreated();
         $lieu->setVille($this->getReference(VilleFixtures::VILLE_SAINT_HERBLAIN));
 
         $manager->persist($lieu);
@@ -39,6 +40,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $lieu->setRue('8 rue des boomers');
         $lieu->setLatitude(48.862725);
         $lieu->setLongitude(2.287592);
+        $lieu->setDateCreated();
         $lieu->setVille($this->getReference(VilleFixtures::VILLE_SAINT_HERBLAIN));
 
         $manager->persist($lieu);
@@ -50,6 +52,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $lieu->setRue('11 impasse des roues de secours');
         $lieu->setLatitude(48.862725);
         $lieu->setLongitude(2.287592);
+        $lieu->setDateCreated();
         $lieu->setVille($this->getReference(VilleFixtures::VILLE_HERBLAY));
 
         $manager->persist($lieu);
@@ -61,6 +64,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $lieu->setRue('7 rue de la Réupublique');
         $lieu->setLatitude(48.862725);
         $lieu->setLongitude(2.287592);
+        $lieu->setDateCreated();
         $lieu->setVille($this->getReference(VilleFixtures::VILLE_CHERBOURG));
 
         $manager->persist($lieu);

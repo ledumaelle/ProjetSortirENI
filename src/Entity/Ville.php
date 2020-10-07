@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\VilleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=VilleRepository::class)
@@ -26,6 +27,16 @@ class Ville
      * @ORM\Column(type="string", length=10)
      */
     private $codePostal;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreated;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    private $dateModified;
 
     public function getId(): ?int
     {
@@ -54,5 +65,39 @@ class Ville
         $this->codePostal = $codePostal;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @throws Exception
+     */
+    public function setDateCreated()
+    {
+        $this->dateCreated = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     * @throws Exception
+     */
+    public function setDateModified()
+    {
+        $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
     }
 }

@@ -17,6 +17,7 @@ class VilleFixtures extends Fixture
         $ville = new Ville();
         $ville->setNom('SAINT HERBLAIN');
         $ville->setCodePostal('44800');
+        $ville->setDateCreated();
         $manager->persist($ville);
 
         //on jaoute une réf de l'objet pour pouvoir l'utiliser dans une autre fixture
@@ -25,6 +26,7 @@ class VilleFixtures extends Fixture
         $ville = new Ville();
         $ville->setNom('HERBLAY');
         $ville->setCodePostal('95220');
+        $ville->setDateCreated();
         $manager->persist($ville);
 
         $this->addReference(self::VILLE_HERBLAY , $ville);
@@ -32,6 +34,7 @@ class VilleFixtures extends Fixture
         $ville = new Ville();
         $ville->setNom('CHERBOURG');
         $ville->setCodePostal('50100');
+        $ville->setDateCreated();
         $manager->persist($ville);
 
         $this->addReference(self::VILLE_CHERBOURG , $ville);

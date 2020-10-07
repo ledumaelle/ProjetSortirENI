@@ -6,6 +6,7 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=CampusRepository::class)
@@ -33,6 +34,17 @@ class Campus
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="siteOrganisateur", orphanRemoval=true)
      */
     private $sorties;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreated;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    private $dateModified;
+
 
     public function __construct()
     {
@@ -117,5 +129,39 @@ class Campus
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @throws Exception
+     */
+    public function setDateCreated()
+    {
+        $this->dateCreated = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     * @throws Exception
+     */
+    public function setDateModified()
+    {
+        $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
     }
 }

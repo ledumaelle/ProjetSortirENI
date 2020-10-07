@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\InscriptionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=InscriptionRepository::class)
@@ -28,6 +29,16 @@ class Inscription
      * @ORM\JoinColumn(nullable=false)
      */
     private $sortie;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreated;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    private $dateModified;
 
     public function getDateInscription(): ?\DateTimeInterface
     {
@@ -63,5 +74,39 @@ class Inscription
         $this->sortie = $sortie;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @throws Exception
+     */
+    public function setDateCreated()
+    {
+        $this->dateCreated = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     * @throws Exception
+     */
+    public function setDateModified()
+    {
+        $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
     }
 }

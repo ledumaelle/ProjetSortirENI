@@ -47,6 +47,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setAdministrateur(true);
         $participant->setActif(true);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
+        $participant->setDateCreated();
         $manager->persist($participant);
 
         //on jaoute une réf de l'objet pour pouvoir l'utiliser dans une autre fixture
@@ -62,6 +63,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setAdministrateur(true);
         $participant->setActif(true);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
+        $participant->setDateCreated();
         $manager->persist($participant);
 
         $this->addReference(self::MAELLE, $participant);
@@ -76,6 +78,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setAdministrateur(false);
         $participant->setActif(true);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
+        $participant->setDateCreated();
         $manager->persist($participant);
 
         $this->addReference(self::THOMAS, $participant);
@@ -90,6 +93,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setAdministrateur(false);
         $participant->setActif(true);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
+        $participant->setDateCreated();
         $manager->persist($participant);
 
         $this->addReference(self::JULIEN, $participant);
@@ -104,6 +108,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setAdministrateur(false);
         $participant->setActif(false);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_LA_ROCHE_SUR_YON));
+        $participant->setDateCreated();
         $manager->persist($participant);
 
         $this->addReference(self::INACTIF, $participant);
