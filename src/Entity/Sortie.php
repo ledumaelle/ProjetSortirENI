@@ -6,6 +6,7 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -61,13 +62,13 @@ class Sortie
     private $siteOrganisateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sortiesOrganisees")
      * @ORM\JoinColumn(nullable=false)
      */
     private $organisateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Lieu::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
@@ -79,9 +80,19 @@ class Sortie
     private $etat;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Participant::class, inversedBy="sortiesInscrites")
+     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="sortie", orphanRemoval=true)
      */
     private $inscriptions;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreated;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    private $dateModified;
 
     public function __construct()
     {
@@ -233,21 +244,60 @@ class Sortie
         return $this->inscriptions;
     }
 
-    public function addInscription(Participant $inscription): self
+    public function addInscription(Inscription $inscriptions): self
     {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions[] = $inscription;
+        if (!$this->inscriptions->contains($inscriptions)) {
+            $this->inscriptions[] = $inscriptions;
+            $inscriptions->setSortie($this);
         }
 
         return $this;
     }
 
-    public function removeInscription(Participant $inscription): self
+    public function removeInscription(Inscription $inscriptions): self
     {
-        if ($this->inscriptions->contains($inscription)) {
-            $this->inscriptions->removeElement($inscription);
+        if ($this->inscriptions->contains($inscriptions)) {
+            $this->inscriptions->removeElement($inscriptions);
+            // set the owning side to null (unless already changed)
+            if ($inscriptions->getSortie() === $this) {
+                $inscriptions->setSortie(null);
+            }
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @throws Exception
+     */
+    public function setDateCreated()
+    {
+        $this->dateCreated = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     * @throws Exception
+     */
+    public function setDateModified()
+    {
+        $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
     }
 }

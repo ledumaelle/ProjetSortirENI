@@ -6,11 +6,19 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
+ * @UniqueEntity("mail")
+ * @Vich\Uploadable
  */
-class Participant
+class Participant implements UserInterface
 {
     /**
      * @ORM\Id
@@ -37,10 +45,15 @@ class Participant
     /**
      * @ORM\Column(type="string", length=125)
      */
+    private $pseudo;
+
+    /**
+     * @ORM\Column(type="string", length=125)
+     */
     private $mail;
 
     /**
-     * @ORM\Column(type="string", length=55)
+     * @ORM\Column(type="string", length=255)
      */
     private $motPasse;
 
@@ -66,14 +79,39 @@ class Participant
     private $sortiesOrganisees;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Sortie::class, mappedBy="inscriptions")
+     * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="participant", orphanRemoval=true)
      */
-    private $sortiesInscrites;
+    private $inscriptions;
+
+    /**
+     * @Vich\UploadableField(mapping="participant_images", fileNameProperty="imageName", size="imageSize")
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imageName;
+
+    /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    private $imageSize;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreated;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    private $dateModified;
 
     public function __construct()
     {
         $this->sortiesOrganisees = new ArrayCollection();
-        $this->sortiesInscrites = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,6 +153,22 @@ class Participant
         $this->telephone = $telephone;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPseudo()
+    {
+        return $this->pseudo;
+    }
+
+    /**
+     * @param mixed $pseudo
+     */
+    public function setPseudo($pseudo): void
+    {
+        $this->pseudo = $pseudo;
     }
 
     public function getMail(): ?string
@@ -209,30 +263,149 @@ class Participant
     }
 
     /**
-     * @return Collection|Sortie[]
+     * @return Collection|Inscription[]
      */
-    public function getSortiesInscrites(): Collection
+    public function getInscriptions(): Collection
     {
-        return $this->sortiesInscrites;
+        return $this->inscriptions;
     }
 
-    public function addSortiesInscrite(Sortie $sortiesInscrite): self
+    public function addInscription(Inscription $inscription): self
     {
-        if (!$this->sortiesInscrites->contains($sortiesInscrite)) {
-            $this->sortiesInscrites[] = $sortiesInscrite;
-            $sortiesInscrite->addInscription($this);
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setParticipant($this);
         }
 
         return $this;
     }
 
-    public function removeSortiesInscrite(Sortie $sortiesInscrite): self
+    public function removeInscription(Inscription $inscription): self
     {
-        if ($this->sortiesInscrites->contains($sortiesInscrite)) {
-            $this->sortiesInscrites->removeElement($sortiesInscrite);
-            $sortiesInscrite->removeInscription($this);
+        if ($this->inscriptions->contains($inscription)) {
+            $this->inscriptions->removeElement($inscription);
+            // set the owning side to null (unless already changed)
+            if ($inscription->getParticipant() === $this) {
+                $inscription->setParticipant(null);
+            }
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPassword()
+    {
+        return $this->motPasse;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->mail;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        $roles = [ "ROLE_USER" ];
+
+        if($this->getAdministrateur()) {
+            $roles[] = "ROLE_ADMIN";
+        }
+
+        return $roles;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalt()
+    {
+        //PAS BESOIN
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+        //PAS BESOIN
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->setDateModified();
+        }
+    }
+
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageSize(?int $imageSize): void
+    {
+        $this->imageSize = $imageSize;
+    }
+
+    public function getImageSize(): ?int
+    {
+        return $this->imageSize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @throws Exception
+     */
+    public function setDateCreated()
+    {
+        $this->dateCreated = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     * @throws Exception
+     */
+    public function setDateModified()
+    {
+        $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
     }
 }
