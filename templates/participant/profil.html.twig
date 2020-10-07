@@ -1,7 +1,75 @@
 {% extends 'layout.html.twig' %}
 
 {% block body %}
-    <h1>MAELLE page profil</h1>
 
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-8 col-lg-6 mx-auto">
+                <!-- Section: Block Content -->
+                <section>
+
+                    <!-- Card -->
+                    <div class="card testimonial-card">
+
+                        <!-- Background color -->
+                        <div class="card-up warning-color-dark p-3 white-text">
+                            <p class="mb-0 font-weight-normal">Mon Profil</p>
+                        </div>
+
+                        <!-- Avatar -->
+                        <div class="avatar mx-auto white">
+                            {% if app.user.imageName %}
+                                <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~app.user.imageName) }}" alt="{{ app.user.imageName }}"/>
+                            {% else %}
+                                <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0"
+                                     alt="avatar image">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Card -->
+
+                </section>
+                <!-- Section: Block Content -->
+            </div>
+        </div>
+    </div>
+    <div class="container my-5 py-5">
+
+        <!--Section: Content-->
+        <section class="px-md-5 mx-md-5 text-center text-lg-left dark-grey-text">
+
+
+            <!--Grid row-->
+            <div class="row d-flex justify-content-center">
+
+                <!--Grid column-->
+                <div class="col-md-10">
+
+                    {{ form_start(formParticipant) }}
+
+                    {{ form_errors(formParticipant) }}
+
+                    {{ form_widget(formParticipant) }}
+
+                    <div class="form-row mb-4">
+                        <div class="col">
+                            <button class="btn btn-primary my-4 btn-block" type="submit">Enregistrer</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-default my-4 btn-block" type="submit">Annuler</button>
+                        </div>
+                    </div>
+                    {{ form_end(formParticipant) }}
+
+                </div>
+                <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+
+        </section>
+        <!--Section: Content-->
+    </div>
 {% endblock %}
 

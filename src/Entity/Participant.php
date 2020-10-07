@@ -6,12 +6,17 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
  * @UniqueEntity("mail")
+ * @Vich\Uploadable
  */
 class Participant implements UserInterface
 {
@@ -77,6 +82,31 @@ class Participant implements UserInterface
      * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="participant", orphanRemoval=true)
      */
     private $inscriptions;
+
+    /**
+     * @Vich\UploadableField(mapping="participant_images", fileNameProperty="imageName", size="imageSize")
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imageName;
+
+    /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    private $imageSize;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreated;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    private $dateModified;
 
     public function __construct()
     {
@@ -284,7 +314,13 @@ class Participant implements UserInterface
      */
     public function getRoles()
     {
-        return [];
+        $roles = [ "ROLE_USER" ];
+
+        if($this->getAdministrateur()) {
+            $roles[] = "ROLE_ADMIN";
+        }
+
+        return $roles;
     }
 
     /**
@@ -292,6 +328,7 @@ class Participant implements UserInterface
      */
     public function getSalt()
     {
+        //PAS BESOIN
     }
 
     /**
@@ -299,5 +336,76 @@ class Participant implements UserInterface
      */
     public function eraseCredentials()
     {
+        //PAS BESOIN
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->setDateModified();
+        }
+    }
+
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageSize(?int $imageSize): void
+    {
+        $this->imageSize = $imageSize;
+    }
+
+    public function getImageSize(): ?int
+    {
+        return $this->imageSize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @throws Exception
+     */
+    public function setDateCreated()
+    {
+        $this->dateCreated = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     * @throws Exception
+     */
+    public function setDateModified()
+    {
+        $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
     }
 }

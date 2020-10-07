@@ -17,6 +17,7 @@ class CampusFixtures extends Fixture
         // create 3 campus
         $campus = new Campus();
         $campus->setNom('SAINT HERBLAIN');
+        $campus->setDateCreated();
         $manager->persist($campus);
 
         //on jaoute une réf de l'objet pour pouvoir l'utiliser dans une autre fixture
@@ -24,12 +25,14 @@ class CampusFixtures extends Fixture
 
         $campus = new Campus();
         $campus->setNom('CHARTRES DE BRETAGNE');
+        $campus->setDateCreated();
         $manager->persist($campus);
 
         $this->addReference(self::CAMPUS_CHARTRES_DE_BRETAGNE , $campus);
 
         $campus = new Campus();
         $campus->setNom('LA ROCHE SUR YON');
+        $campus->setDateCreated();
         $manager->persist($campus);
 
         $this->addReference(self::CAMPUS_LA_ROCHE_SUR_YON , $campus);

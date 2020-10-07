@@ -19,6 +19,7 @@ class EtatFixtures extends Fixture
     {
         $etat = new Etat();
         $etat->setLibelle('Créée');
+        $etat->setDateCreated();
         $manager->persist($etat);
 
         //on jaoute une réf de l'objet pour pouvoir l'utiliser dans une autre fixture
@@ -26,30 +27,35 @@ class EtatFixtures extends Fixture
 
         $etat = new Etat();
         $etat->setLibelle('Ouverte');
+        $etat->setDateCreated();
         $manager->persist($etat);
 
         $this->addReference(self::ETAT_OUVERTE , $etat);
 
         $etat = new Etat();
         $etat->setLibelle('Clôturée');
+        $etat->setDateCreated();
         $manager->persist($etat);
 
         $this->addReference(self::ETAT_CLOTUREE , $etat);
 
         $etat = new Etat();
         $etat->setLibelle('Activité en cours');
+        $etat->setDateCreated();
         $manager->persist($etat);
 
         $this->addReference(self::ETAT_ACTIVITE_EN_COURS , $etat);
 
         $etat = new Etat();
         $etat->setLibelle('Passée');
+        $etat->setDateCreated();
         $manager->persist($etat);
 
         $this->addReference(self::ETAT_PASSEE , $etat);
 
         $etat = new Etat();
         $etat->setLibelle('Annulée');
+        $etat->setDateCreated();
         $manager->persist($etat);
 
         $this->addReference(self::ETAT_ANNULEE , $etat);

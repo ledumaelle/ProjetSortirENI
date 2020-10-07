@@ -1,16 +1,18 @@
 security:
-  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+
   providers:
     users:
       entity:
         class: 'App\Entity\Participant'
         property: 'mail'
+
     users_in_memory: { memory: null }
 
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+
     main:
       anonymous: lazy
       provider: users_in_memory
@@ -21,22 +23,22 @@ security:
         path: app_logout
         # where to redirect after logout
         target: app_login
+
       remember_me:
-        secret: '411374ee863efcb8d74c9d9cdd2617ec' # env.APP_SECRET
+        secret: '%kernel.secret%'
         lifetime: 36000 # 10 heures
         path: /
+
   encoders:
     App\Entity\Participant:
       algorithm: auto
 
-      # activate different ways to authenticate
-      # https://symfony.com/doc/current/security.html#firewalls-authentication
-
-      # https://symfony.com/doc/current/security/impersonating_user.html
-      # switch_user: true
-
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-  # - { path: ^/admin, roles: ROLE_ADMIN }
-  # - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/, roles: ROLE_USER }
+
+  role_hierarchy:
+    ROLE_ADMIN: [ROLE_USER]

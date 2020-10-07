@@ -35,12 +35,14 @@
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
+                        {% if is_granted("ROLE_ADMIN") %}
                         <li class="nav-item">
                             <a class="nav-link" href="#" title="Sortir.com | Villes">Villes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" title="Sortir.com | Campus">Campus</a>
                         </li>
+                        {% endif %}
                     {% endif %}
                 </ul>
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
@@ -48,13 +50,17 @@
                     <li class="nav-item avatar dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
-                            <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0"
-                                 alt="avatar image">
+                            {% if app.user.imageName %}
+                                <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~app.user.imageName) }}" alt="{{ app.user.imageName }}"/>
+                            {% else %}
+                                <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0"
+                                     alt="avatar image">
+                            {% endif %}
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg-right dropdown-default"
                              aria-labelledby="navbarDropdownMenuLink-55">
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                                <a class="dropdown-item" href="{{ path('participant_profil') }}" title="Sortir.com | Mon profil">Mon profil</a>
+                                <a class="dropdown-item" href="{{ path('participant_edit', {id: app.user.id}) }}" title="Sortir.com | Mon profil">Mon profil</a>
                                 <a class="dropdown-item" href="{{ path('app_logout') }}" title="Sortir.com | Se déconnecter">Se déconnecter</a>
                             {% endif %}
                         </div>
@@ -99,6 +105,8 @@
         <script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
         <!-- MDB core JavaScript -->
         <script type="text/javascript" src="{{ asset('bootstrap/js/mdb.js') }}"></script>
+        <!-- Custom JS -->
+        <script type="text/javascript" src="{{ asset('bootstrap/js/script.js') }}"></script>
     {% endblock %}
     </body>
 </html>

@@ -48,6 +48,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_LE_CAP));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_SAINT_HERBLAIN));
         $sortie->setInfosSortie("ça va être la fiesta boum boum !");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_ZOO , $sortie);
@@ -65,6 +66,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_CINEMA));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $sortie->setInfosSortie("Origamiiiiiiie !! ");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_ORIGAMIE , $sortie);
@@ -82,6 +84,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_PANAME));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $sortie->setInfosSortie("Let's go to paname !!");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_PERLES , $sortie);
@@ -99,6 +102,8 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_LE_CAP));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_LA_ROCHE_SUR_YON));
         $sortie->setInfosSortie("Un cours de philo comme on les aime LOL");
+        $sortie->setDateCreated();
+        $sortie->setDateModified();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_PHILO , $sortie);
@@ -116,6 +121,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_CINEMA));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_LA_ROCHE_SUR_YON));
         $sortie->setInfosSortie("ça va zouker ou pas du tout mdr");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_CONCERT_METAL , $sortie);
@@ -133,6 +139,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_ZOO));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $sortie->setInfosSortie("Je suis une fleur je suis une très jolie fleur. :) (P'tit ref)");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_JARDINAGE , $sortie);
@@ -150,6 +157,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_CINEMA));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $sortie->setInfosSortie("Creed 2 ! ");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_CINEMA , $sortie);
@@ -167,6 +175,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_PANAME));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_LA_ROCHE_SUR_YON));
         $sortie->setInfosSortie("Go faire de la pate à sel LOL !! :)");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_PATE_A_SEL , $sortie);
@@ -184,6 +193,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_LE_CAP));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $sortie->setInfosSortie("Go se faire une journée entière à la playa + faire du bateau hehe :) !");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_SORTIE_PASSEE , $sortie);
@@ -201,6 +211,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_PANAME));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_LA_ROCHE_SUR_YON));
         $sortie->setInfosSortie("Boire un verre dans un bar!");
+        $sortie->setDateCreated();
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_SORTIE_PRIVATE , $sortie);

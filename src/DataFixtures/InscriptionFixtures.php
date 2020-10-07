@@ -41,6 +41,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionMaelleToPhilo->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionMaelleToPhilo->setParticipant($maelle);
         $inscriptionMaelleToPhilo->setSortie($sortie);
+        $inscriptionMaelleToPhilo->setDateCreated();
 
         $manager->persist($inscriptionMaelleToPhilo);
 
@@ -48,11 +49,14 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionAngeliqueToPhilo->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionAngeliqueToPhilo->setParticipant($angelique);
         $inscriptionAngeliqueToPhilo->setSortie($sortie);
+        $inscriptionAngeliqueToPhilo->setDateCreated();
 
         $manager->persist($inscriptionAngeliqueToPhilo);
 
         $sortie->addInscription($inscriptionMaelleToPhilo);
         $sortie->addInscription($inscriptionAngeliqueToPhilo);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
@@ -65,6 +69,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionThomasToCinema->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionThomasToCinema->setParticipant($thomas);
         $inscriptionThomasToCinema->setSortie($sortie);
+        $inscriptionThomasToCinema->setDateCreated();
 
         $manager->persist($inscriptionThomasToCinema);
 
@@ -72,11 +77,14 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionJulienToCinema->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionJulienToCinema->setParticipant($julien);
         $inscriptionJulienToCinema->setSortie($sortie);
+        $inscriptionJulienToCinema->setDateCreated();
 
         $manager->persist($inscriptionJulienToCinema);
 
         $sortie->addInscription($inscriptionThomasToCinema);
         $sortie->addInscription($inscriptionJulienToCinema);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
@@ -91,6 +99,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionMaelleToPrivate->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionMaelleToPrivate->setParticipant($maelle);
         $inscriptionMaelleToPrivate->setSortie($sortie);
+        $inscriptionMaelleToPrivate->setDateCreated();
 
         $manager->persist($inscriptionMaelleToPrivate);
 
@@ -98,6 +107,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionAngeliqueToPrivate->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionAngeliqueToPrivate->setParticipant($angelique);
         $inscriptionAngeliqueToPrivate->setSortie($sortie);
+        $inscriptionAngeliqueToPrivate->setDateCreated();
 
         $manager->persist($inscriptionAngeliqueToPrivate);
 
@@ -105,6 +115,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionThomasToPrivate->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionThomasToPrivate->setParticipant($thomas);
         $inscriptionThomasToPrivate->setSortie($sortie);
+        $inscriptionThomasToPrivate->setDateCreated();
 
         $manager->persist($inscriptionThomasToPrivate);
 
@@ -112,6 +123,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionJulienToPrivate->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionJulienToPrivate->setParticipant($julien);
         $inscriptionJulienToPrivate->setSortie($sortie);
+        $inscriptionJulienToPrivate->setDateCreated();
 
         $manager->persist($inscriptionJulienToPrivate);
 
@@ -119,6 +131,8 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $sortie->addInscription($inscriptionAngeliqueToPrivate);
         $sortie->addInscription($inscriptionThomasToPrivate);
         $sortie->addInscription($inscriptionJulienToPrivate);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
@@ -133,6 +147,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionMaelleToPate->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionMaelleToPate->setParticipant($maelle);
         $inscriptionMaelleToPate->setSortie($sortie);
+        $inscriptionMaelleToPate->setDateCreated();
 
         $manager->persist($inscriptionMaelleToPate);
 
@@ -140,11 +155,14 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionJulienToPate->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionJulienToPate->setParticipant($julien);
         $inscriptionJulienToPate->setSortie($sortie);
+        $inscriptionJulienToPate->setDateCreated();
 
         $manager->persist($inscriptionJulienToPate);
 
         $sortie->addInscription($inscriptionMaelleToPate);
         $sortie->addInscription($inscriptionJulienToPate);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
@@ -159,6 +177,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionThomasToMetal->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionThomasToMetal->setParticipant($thomas);
         $inscriptionThomasToMetal->setSortie($sortie);
+        $inscriptionThomasToMetal->setDateCreated();
 
         $manager->persist($inscriptionThomasToMetal);
 
@@ -166,11 +185,14 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionJulienToMetal->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionJulienToMetal->setParticipant($julien);
         $inscriptionJulienToMetal->setSortie($sortie);
+        $inscriptionJulienToMetal->setDateCreated();
 
         $manager->persist($inscriptionJulienToMetal);
 
         $sortie->addInscription($inscriptionThomasToMetal);
         $sortie->addInscription($inscriptionJulienToMetal);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
@@ -185,6 +207,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionThomasToSortiePassee->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionThomasToSortiePassee->setParticipant($thomas);
         $inscriptionThomasToSortiePassee->setSortie($sortie);
+        $inscriptionThomasToSortiePassee->setDateCreated();
 
         $manager->persist($inscriptionThomasToSortiePassee);
 
@@ -192,6 +215,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionJulienToSortiePassee->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionJulienToSortiePassee->setParticipant($julien);
         $inscriptionJulienToSortiePassee->setSortie($sortie);
+        $inscriptionJulienToSortiePassee->setDateCreated();
 
         $manager->persist($inscriptionJulienToSortiePassee);
 
@@ -199,12 +223,15 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionAngeliqueToSortiePassee->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionAngeliqueToSortiePassee->setParticipant($angelique);
         $inscriptionAngeliqueToSortiePassee->setSortie($sortie);
+        $inscriptionAngeliqueToSortiePassee->setDateCreated();
 
         $manager->persist($inscriptionAngeliqueToSortiePassee);
 
         $sortie->addInscription($inscriptionThomasToSortiePassee);
         $sortie->addInscription($inscriptionJulienToSortiePassee);
         $sortie->addInscription($inscriptionAngeliqueToSortiePassee);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
@@ -219,6 +246,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionMaelleToJardinage->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionMaelleToJardinage->setParticipant($maelle);
         $inscriptionMaelleToJardinage->setSortie($sortie);
+        $inscriptionMaelleToJardinage->setDateCreated();
 
         $manager->persist($inscriptionMaelleToJardinage);
 
@@ -226,6 +254,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionAngeliqueToJardinage->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionAngeliqueToJardinage->setParticipant($angelique);
         $inscriptionAngeliqueToJardinage->setSortie($sortie);
+        $inscriptionAngeliqueToJardinage->setDateCreated();
 
         $manager->persist($inscriptionAngeliqueToJardinage);
 
@@ -233,6 +262,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionJulienToJardinage->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionJulienToJardinage->setParticipant($julien);
         $inscriptionJulienToJardinage->setSortie($sortie);
+        $inscriptionJulienToJardinage->setDateCreated();
 
         $manager->persist($inscriptionJulienToJardinage);
 
@@ -240,6 +270,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionThomasToJardinage->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionThomasToJardinage->setParticipant($thomas);
         $inscriptionThomasToJardinage->setSortie($sortie);
+        $inscriptionThomasToJardinage->setDateCreated();
 
         $manager->persist($inscriptionThomasToJardinage);
 
@@ -249,6 +280,8 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $sortie->addInscription($inscriptionJulienToJardinage);
         $sortie->addInscription($inscriptionThomasToJardinage);
 
+        $sortie->setDateModified();
+
         $manager->persist($sortie);
 
         $sortie = $this->getReference(SortieFixtures::SORTIE_ORIGAMIE);
@@ -257,6 +290,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionJulienToOrigamie->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionJulienToOrigamie->setParticipant($julien);
         $inscriptionJulienToOrigamie->setSortie($sortie);
+        $inscriptionJulienToOrigamie->setDateCreated();
 
         $manager->persist($inscriptionJulienToOrigamie);
 
@@ -264,11 +298,14 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionThomasToOrigamie->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionThomasToOrigamie->setParticipant($thomas);
         $inscriptionThomasToOrigamie->setSortie($sortie);
+        $inscriptionThomasToOrigamie->setDateCreated();
 
         $manager->persist($inscriptionThomasToOrigamie);
 
         $sortie->addInscription($inscriptionJulienToOrigamie);
         $sortie->addInscription($inscriptionThomasToOrigamie);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
@@ -281,10 +318,13 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         $inscriptionMaelleToZoo->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionMaelleToZoo->setParticipant($maelle);
         $inscriptionMaelleToZoo->setSortie($sortie);
+        $inscriptionMaelleToZoo->setDateCreated();
 
         $manager->persist($inscriptionMaelleToZoo);
 
         $sortie->addInscription($inscriptionMaelleToZoo);
+
+        $sortie->setDateModified();
 
         $manager->persist($sortie);
 
