@@ -2,9 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
+use App\Form\ResetPaswordType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
@@ -39,5 +46,67 @@ class SecurityController extends AbstractController
     public function logout()
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    /**
+     * @Route("/send_reset_psw", name="send_reset_psw")
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function SendResetPsw(Request $request)
+    {
+        $participantRepository = $this->getDoctrine()->getRepository(Participant::class);
+
+        $participant = $participantRepository->findOneBy(['mail' => $request->get('email')]);
+        if ($participant === null) {
+            $this->addFlash('danger', 'Cet utilisateur est inconnu êtes vous sûre de possèder un compte ?');
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('security/email_reset_password.html.twig', [
+            'mailTo' => $request->get('email'),
+            'mail' => base64_encode($request->get('email'))
+        ]);
+    }
+
+    /**
+     * @param string $email
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param UserPasswordEncoderInterface $encoder
+     * @return RedirectResponse|Response
+     * @Route(path="/reset_password/{email}", name="reset_password")
+     */
+    public function resetPassword(string $email, Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder)
+    {
+        $emailDecode = base64_decode($email);
+        $participantRepository = $this->getDoctrine()->getRepository(Participant::class);
+
+
+        /** @var Participant $participant */
+        $participant = $participantRepository->findOneBy(['mail' => $emailDecode]);
+
+        if (null !== $participant) {
+            $resetPwdForm = $this->createForm(ResetPaswordType::class, $participant);
+
+            $resetPwdForm->handleRequest($request);
+            if ($resetPwdForm->isSubmitted() && $resetPwdForm->isValid()) {
+                $password = $encoder->encodePassword($participant, $participant->getMotPasse());
+                $participant->setMotPasse($password);
+
+                $entityManager->persist($participant);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_login');
+            }
+
+            return $this->render('security/reset_password.html.twig', [
+                'mail' => $email,
+                'resetPwdForm' => $resetPwdForm->createView()
+            ]);
+        }
+
+        return $this->redirectToRoute('app_login');
     }
 }
