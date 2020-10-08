@@ -29,6 +29,7 @@
                     aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
                 <ul class="navbar-nav mr-auto">
                     {% if is_granted("ROLE_USER") %}
@@ -48,7 +49,12 @@
                     {% endif %}
                 </ul>
                 {% if is_granted("ROLE_USER") %}
-                <ul class="navbar-nav ml-auto nav-flex-icons">
+                <ul class="navbar-nav ml-auto nav-flex-icons mr-3">
+                    <li class="nav-item mr-3">
+                        <span class="nav-link">
+                            {{ app.user.username }}
+                        </span>
+                    </li>
                     <li class="nav-item avatar dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">

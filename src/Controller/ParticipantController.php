@@ -17,16 +17,26 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class ParticipantController extends AbstractController
 {
     /**
-     * @Route("/profil", name="participant_profil")
-     * @return void
+     * @Route("/profil/{id}", name="participant_show", requirements={"id": "\d+"})
+     * @param $id
+     * @param ParticipantRepository $repo
+     * @return Response
      */
-    public function index()
+    public function show($id,ParticipantRepository $repo)
     {
-        //
+        $participant = $repo->find($id);
+
+        if(empty($participant)) {
+            throw $this->createNotFoundException("Participant non trouvé");
+        }
+
+        return $this->render('participant/show.html.twig', [
+            'participant' => $participant
+        ]);
     }
 
     /**
-     * @Route("/profil/{id}", name="participant_edit", requirements={"id": "\d+"})
+     * @Route("/profil/{id}/edit", name="participant_edit", requirements={"id": "\d+"})
      * @param $id
      * @param Request $request
      * @param EntityManagerInterface $entityManager
@@ -79,8 +89,8 @@ class ParticipantController extends AbstractController
             ]);
         }
 
-        return $this->render('participant/profil.html.twig', [
-            'formParticipant' => $formParticipant->createView(),
+        return $this->render('participant/edit.html.twig', [
+            'formParticipant' => $formParticipant->createView()
         ]);
     }
 }
