@@ -54,10 +54,27 @@
                         </div>
                     </div>
 
-                    <!-- Pseudo -->
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Pseudo -->
+                            <div class="md-form mt-0">
+                                <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.pseudo }}">
+                                <label for="materialRegisterFormEmail">Pseudo</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Mail -->
+                            <div class="md-form mt-0">
+                                <input type="email" id="materialRegisterFormEmail" class="form-control" value="{{ participant.mail }}">
+                                <label for="materialRegisterFormEmail">Mail</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Téléphone -->
                     <div class="md-form mt-0">
-                        <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.pseudo }}">
-                        <label for="materialRegisterFormEmail">Pseudo</label>
+                        <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.telephone }}">
+                        <label for="materialRegisterFormEmail">Téléphone</label>
                     </div>
 
                     <!-- Campus -->
@@ -68,6 +85,12 @@
 
                 </form>
                 <!-- Form -->
+
+                <div class="row d-flex">
+                    <div class="col-sm-4">
+                        <button class="btn btn-outline-default btn-rounded waves-effect my-4 btn-block" type="button" onclick="history.go(-1)">Retour</button>
+                    </div>
+                </div>
 
             </div>
             <!--Grid column-->
