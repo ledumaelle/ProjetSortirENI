@@ -8,6 +8,7 @@ use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,15 +42,25 @@ class ParticipantController extends AbstractController
             $this->createNotFoundException("Participant non trouvé");
         }
 
+        $originalPassword = $participant->getPassword();
+
         $formParticipant = $this->createForm(ParticipantType::class, $participant);
 
         $formParticipant->handleRequest($request);
+
         if ($formParticipant->isSubmitted() && $formParticipant->isValid()) {
 
             try {
 
-                $password = $passwordEncoder->encodePassword($participant, $participant->getPassword());
-                $participant->setMotPasse($password);
+                $plainPassword = $formParticipant->get('motPasse')->getData();
+
+                if (!empty(trim($plainPassword)))  {
+                    $password = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+                    $participant->setMotPasse($password);
+                }
+                else {
+                    $participant->setMotPasse($originalPassword);
+                }
 
                 $entityManager->persist($participant);
                 $entityManager->flush();

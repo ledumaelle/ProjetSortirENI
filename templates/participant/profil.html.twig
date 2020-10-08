@@ -2,12 +2,12 @@
 
 {% block body %}
 
-    <div class="container my-5">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8 col-lg-6 mx-auto">
+            <!--Grid column-->
+            <div class="col-md-2 col-lg-2 mx-auto">
                 <!-- Section: Block Content -->
                 <section>
-
                     <!-- Card -->
                     <div class="card testimonial-card">
 
@@ -21,7 +21,7 @@
                             {% if app.user.imageName %}
                                 <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~app.user.imageName) }}" alt="{{ app.user.imageName }}"/>
                             {% else %}
-                                <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0"
+                                <img src="{{ asset('image/participants/empty_picture.png') }}" class="rounded-circle z-depth-0"
                                      alt="avatar image">
                             {% endif %}
                         </div>
@@ -31,45 +31,160 @@
                 </section>
                 <!-- Section: Block Content -->
             </div>
-        </div>
-    </div>
-    <div class="container my-5 py-5">
+            <!--Grid column-->
+            <div class="col-md-8 col-lg-8 mx-auto">
 
-        <!--Section: Content-->
-        <section class="px-md-5 mx-md-5 text-center text-lg-left dark-grey-text">
+                {{ form_start(formParticipant, {'class': 'md-form'}) }}
 
+                {{ form_errors(formParticipant) }}
 
-            <!--Grid row-->
-            <div class="row d-flex justify-content-center">
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Pseudo -->
+                        <div class="md-form">
+                            {{ form_widget(formParticipant.pseudo) }}
 
-                <!--Grid column-->
-                <div class="col-md-10">
+                            {{ form_label(formParticipant.pseudo) }}
 
-                    {{ form_start(formParticipant) }}
+                            <small>{{ form_help(formParticipant.pseudo) }}</small>
 
-                    {{ form_errors(formParticipant) }}
-
-                    {{ form_widget(formParticipant) }}
-
-                    <div class="form-row mb-4">
-                        <div class="col">
-                            <button class="btn btn-primary my-4 btn-block" type="submit">Enregistrer</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-default my-4 btn-block" type="submit">Annuler</button>
+                            <div class="form-error">
+                                {{ form_errors(formParticipant.pseudo) }}
+                            </div>
                         </div>
                     </div>
-                    {{ form_end(formParticipant) }}
+                    <div class="col">
+                        <!-- Mail -->
+                        <div class="md-form">
+                            {{ form_widget(formParticipant.mail) }}
 
+                            {{ form_label(formParticipant.mail) }}
+
+                            <small>{{ form_help(formParticipant.mail) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(formParticipant.mail) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!--Grid column-->
+
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Nom -->
+                        <div class="md-form">
+                            {{ form_widget(formParticipant.nom) }}
+
+                            {{ form_label(formParticipant.nom) }}
+
+                            <small>{{ form_help(formParticipant.nom) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(formParticipant.nom) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <!-- Prénom -->
+                        <div class="md-form">
+                            {{ form_widget(formParticipant.prenom) }}
+
+                            {{ form_label(formParticipant.prenom) }}
+
+                            <small>{{ form_help(formParticipant.prenom) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(formParticipant.prenom) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mot de Passe -->
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Pseudo -->
+                        <div class="md-form">
+                            {{ form_widget(formParticipant.motPasse.first) }}
+
+                            {{ form_label(formParticipant.motPasse.first) }}
+
+                            <small>{{ form_help(formParticipant.motPasse.first) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(formParticipant.motPasse.first) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <!-- Mail -->
+                        <div class="md-form">
+                            {{ form_widget(formParticipant.motPasse.second) }}
+
+                            {{ form_label(formParticipant.motPasse.second) }}
+
+                            <small>{{ form_help(formParticipant.motPasse.second) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(formParticipant.motPasse.second) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Téléphone -->
+                <div class="md-form">
+                    {{ form_widget(formParticipant.telephone) }}
+
+                    {{ form_label(formParticipant.telephone) }}
+
+                    <small>{{ form_help(formParticipant.telephone) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(formParticipant.telephone) }}
+                    </div>
+                </div>
+
+                <!-- Campus -->
+                <div class="md-form">
+                    {{ form_widget(formParticipant.campus) }}
+
+                    {{ form_label(formParticipant.campus) }}
+
+                    <small>{{ form_help(formParticipant.campus) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(formParticipant.campus) }}
+                    </div>
+                </div>
+
+                <!-- Photo -->
+                <div class="md-form">
+                    <div class="file-field">
+                        <div class="btn btn-primary btn-sm float-left">
+                            <span>Photo de Profil</span>
+                            {{ form_widget(formParticipant.imageFile) }}
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Télécharger ma photo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row mb-4">
+                    <div class="col">
+                        <button class="btn btn-primary my-4 btn-block" type="submit">Enregistrer</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-default my-4 btn-block" type="button">Annuler</button>
+                    </div>
+                </div>
+
+                {{ form_end(formParticipant) }}
 
             </div>
-            <!--Grid row-->
-
-
-        </section>
-        <!--Section: Content-->
+            <!--Grid column-->
+        </div>
     </div>
 {% endblock %}
 

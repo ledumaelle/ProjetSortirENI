@@ -14,10 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/", name="app_racine")
      */
-    public function home()
-    {
+    public function home() {
         return $this->redirectToRoute('app_login');
     }
 }
