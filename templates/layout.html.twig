@@ -15,12 +15,14 @@
         <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         <!-- Material Design Bootstrap -->
         <link href="{{ asset('bootstrap/css/mdb.min.css') }}" rel="stylesheet">
+        <!-- Css perso -->
+        <link href="{{ asset('bootstrap/css/style.css') }}" rel="stylesheet">
     {% endblock %}
 </head>
 <body>
     <header>
         <!--Navbar -->
-        <nav class="mb-1 navbar navbar-expand-lg navbar-dark light-blue darken-4">
+        <nav class="mb-1 navbar navbar-expand-lg navbar-dark default-color">
             <img src="{{ asset('image/favicon.png') }}" alt="Bucket-List" class="img-fluid mr-2" width="64px" height="64px">
             <a class="navbar-brand" href="#">Sortir.com</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
@@ -57,7 +59,7 @@
                                      alt="avatar image">
                             {% endif %}
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg-right dropdown-info"
+                        <div class="dropdown-menu dropdown-menu-lg-right dropdown-default"
                              aria-labelledby="navbarDropdownMenuLink-55">
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                                 <a class="dropdown-item" href="{{ path('participant_edit', {id: app.user.id}) }}" title="Sortir.com | Mon profil">Mon profil</a>
@@ -73,27 +75,27 @@
     </header>
     <main>
 
-    {# read and display all flash messages #}
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message|raw }}
-            </div>
+        {# read and display all flash messages #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash-{{ label }}">
+                    {{ message|raw }}
+                </div>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
 
         <div class="container-fluid mt-5">
             {% block body %} {% endblock %}
         </div>
     </main>
 
-<!-- Footer -->
-<footer class="page-footer font-small light-blue darken-4 fixed-bottom">
-    <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">&copy {{ "now"|date("Y") }} Sortir.com</div>
-    <!-- Copyright -->
-</footer>
-<!-- Footer -->
+    <!-- Footer -->
+    <footer class="page-footer font-small default-color fixed-bottom">
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">&copy {{"now"|date("Y")}} Sortir.com</div>
+        <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
 
     {% block javascripts %}
         <!-- SCRIPTS -->
