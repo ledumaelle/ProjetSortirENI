@@ -31,7 +31,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
                 <ul class="navbar-nav mr-auto">
-                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    {% if is_granted("ROLE_USER") %}
                         <li class="nav-item active">
                             <a class="nav-link" href="{{ path('app_homepage') }}" title="Sortir.com | Accueil">Accueil
                                 <span class="sr-only">(current)</span>
@@ -47,7 +47,7 @@
                         {% endif %}
                     {% endif %}
                 </ul>
-                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                {% if is_granted("ROLE_USER") %}
                 <ul class="navbar-nav ml-auto nav-flex-icons">
                     <li class="nav-item avatar dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
@@ -55,17 +55,15 @@
                             {% if app.user.imageName %}
                                 <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~app.user.imageName) }}" alt="{{ app.user.imageName }}"/>
                             {% else %}
-                                <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0"
+                                <img src="{{ asset('image/participants/empty_picture.png') }}" class="rounded-circle z-depth-0 white"
                                      alt="avatar image">
                             {% endif %}
                         </a>
                         <div class="dropdown-menu dropdown-menu-lg-right dropdown-default"
                              aria-labelledby="navbarDropdownMenuLink-55">
-                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                                 <a class="dropdown-item" href="{{ path('participant_edit', {id: app.user.id}) }}" title="Sortir.com | Mon profil">Mon profil</a>
                                 <a class="dropdown-item" href="{{ path('app_logout') }}" title="Sortir.com | Se déconnecter">Se déconnecter</a>
-                            {% endif %}
-                        </div>
+                         </div>
                     </li>
                 </ul>
                 {% endif %}

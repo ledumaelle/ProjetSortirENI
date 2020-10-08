@@ -20,7 +20,7 @@ class ParticipantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            /*->add('imageFile',VichImageType::class,
+            ->add('imageFile',VichImageType::class,
                 [
                     'label' => false,
                     'required' => false,
@@ -28,7 +28,7 @@ class ParticipantType extends AbstractType
                     'delete_label' => false,
                     'download_uri' => false,
                     'download_label' => false
-            ])*/
+            ])
             ->add('pseudo', TextType::class, [
                 'attr' => [
                     'class' => 'form-control mb-4',
@@ -68,14 +68,16 @@ class ParticipantType extends AbstractType
                     'attr' => [
                         'class' => 'form-control mb-4',
                         'placeholder' => 'Mot de passe'
-                    ]
+                    ],
+                    'empty_data' => ' ',
                 ],
                 'second_options' => [
                     'label' => false,
                     'attr' => [
                         'class' => 'form-control mb-4',
                         'placeholder' => 'Confirmez le mot de passe'
-                    ]
+                    ],
+                    'empty_data' => ' ',
                 ],
             ])
             ->add('campus',EntityType::class,[
