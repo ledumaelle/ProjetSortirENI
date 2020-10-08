@@ -2,3 +2,7 @@
     top: .5em !important;
     z-index: 2 !important;
 }
+
+.navbar .nav-item.avatar .dropdown-toggle img {
+    height: 50px;
+}
