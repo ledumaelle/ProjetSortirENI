@@ -1,0 +1,29 @@
+{% extends 'layout.html.twig' %}
+
+
+{% block body %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Pseudo</th>
+            <th scope="col">Mail</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Téléphone</th>
+            <th scope="col">Campus</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for participant in participants %}
+            <tr>
+                <th scope="row">{{ participant.pseudo }}</th>
+                <th>{{ participant.mail }}</th>
+                <th>{{ participant.nom }}</th>
+                <th>{{ participant.prenom }}</th>
+                <th>{{ participant.telephone }}</th>
+                <th>{{ participant.campus.nom }}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

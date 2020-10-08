@@ -45,4 +45,13 @@ class ParticipantRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getUtilisateursWithCampus()
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.campus', 'c')
+            ->addSelect('c')
+            ->getQuery()
+            ->execute();
+    }
 }
