@@ -11,6 +11,7 @@
             <th scope="col">Prénom</th>
             <th scope="col">Téléphone</th>
             <th scope="col">Campus</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -22,6 +23,20 @@
                 <th>{{ participant.prenom }}</th>
                 <th>{{ participant.telephone }}</th>
                 <th>{{ participant.campus.nom }}</th>
+                <th>
+                    {% if participant.actif %}
+                        <a href="{{ path('app_admin_utilisateur_desactiver', {id: participant.id}) }}" class="btn-floating btn-secondary mr-2 btn-sm material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Désactiver cet utilisateur">
+                            <i class="fas fa-ban"></i>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_admin_utilisateur_reactiver', {id: participant.id}) }}" class="btn-floating btn-success mr-2 btn-sm material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Réactiver cet utilisateur">
+                            <i class="fas fa-check"></i>
+                        </a>
+                    {% endif %}
+                    <a href="{{ path('app_admin_utilisateur_delete', {id: participant.id}) }}" class="btn-floating btn-danger btn-sm material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Supprimer cet utilisateur">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </th>
             </tr>
         {% endfor %}
         </tbody>
