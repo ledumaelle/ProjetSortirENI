@@ -38,8 +38,12 @@ class ParticipantController extends AbstractController
 
         $participant = $repo->find($id);
 
-        if(empty($idea)) {
-            $this->createNotFoundException("Participant non trouvé");
+        if(empty($participant)) {
+            throw $this->createNotFoundException("Participant non trouvé");
+        }
+
+        if($participant->getMail() != $this->getUser()->getUsername()) {
+            throw $this->createAccessDeniedException("Vous n'avez pas le droit de modifier le profil d'un autre participant.");
         }
 
         $originalPassword = $participant->getPassword();

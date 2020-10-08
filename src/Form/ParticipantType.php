@@ -75,7 +75,7 @@ class ParticipantType extends AbstractType
                     'label' => false,
                     'attr' => [
                         'class' => 'form-control mb-4',
-                        'placeholder' => 'Confirmez le mot de passe'
+                        'placeholder' => 'Confirmer le mot de passe'
                     ],
                     'empty_data' => ' ',
                 ],
