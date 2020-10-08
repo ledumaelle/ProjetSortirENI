@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/send_reset_psw", name="send_reset_psw")
+     * @Route("/password/send_mail", name="app_password_send_mail")
      * @param Request $request
      * @return RedirectResponse|Response
      */
@@ -64,7 +64,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/email_reset_password.html.twig', [
+        return $this->render('security/emailPassword.html.twig', [
             'mailTo' => $request->get('email'),
             'mail' => base64_encode($request->get('email'))
         ]);
@@ -76,7 +76,7 @@ class SecurityController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $encoder
      * @return RedirectResponse|Response
-     * @Route(path="/reset_password/{email}", name="reset_password")
+     * @Route(path="/password/reset/{email}", name="app_reset_password")
      */
     public function resetPassword(string $email, Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder)
     {
@@ -98,10 +98,12 @@ class SecurityController extends AbstractController
                 $entityManager->persist($participant);
                 $entityManager->flush();
 
+                $this->addFlash('success', 'Mot de passe réinitialisé avec succès! Vous pouvez désormais vous connecter.');
+
                 return $this->redirectToRoute('app_login');
             }
 
-            return $this->render('security/reset_password.html.twig', [
+            return $this->render('security/resetPassword.html.twig', [
                 'mail' => $email,
                 'resetPwdForm' => $resetPwdForm->createView()
             ]);
