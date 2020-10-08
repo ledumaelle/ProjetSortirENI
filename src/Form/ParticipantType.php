@@ -20,50 +20,49 @@ class ParticipantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('imageFile',VichImageType::class,
+            /*->add('imageFile',VichImageType::class,
                 [
                     'label' => false,
-                    'required' => false
-            ])
+                    'required' => false,
+                    'allow_delete' => false,
+                    'delete_label' => false,
+                    'download_uri' => false,
+                    'download_label' => false
+            ])*/
             ->add('pseudo', TextType::class, [
                 'attr' => [
                     'class' => 'form-control mb-4',
-                    'placeholder' => 'Pseudo'
                 ],
-                'label' => false
+                'label' => 'Pseudo'
             ])
             ->add('mail', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Mail'
+                    'class' => 'form-control mb-4'
                 ],
-                'label' => false
+                'label' => 'Mail'
             ])
             ->add('nom',TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Nom'
+                    'class' => 'form-control mb-4'
                 ],
-                'label' => false
+                'label' => 'Nom'
             ])
             ->add('prenom',TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Prénom'
+                    'class' => 'form-control mb-4'
                 ],
-                'label' => false
+                'label' => 'Prénom'
             ])
             ->add('telephone', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Téléphone'
+                    'class' => 'form-control mb-4'
                 ],
-                'label' => false
+                'label' => 'Téléphone'
             ])
             ->add('motPasse', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mot de passe doivent être identiques.',
-                'required' => true,
+                'required' => false,
                 'first_options'  => [
                     'label' => false,
                     'attr' => [
@@ -84,7 +83,7 @@ class ParticipantType extends AbstractType
                 'choice_label' => 'nom',
                 'placeholder' => 'Sélectionnez un campus',
                 'required' => true,
-                'label' => false,
+                'label' => 'Campus',
                 'attr' => [
                     'class' => 'mdb-select md-form'
                 ],
