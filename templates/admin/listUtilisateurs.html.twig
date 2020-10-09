@@ -36,25 +36,45 @@
     </div>
 
     <table class="table">
+    {# total items count #}
+    <div class="count mb-3">
+        <h5 class="text-primary"> Total : {{ participants.getTotalItemCount }} </h5>
+    </div>
+    <table class="table" id="participantsTable">
         <thead>
         <tr>
-            <th scope="col">Pseudo</th>
-            <th scope="col">Mail</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Prénom</th>
-            <th scope="col">Téléphone</th>
-            <th scope="col">Campus</th>
+            <th scope="col" class="font-weight-bold">PSEUDO</th>
+            <th scope="col" class="font-weight-bold">MAIL</th>
+            <th scope="col" class="font-weight-bold">NOM</th>
+            <th scope="col" class="font-weight-bold">PRÉNOM</th>
+            <th scope="col" class="font-weight-bold">TÉLÉPHONE</th>
+            <th scope="col" class="font-weight-bold">CAMPUS</th>
+            <th scope="col" class="font-weight-bold">ACTION</th>
         </tr>
         </thead>
         <tbody>
         {% for participant in participants %}
-            <tr>
+            <tr class="{{ participant.actif ? 'unban' : 'ban'}}">
                 <th scope="row">{{ participant.pseudo }}</th>
                 <th>{{ participant.mail }}</th>
                 <th>{{ participant.nom }}</th>
                 <th>{{ participant.prenom }}</th>
                 <th>{{ participant.telephone }}</th>
                 <th>{{ participant.campus.nom }}</th>
+                <th>
+                    {% if participant.actif %}
+                        <a href="{{ path('app_admin_utilisateur_desactiver', {id: participant.id}) }}" class="btn-floating btn-secondary mr-2 btn-sm material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Désactiver cet utilisateur">
+                            <i class="fas fa-ban"></i>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_admin_utilisateur_reactiver', {id: participant.id}) }}" class="btn-floating btn-success mr-2 btn-sm material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Réactiver cet utilisateur">
+                            <i class="fas fa-check"></i>
+                        </a>
+                    {% endif %}
+                    <a class="btn-floating btn-danger btn-sm material-tooltip-main openModalDeleteUser" data-id="{{participant.id}}" data-toggle="tooltip" data-placement="top" title="Supprimer cet utilisateur">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </th>
             </tr>
         {% endfor %}
         </tbody>
@@ -86,4 +106,56 @@
             cursor: pointer;
         }
     </style>
+    <div class="navigation">
+        {{ knp_pagination_render(participants) }}
+    </div>
+
+    <!--Modal: modalConfirmDelete-->
+    <div class="modal fade" id="modalConfirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-notify modal-danger" role="document">
+            <!--Content-->
+            <div class="modal-content text-center">
+                <!--Header-->
+                <div class="modal-header d-flex justify-content-center">
+                    <p class="heading">Etes-vous sûr de supprimer cet utilisateur ? </p>
+                </div>
+
+                <!--Body-->
+                <div class="modal-body">
+
+                    <i class="fas fa-times fa-4x animated rotateIn"></i>
+
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer flex-center">
+                    <a id="deleteUser" class="btn  btn-outline-danger">Oui</a>
+                    <a type="button" class="btn  btn-danger waves-effect" data-dismiss="modal">Non</a>
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+    <!--Modal: modalConfirmDelete-->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function() {
+
+            $('.openModalDeleteUser').on("click", function() {
+                let participantId = ($(this).attr('data-id'));
+
+                var url = '{{ path('app_admin_utilisateur_delete',  {'id': 'participantId'})|escape('js') }}';
+                url = url.replace("participantId", participantId);
+
+                $('#deleteUser').attr('href', url);
+
+                $('#modalConfirmDelete').modal('show');
+            });
+        });
+    </script>
 {% endblock %}
