@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -27,16 +28,19 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThanOrEqual("today",message="La date doit etre superieur a la date d'aujourd'hui")
      */
     private $dateHeureDebut;
 
     /**
      * @ORM\Column(type="integer")
+     *
      */
     private $duree;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThanOrEqual("today",message="La date doit etre superieur a la date d'aujourd'hui")
      */
     private $dateLimiteInscription;
 
@@ -93,6 +97,14 @@ class Sortie
      * @ORM\Column(type="datetime",nullable=true)
      */
     private $dateModified;
+
+
+
+
+
+
+    private $ville;
+
 
     public function __construct()
     {
@@ -236,6 +248,26 @@ class Sortie
         return $this;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getVille()
+    {
+        return $this->ville;
+    }
+
+    /**
+     * @param mixed $ville
+     */
+    public function setVille($ville): void
+    {
+        $this->ville = $ville;
+    }
+
+
+
+
     /**
      * @return Collection|Participant[]
      */
@@ -300,4 +332,17 @@ class Sortie
     {
         $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
     }
+
+
+    /**
+     * @Assert\IsTrue(message="La date limite d'inscrition doit pas depasser la date de debut")
+     */
+    public function isDatesValide()
+    {
+        $dif=$this->dateLimiteInscription->diff($this->dateHeureDebut);
+        return $dif->invert!=1;
+    }
+
+
+
 }
