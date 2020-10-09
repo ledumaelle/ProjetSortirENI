@@ -2,24 +2,20 @@
 
 
 {% block body %}
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                <h4>
-                    Filtrer les sorties
-                </h4>
+                <h4> Filtrer les sorties </h4>
                 <div class="row">
                     <div class="col-md-6 select-outline">
 
-                        <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
-                            <option value="" disabled selected>Choisi ton campus</option>
-                            <option value="1">test1</option>
-                            <option value="1">test2</option>
-                            <option value="1">test3</option>
-                            <option value="1">test4</option>
-                        </select>
-                        <label>Campus</label>
+                        <select class="mdb-select md-form" searchable="Rechercher...">
+                            <option value="" disabled selected>Sélectionnez le campus</option>
 
+                            {% for c in campus %}
+                                <option value="{{ c.id }}">{{ c.nom }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
 
@@ -74,10 +70,61 @@
                     <label class="form-check-label" for="sortieEnd">Sorties passées</label>
                 </div>
 
+                <br>
+                <button type="button" class="btn btn-secondary btn-rounded">Rechercher</button>
+
             </div>
+
         </div>
     </div>
-    <table id="sorties_data" class="table table-striped table-bordered " width="100%">
+    {# total items count #}
+    <div class="row flex mb-3">
+        <div class="justify-content-start col-md-10">
+            <a href="{{ path('sortie_create') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Créer une sortie</a>
+        </div>
+        <div class="count col-md-2 text-right">
+            <h5 class="text-primary"> Total : {{ sorties.getTotalItemCount }} </h5>
+        </div>
+    </div>
+    <table class="table" id="participantsTable">
+        <thead>
+        <tr>
+            <th scope="col" class="font-weight-bold">NOM DE LA SORTIE</th>
+            <th scope="col" class="font-weight-bold">DATE DE LA SORTIE</th>
+            <th scope="col" class="font-weight-bold">CLOTURE</th>
+            <th scope="col" class="font-weight-bold">INSCRITS/PLACES</th>
+            <th scope="col" class="font-weight-bold">ETAT</th>
+            <th scope="col" class="font-weight-bold">INSCRIT</th>
+            <th scope="col" class="font-weight-bold">ORGANISATEUR</th>
+            <th scope="col" class="font-weight-bold">ACTIONS</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sortie in sorties %}
+            <tr class="{{ sortie.organisateur.id == app.user.id ? 'organisteur' : 'notorganisateur' }}">
+                <th scope="row">{{ sortie.nom }}</th>
+                <th>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date("d-m-Y")  : sortie.dateHeureDebut|date("d-m-Y") }}</th>
+                <th>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date("d-m-Y")  : sortie.dateLimiteInscription|date("d-m-Y") }}</th>
+                <th> à définir / {{ sortie.nbInscriptionsMax }}</th>
+                <th>{{ sortie.etat.libelle }}</th>
+                <th> à définir </th>
+                <th>
+                    <a href="{{ path('participant_show', {id: sortie.organisateur.id }) }}" class="text-secondary material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Afficher le profil">
+                        {{ sortie.organisateur.pseudo }}
+                    </a>
+                </th>
+                <th> à définir </th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(sorties) }}
+    </div>
+
+
+    <!--<table id="sorties_data" class="table table-striped table-bordered " width="100%">
         <thead class="blue lighten-4">
         <tr>
             <th class='th-sm center'>Nom de la sortie</th>
@@ -90,16 +137,14 @@
             <th class='th-sm center'>Actions</th>
         </tr>
         </thead>
-    </table>
-    <a href="{{ path('app_sortie_creer') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Créer
-        une sortie</a>
+    </table> -->
 {% endblock %}
 
 
 {% block javascripts %}
     {{ parent() }}
 
-    <script>
+    <!--<script>
         $(document).ready(function () {
 
             $('.mdb-select').materialSelect();
@@ -142,5 +187,5 @@
                 {#}#}
             });
         });
-    </script>
+    </script>-->
 {% endblock %}
