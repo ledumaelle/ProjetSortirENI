@@ -2,6 +2,36 @@
 
 
 {% block body %}
+    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn grey lighten-2 btn-md mt-4">Ajouter un utilisateur</a>
+    <button data-toggle="modal" data-target="#importUsers" class="btn grey lighten-2 btn-md mt-4">Importer des
+        utilisateur
+    </button>
+
+    <div class="modal fade" id="importUsers" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header grey lighten-4">
+                    <h4 class="modal-title">Importer des utilisateurs</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <form method="post" action="{{ path('app_admin_import_users') }}" enctype="multipart/form-data">
+                        <div class="md-form">
+                            <input type="file" name="csvFile" id="csvFile" accept=".csv"/>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button class="btn grey lighten-2 btn-md mt-4" type="submit">Importer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <table class="table">
         <thead>
         <tr>
