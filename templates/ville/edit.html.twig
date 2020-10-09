@@ -1,0 +1,63 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-lg-8 mx-auto">
+
+                {{ form_start(formVille, {'class': 'md-form'}) }}
+
+                {{ form_errors(formVille) }}
+
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Nom -->
+                        <div class="md-form">
+                            {{ form_widget(formVille.nom) }}
+
+                            {{ form_label(formVille.nom) }}
+
+                            <small>{{ form_help(formVille.nom) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(formVille.nom) }}
+                            </div>
+                        </div>
+                        <!-- Code postal -->
+                        <div class="md-form">
+                            {{ form_widget(formVille.codePostal) }}
+
+                            {{ form_label(formVille.codePostal) }}
+
+                            <small>{{ form_help(formVille.codePostal) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(formVille.codePostal) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row mb-4 flex justify-content-center">
+                    <div class="col-sm-2 mr-5">
+                        <button class="btn btn-primary btn-rounded waves-effect my-4 btn-block" type="submit">
+                            Enregistrer
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block"
+                           href="{{ path("app_admin_villes") }}">Annuler
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+            {{ form_end(formVille) }}
+
+        </div>
+    </div>
+    </div>
+{% endblock %}
+

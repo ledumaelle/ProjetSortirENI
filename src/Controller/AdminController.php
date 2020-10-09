@@ -4,8 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Campus;
 use App\Entity\Participant;
+use App\Entity\Ville;
+use App\Form\CampusType;
 use App\Form\ParticipantType;
+use App\Form\VilleType;
+use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
@@ -224,5 +229,127 @@ class AdminController extends AbstractController
 
             return $this->redirectToRoute("app_admin_utilisateurs");
         }
+    }
+
+    /**
+     * @Route("/villes", name="app_admin_villes")
+     * @param VilleRepository $villeRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
+    public function listVilles(VilleRepository $villeRepository, PaginatorInterface $paginator, Request $request)
+    {
+        $query = $villeRepository->findAll();
+
+        $villes = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            4 /*limit per page*/
+        );
+
+        return $this->render('admin/listVilles.html.twig', [
+            'villes' => $villes
+        ]);
+    }
+
+    /**
+     * @Route("/villes/add", name="app_admin_villes_add")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function addVille(Request $request, EntityManagerInterface $entityManager)
+    {
+        $ville = new Ville();
+
+        $formVille = $this->createForm(VilleType::class, $ville);
+
+        $formVille->handleRequest($request);
+        if ($formVille->isSubmitted() && $formVille->isValid()) {
+
+            try {
+                $ville->setNom(strtoupper($ville->getNom()));
+                $ville->setDateCreated();
+
+                $entityManager->persist($ville);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Votre ville a été ajoutée ! ");
+
+            } catch (Exception $exception) {
+                $this->addFlash("danger", $exception->getMessage());
+            }
+
+            return $this->render('ville/edit.html.twig', [
+                'formVille' => $formVille->createView()
+            ]);
+        }
+
+
+        return $this->render('ville/edit.html.twig', [
+            'formVille' => $formVille->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/campus", name="app_admin_campus")
+     * @param CampusRepository $campusRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
+    public function listCampus(CampusRepository $campusRepository, PaginatorInterface $paginator, Request $request)
+    {
+        $query = $campusRepository->findAll();
+
+        $campus = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            4 /*limit per page*/
+        );
+
+        return $this->render('admin/listCampus.html.twig', [
+            'campus' => $campus
+        ]);
+    }
+
+    /**
+     * @Route("/campus/add", name="app_admin_campus_add")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function addCampus(Request $request, EntityManagerInterface $entityManager)
+    {
+        $campus = new Campus();
+
+        $formCampus = $this->createForm(CampusType::class, $campus);
+
+        $formCampus->handleRequest($request);
+        if ($formCampus->isSubmitted() && $formCampus->isValid()) {
+
+            try {
+                $campus->setNom(strtoupper($campus->getNom()));
+                $campus->setDateCreated();
+
+                $entityManager->persist($campus);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Votre campus a été ajouté ! ");
+
+            } catch (Exception $exception) {
+                $this->addFlash("danger", $exception->getMessage());
+            }
+
+            return $this->render('campus/edit.html.twig', [
+                'formCampus' => $formCampus->createView()
+            ]);
+        }
+
+
+        return $this->render('campus/edit.html.twig', [
+            'formCampus' => $formCampus->createView()
+        ]);
     }
 }
