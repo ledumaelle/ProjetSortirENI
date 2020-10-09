@@ -46,15 +46,17 @@
                                title="Sortir.com | Utilisateur">Utilisateurs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" title="Sortir.com | Villes">Villes</a>
+                            <a class="nav-link" href="{{ path('app_admin_villes') }}"
+                               title="Sortir.com | Villes">Villes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" title="Sortir.com | Campus">Campus</a>
+                            <a class="nav-link" href="{{ path('app_admin_campus') }}"
+                               title="Sortir.com | Campus">Campus</a>
                         </li>
-                        {% endif %}
                     {% endif %}
-                </ul>
-                {% if is_granted("ROLE_USER") %}
+                {% endif %}
+            </ul>
+            {% if is_granted("ROLE_USER") %}
                 <ul class="navbar-nav ml-auto nav-flex-icons mr-3">
                     <li class="nav-item mr-3">
                         <span class="nav-link">
@@ -65,9 +67,12 @@
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             {% if app.user.imageName %}
-                                <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~app.user.imageName) }}" alt="{{ app.user.imageName }}"/>
+                                <img class="rounded-circle z-depth-0"
+                                     src="{{ asset('image/participants/'~app.user.imageName) }}"
+                                     alt="{{ app.user.imageName }}"/>
                             {% else %}
-                                <img src="{{ asset('image/participants/empty_picture.png') }}" class="rounded-circle z-depth-0 white"
+                                <img src="{{ asset('image/participants/empty_picture.png') }}"
+                                     class="rounded-circle z-depth-0 white"
                                      alt="avatar image">
                             {% endif %}
                         </a>
@@ -82,12 +87,12 @@
                         </div>
                     </li>
                 </ul>
-                {% endif %}
-            </div>
-        </nav>
-        <!--/.Navbar -->
-    </header>
-    <main>
+            {% endif %}
+        </div>
+    </nav>
+    <!--/.Navbar -->
+</header>
+<main>
 
     {# read and display all flash messages #}
     {% for label, messages in app.flashes %}
@@ -98,10 +103,10 @@
         {% endfor %}
     {% endfor %}
 
-        <div class="container-fluid mt-5">
-            {% block body %} {% endblock %}
-        </div>
-    </main>
+    <div class="container-fluid mt-5">
+        {% block body %} {% endblock %}
+    </div>
+</main>
 
 <!-- Footer -->
 <footer class="page-footer font-small light-blue darken-4 fixed-bottom">
@@ -111,18 +116,18 @@
 </footer>
 <!-- Footer -->
 
-    {% block javascripts %}
-        <!-- SCRIPTS -->
-        <!-- JQuery -->
-        <script type="text/javascript" src="{{ asset('bootstrap/js/jquery-3.4.1.min.js') }}"></script>
-        <!-- Bootstrap tooltips -->
-        <script type="text/javascript" src="{{ asset('bootstrap/js/popper.min.js') }}"></script>
-        <!-- Bootstrap core JavaScript -->
-        <script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-        <!-- MDB core JavaScript -->
-        <script type="text/javascript" src="{{ asset('bootstrap/js/mdb.js') }}"></script>
-        <!-- Custom JS -->
-        <script type="text/javascript" src="{{ asset('bootstrap/js/script.js') }}"></script>
-    {% endblock %}
-    </body>
+{% block javascripts %}
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="{{ asset('bootstrap/js/jquery-3.4.1.min.js') }}"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="{{ asset('bootstrap/js/popper.min.js') }}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{{ asset('bootstrap/js/mdb.js') }}"></script>
+    <!-- Custom JS -->
+    <script type="text/javascript" src="{{ asset('bootstrap/js/script.js') }}"></script>
+{% endblock %}
+</body>
 </html>

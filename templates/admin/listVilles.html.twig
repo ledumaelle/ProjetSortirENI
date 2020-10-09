@@ -1,0 +1,31 @@
+{% extends 'layout.html.twig' %}
+
+
+{% block body %}
+    <a href="{{ path('app_admin_villes_add') }}" class="btn grey lighten-2 btn-md mt-2">Ajouter une ville</a>
+
+    {# total items count #}
+    <div class="count mt-3  mb-3 flex row justify-content-end mr-5">
+        <h5 class="text-primary"> Total : {{ villes.getTotalItemCount }} </h5>
+    </div>
+    <table class="table" id="participantsTable">
+        <thead>
+        <tr>
+            <th scope="col" class="font-weight-bold">NOM</th>
+            <th scope="col" class="font-weight-bold">CODE POSTAL</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ville in villes %}
+            <tr>
+                <th scope="row">{{ ville.nom }}</th>
+                <th>{{ ville.codePostal }}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(villes) }}
+    </div>
+{% endblock %}
