@@ -8,32 +8,40 @@ use App\Entity\Etat;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
+use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class SortieController
+ * @package App\Controller
+ *
+ * @Route("/sortie")
+ */
 class SortieController extends AbstractController
 {
-
     /**
      *
-     * @Route("/sortie/creer", name="app_sortie_creer")
+     * @Route("/create", name="sortie_create")
      * @param Request $request
+     * @param LoggerInterface $logger
+     * @param ParticipantRepository $participantRepository
+     * @param EtatRepository $etatRepository
      * @return Response
-     *
      */
-    public function creerSortie(Request $request, LoggerInterface $logger)
-    {
-
+    public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface  $entityManager) {
         $sortie = new Sortie();
-
-        $em = $this->getDoctrine()->getManager();
 
         $userName = $this->getUser()->getUsername();
 
-        $user = $em->getRepository(Participant::class)->findOneByMail($userName);
+        $user = $participantRepository->findOneByMail($userName);
 
 
         $form = $this->createForm(SortieType::class, $sortie, array('user' => $user));
@@ -45,10 +53,10 @@ class SortieController extends AbstractController
 
             if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()->getName()) {
 
-                $etat = $em->getRepository(Etat::class)->findOneByLibelle('Créée');
+                $etat = $etatRepository->findOneByLibelle('Créée');
 
             } else {
-                $etat = $em->getRepository(Etat::class)->findOneByLibelle('Ouverte');
+                $etat = $etatRepository->findOneByLibelle('Ouverte');
             }
 
             $sortie->setEtat($etat);
@@ -61,8 +69,8 @@ class SortieController extends AbstractController
                 $logger->error($e);
             }
 
-            $em->persist($sortie);
-            $em->flush();
+            $entityManager->persist($sortie);
+            $entityManager->flush();
             return $this->render('default/home.html.twig');
         }
 
@@ -75,23 +83,19 @@ class SortieController extends AbstractController
 
     /**
      *
-     * @Route("/sortie/edit/{id}",
-     *     name="edit_sortie",
-     *     requirements={"id": "\d+"})
+     * @Route("/edit/{id}", name="sortie_edit", requirements={"id": "\d+"})
      * @param Request $request
      * @param Sortie $sortie
+     * @param LoggerInterface $logger
+     * @param ParticipantRepository $participantRepository
+     * @param EtatRepository $etatRepository
      * @return Response
-     *
      */
-    public function editSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
-    {
-
-
-        $em = $this->getDoctrine()->getManager();
+    public function edit(Request $request, Sortie $sortie, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager) {
 
         $userName = $this->getUser()->getUsername();
 
-        $user = $em->getRepository(Participant::class)->findOneByMail($userName);
+        $user = $participantRepository->findOneByMail($userName);
 
 
         //TODO check si sortie est editable (date,etat)
@@ -106,10 +110,10 @@ class SortieController extends AbstractController
 
             if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()->getName()) {
 
-                $etat = $em->getRepository(Etat::class)->findOneByLibelle('Créée');
+                $etat = $etatRepository->findOneByLibelle('Créée');
 
             } else {
-                $etat = $em->getRepository(Etat::class)->findOneByLibelle('Ouverte');
+                $etat = $etatRepository->findOneByLibelle('Ouverte');
             }
 
             $sortie->setEtat($etat);
@@ -122,8 +126,8 @@ class SortieController extends AbstractController
                 $logger->error($e);
             }
 
-            $em->persist($sortie);
-            $em->flush();
+            $entityManager->persist($sortie);
+            $entityManager->flush();
             return $this->render('default/home.html.twig');
         }
 
