@@ -22,11 +22,11 @@ class ParticipantController extends AbstractController
      * @param ParticipantRepository $repo
      * @return Response
      */
-    public function show($id,ParticipantRepository $repo)
+    public function show($id, ParticipantRepository $repo)
     {
         $participant = $repo->find($id);
 
-        if(empty($participant)) {
+        if (empty($participant)) {
             throw $this->createNotFoundException("Participant non trouvé");
         }
 
@@ -44,15 +44,16 @@ class ParticipantController extends AbstractController
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return Response
      */
-    public function edit($id, Request $request, EntityManagerInterface $entityManager, ParticipantRepository $repo, UserPasswordEncoderInterface $passwordEncoder) {
+    public function edit($id, Request $request, EntityManagerInterface $entityManager, ParticipantRepository $repo, UserPasswordEncoderInterface $passwordEncoder)
+    {
 
         $participant = $repo->find($id);
 
-        if(empty($participant)) {
+        if (empty($participant)) {
             throw $this->createNotFoundException("Participant non trouvé");
         }
 
-        if($participant->getMail() != $this->getUser()->getUsername()) {
+        if ($participant->getMail() != $this->getUser()->getUsername()) {
             throw $this->createAccessDeniedException("Vous n'avez pas le droit de modifier le profil d'un autre participant.");
         }
 
@@ -68,11 +69,10 @@ class ParticipantController extends AbstractController
 
                 $plainPassword = $formParticipant->get('motPasse')->getData();
 
-                if (!empty(trim($plainPassword)))  {
+                if (!empty(trim($plainPassword))) {
                     $password = $passwordEncoder->encodePassword($participant, $participant->getPassword());
                     $participant->setMotPasse($password);
-                }
-                else {
+                } else {
                     $participant->setMotPasse($originalPassword);
                 }
 
@@ -84,13 +84,14 @@ class ParticipantController extends AbstractController
                 $this->addFlash("error", $exception->getMessage());
             }
 
-            return $this->redirectToRoute('participant_edit',[
+            return $this->redirectToRoute('participant_edit', [
                 'id' => $participant->getId()
             ]);
         }
 
         return $this->render('participant/edit.html.twig', [
-            'formParticipant' => $formParticipant->createView()
+            'formParticipant' => $formParticipant->createView(),
+            'isAdmin' => false
         ]);
     }
 }
