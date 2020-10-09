@@ -91,17 +91,30 @@ class AdminController extends AbstractController
      * @Route("/utilisateurs/import", name="app_admin_import_users")
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @throws Exception
+     * @return RedirectResponse
      */
     public function importUsers(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         try {
+            if ($_FILES["csvFile"]["size"] === 0) {
+                $this->addFlash("danger", 'Veuillez choisir un fichier (.csv)!');
+
+                return $this->redirectToRoute("app_admin_utilisateurs");
+            }
+
             $campusRepository = $this->getDoctrine()->getRepository(Campus::class);
+            $participantRepository = $this->getDoctrine()->getRepository(Participant::class);
 
             move_uploaded_file($_FILES["csvFile"]["tmp_name"], "import/" . $_FILES["csvFile"]["name"]);
             $users = fopen("import/" . $_FILES["csvFile"]["name"], 'r');
 
             while (($user = fgetcsv($users)) !== FALSE) {
+                if (null !== $participantRepository->findOneBy(["mail" => $user[1]])) {
+                    $this->addFlash("danger", 'Veuillez vérifier les informations utilisateurs!');
+
+                    return $this->redirectToRoute("app_admin_utilisateurs");
+                }
+
                 $participant = new Participant();
                 $participant->setPseudo($user[0]);
                 $participant->setMail($user[1]);
