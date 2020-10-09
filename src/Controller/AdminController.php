@@ -2,18 +2,16 @@
 
 namespace App\Controller;
 
-use App\Repository\ParticipantRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use App\Entity\Campus;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
-use DateTime;
+use App\Repository\ParticipantRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -33,7 +31,7 @@ class AdminController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function listUtilisateurs(ParticipantRepository $repo, PaginatorInterface $paginator,Request $request)
+    public function listUtilisateurs(ParticipantRepository $repo, PaginatorInterface $paginator, Request $request)
     {
         $query = $repo->getUtilisateursWithCampus();
 
@@ -103,7 +101,7 @@ class AdminController extends AbstractController
      */
     public function delete($id, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager)
     {
-        if(!is_numeric($id)) {
+        if (!is_numeric($id)) {
             throw $this->createNotFoundException("Paramètre invalide.");
         }
 

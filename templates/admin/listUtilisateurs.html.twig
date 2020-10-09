@@ -2,9 +2,9 @@
 
 
 {% block body %}
-    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn grey lighten-2 btn-md mt-4">Ajouter un utilisateur</a>
-    <button data-toggle="modal" data-target="#importUsers" class="btn grey lighten-2 btn-md mt-4">Importer des
-        utilisateur
+    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn grey lighten-2 btn-md mt-2">Ajouter un utilisateur</a>
+    <button data-toggle="modal" data-target="#importUsers" class="btn grey lighten-2 btn-md mt-2">Importer des
+        utilisateurs
     </button>
 
     <div class="modal fade" id="importUsers" tabindex="-1" role="dialog"
@@ -37,7 +37,7 @@
 
     <table class="table">
     {# total items count #}
-    <div class="count mb-3">
+    <div class="count mt-3  mb-3 flex row justify-content-end mr-5">
         <h5 class="text-primary"> Total : {{ participants.getTotalItemCount }} </h5>
     </div>
     <table class="table" id="participantsTable">
@@ -80,32 +80,6 @@
         </tbody>
     </table>
 
-    <style>
-        /* styles de base si JS est activé */
-        .input-file-container {
-            position: relative;
-        }
-
-        .input-file-trigger {
-            display: block;
-            padding: 14px 45px;
-            background: #4285F4;
-            color: #fff;
-            font-size: 1em;
-            transition: all .4s;
-            cursor: pointer;
-        }
-
-        .input-file {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 225px;
-            padding: 14px 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-    </style>
     <div class="navigation">
         {{ knp_pagination_render(participants) }}
     </div>
@@ -138,6 +112,33 @@
         </div>
     </div>
     <!--Modal: modalConfirmDelete-->
+
+        <style>
+            /* styles de base si JS est activé */
+            .input-file-container {
+                position: relative;
+            }
+
+            .input-file-trigger {
+                display: block;
+                padding: 14px 45px;
+                background: #4285F4;
+                color: #fff;
+                font-size: 1em;
+                transition: all .4s;
+                cursor: pointer;
+            }
+
+            .input-file {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 225px;
+                padding: 14px 0;
+                opacity: 0;
+                cursor: pointer;
+            }
+        </style>
 {% endblock %}
 
 {% block javascripts %}
