@@ -18,10 +18,13 @@
 
                         <!-- Avatar -->
                         <div class="avatar mx-auto white">
-                            {% if app.user.imageName %}
-                                <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~app.user.imageName) }}" alt="{{ app.user.imageName }}"/>
+                            {% if app.user.imageName and isAdmin == false %}
+                                <img class="rounded-circle z-depth-0"
+                                     src="{{ asset('image/participants/'~app.user.imageName) }}"
+                                     alt="{{ app.user.imageName }}"/>
                             {% else %}
-                                <img src="{{ asset('image/participants/empty_picture.png') }}" class="rounded-circle z-depth-0"
+                                <img src="{{ asset('image/participants/empty_picture.png') }}"
+                                     class="rounded-circle z-depth-0"
                                      alt="avatar image">
                             {% endif %}
                         </div>
@@ -171,12 +174,26 @@
                     </div>
                 </div>
 
+                <!-- Administrateur -->
+                {% if isAdmin == true %}
+                    <div class="md-form">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="isAdmin" name="isAdmin" value="true">
+                            <label class="form-check-label" for="isAdmin">Administrateur</label>
+                        </div>
+                    </div>
+                {% endif %}
+
                 <div class="form-row mb-4 flex justify-content-center">
                     <div class="col-sm-2 mr-5">
-                        <button class="btn btn-primary btn-rounded waves-effect my-4 btn-block" type="submit">Enregistrer</button>
+                        <button class="btn btn-primary btn-rounded waves-effect my-4 btn-block" type="submit">
+                            Enregistrer
+                        </button>
                     </div>
                     <div class="col-sm-2">
-                        <button class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button" onclick="history.go(-1)">Annuler</button>
+                        <button class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
+                                onclick="history.go(-1)">Annuler
+                        </button>
                     </div>
                 </div>
 

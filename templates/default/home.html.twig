@@ -92,9 +92,15 @@
         </thead>
     </table>
     <button class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Créer une sortie</button>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
 
     <script>
-        $(document).ready(function(){
+            $(document).ready(function(){
+
             $('.mdb-select').materialSelect();
             $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
                 $(this).closest('.select-outline').find('label').toggleClass('active');
@@ -136,7 +142,4 @@
             });
         });
     </script>
-
-
-
 {% endblock %}

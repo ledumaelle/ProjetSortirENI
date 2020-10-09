@@ -51,7 +51,6 @@ class ParticipantRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->innerJoin('p.campus', 'c')
             ->addSelect('c')
-            ->getQuery()
-            ->execute();
+            ->getQuery();
     }
 }
