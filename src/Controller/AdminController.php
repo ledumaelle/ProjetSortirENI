@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Participant;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,13 +21,20 @@ class AdminController extends AbstractController
 {
     /**
      * @Route("/utilisateurs", name="app_admin_utilisateurs")
+     * @param ParticipantRepository $repo
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @return Response
      */
-    public function listUtilisateurs()
+    public function listUtilisateurs(ParticipantRepository $repo, PaginatorInterface $paginator,Request $request)
     {
-        $participantRepository = $this->getDoctrine()->getRepository(Participant::class);
+        $query = $repo->getUtilisateursWithCampus();
 
-        $participants = $participantRepository->getUtilisateursWithCampus();
+        $participants = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            4 /*limit per page*/
+        );
 
         return $this->render('admin/listUtilisateurs.html.twig', [
             'participants' => $participants
@@ -44,7 +52,7 @@ class AdminController extends AbstractController
     {
         $participant = $participantRepository->find($id);
 
-        if(empty($participant)) {
+        if (empty($participant)) {
             throw $this->createNotFoundException("Participant non trouvé");
         }
 
@@ -52,7 +60,7 @@ class AdminController extends AbstractController
         $entityManager->persist($participant);
         $entityManager->flush();
 
-        $this->addFlash("success","L'utilisateur a bien été désactivé temporairement ! ");
+        $this->addFlash("success", "L'utilisateur a bien été désactivé temporairement ! ");
         return $this->redirectToRoute("app_admin_utilisateurs");
     }
 
@@ -67,7 +75,7 @@ class AdminController extends AbstractController
     {
         $participant = $participantRepository->find($id);
 
-        if(empty($participant)) {
+        if (empty($participant)) {
             throw $this->createNotFoundException("Participant non trouvé");
         }
 
@@ -75,12 +83,12 @@ class AdminController extends AbstractController
         $entityManager->persist($participant);
         $entityManager->flush();
 
-        $this->addFlash("success","L'utilisateur a bien été réactivé ! ");
+        $this->addFlash("success", "L'utilisateur a bien été réactivé ! ");
         return $this->redirectToRoute("app_admin_utilisateurs");
     }
 
     /**
-     * @Route("/utilisateur/{id}/delete", name="app_admin_utilisateur_delete", requirements={"id": "\d+"})
+     * @Route("/utilisateur/{id}/delete", name="app_admin_utilisateur_delete")
      * @param $id
      * @param ParticipantRepository $participantRepository
      * @param EntityManagerInterface $entityManager
@@ -88,16 +96,20 @@ class AdminController extends AbstractController
      */
     public function delete($id, ParticipantRepository $participantRepository, EntityManagerInterface $entityManager)
     {
+        if(!is_numeric($id)) {
+            throw $this->createNotFoundException("Paramètre invalide.");
+        }
+
         $participant = $participantRepository->find($id);
 
-        if(empty($participant)) {
+        if (empty($participant)) {
             throw $this->createNotFoundException("Participant non trouvé");
         }
 
         $entityManager->remove($participant);
         $entityManager->flush();
 
-        $this->addFlash("success","L'utilisateur a bien été supprimé ! ");
+        $this->addFlash("success", "L'utilisateur a bien été supprimé ! ");
         return $this->redirectToRoute("app_admin_utilisateurs");
     }
 }
