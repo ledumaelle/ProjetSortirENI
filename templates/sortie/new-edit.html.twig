@@ -14,7 +14,30 @@
 
 
 <div class="card-body">
-    {{ form(form) }}
+    {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        {{ form_row(form.nom) }}
+        {{ form_row(form.dateHeureDebut) }}
+        {{ form_row(form.dateLimiteInscription) }}
+        {{ form_row(form.duree) }}
+        {{ form_row(form.nbInscriptionsMax) }}
+        {{ form_row(form.infosSortie) }}
+        <div class="form-control mb-4">
+            {{ form_widget(form.isprivate) }}
+            {{ form_label(form.isprivate) }}
+        </div>
+
+        {{ form_row(form.siteOrganisateur) }}
+        {{ form_row(form.ville) }}
+        {{ form_row(form.lieu) }}
+        <div class=" mb-4">
+            {{ form_widget(form.Enregistrer) }}
+            {{ form_widget(form.Publier) }}
+        </div>
+
+    {{ form_end(form) }}
 </div>
 
 

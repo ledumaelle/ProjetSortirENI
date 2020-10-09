@@ -55,6 +55,8 @@ class SortieType extends AbstractType
                 ],
                 'widget'=>'single_text',
                 'label' => 'Date et heure de la sortie',
+
+
                 'data' => new DateTime("now")
             ])->add('dateLimiteInscription',DateType::class,[
             'attr' => [
@@ -84,14 +86,17 @@ class SortieType extends AbstractType
             'label' => false
 
         ])->add('isprivate',CheckboxType::class,[
-          'label'=>'Sortie privé',
-            
-        ])->add('campus',EntityType::class,[
+            'label'=>'Sortie privé',
+            'label_attr'=>['class'=>'form-check-label '],
+            'row_attr' => ['class' => 'form-check mb-4'],
+            'attr'=>['class'=>'form-check-input'],
+            'required'=>false
+
+        ])->add('siteOrganisateur',EntityType::class,[
                 'class' => Campus::class,
                 'choice_label' => 'nom',
+                'label' => 'Campus',
                 'required' => true,
-
-                'mapped'=>false,
                 'disabled'=>true,
                 'attr' => [
                     'class' => 'browser-default custom-select mb-4'
@@ -106,6 +111,7 @@ class SortieType extends AbstractType
             'required' => true,
             'label' => false,
             'mapped'=>false,
+            'required'=>false,
             'attr' => [
                 'class' => 'browser-default custom-select mb-4',
 
@@ -133,7 +139,11 @@ class SortieType extends AbstractType
                         return $er->createQueryBuilder('c')
                         ->orderBy('c.nom',"ASC");
                     }
-                ])->add('Enregistrer',SubmitType::class);
+                ])->add('Enregistrer',SubmitType::class,[
+                    'attr'=>['class'=>'btn btn-primary btn-rounded waves-effect waves-light']
+                ])->add('Publier',SubmitType::class,[
+                    'attr'=>['class'=>'btn btn-primary btn-rounded waves-effect waves-light']
+                ]);
             }else{
                 $form->add('lieu',EntityType::class,[
                     'class' => Lieu::class,
@@ -149,7 +159,11 @@ class SortieType extends AbstractType
                         return $er->createQueryBuilder('c')->where('c.ville=?1')->setParameters(array(1=>$ville))
                         ->orderBy('c.nom',"ASC");
                     }
-                ])->add('Enregistrer',SubmitType::class);
+                ])->add('Enregistrer',SubmitType::class,[
+                    'attr'=>['class'=>'btn btn-primary btn-rounded waves-effect waves-light']
+                ])->add('Publier',SubmitType::class,[
+                'attr'=>['class'=>'btn btn-primary btn-rounded waves-effect waves-light']
+                ]);
             }
 
         };
