@@ -94,6 +94,11 @@ class Sortie
      */
     private $dateModified;
 
+
+
+    private $ville;
+
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -235,6 +240,26 @@ class Sortie
 
         return $this;
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getVille()
+    {
+        return $this->ville;
+    }
+
+    /**
+     * @param mixed $ville
+     */
+    public function setVille($ville): void
+    {
+        $this->ville = $ville;
+    }
+
+
+
 
     /**
      * @return Collection|Participant[]
