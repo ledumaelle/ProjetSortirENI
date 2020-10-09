@@ -24,11 +24,11 @@
                 </div>
 
 
-                    <div class="md-form">
-                        <i class="fas fa-search prefix"></i>
-                        <input type="text" id="searchSortie" class="form-control">
-                        <label for="searchSortie">Rechercher une sortie</label>
-                    </div>
+                <div class="md-form">
+                    <i class="fas fa-search prefix"></i>
+                    <input type="text" id="searchSortie" class="form-control">
+                    <label for="searchSortie">Rechercher une sortie</label>
+                </div>
 
                 <div class="row">
                     <div class="col-md-6">
@@ -58,26 +58,26 @@
             </div>
             <div class="col-md-6">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="inscritAdmin" >
+                    <input type="checkbox" class="form-check-input" id="inscritAdmin">
                     <label class="form-check-label" for="inscritAdmin">Sorties dont je suis l'organisateur</label>
                 </div>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="inscritKO" >
+                    <input type="checkbox" class="form-check-input" id="inscritKO">
                     <label class="form-check-label" for="inscritKO">Sorties auxquelles je suis inscrit/e</label>
                 </div>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="inscritOk" >
+                    <input type="checkbox" class="form-check-input" id="inscritOk">
                     <label class="form-check-label" for="inscritOk">Sorties auxquelles je ne suis pas inscrit/e</label>
                 </div>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="sortieEnd" >
+                    <input type="checkbox" class="form-check-input" id="sortieEnd">
                     <label class="form-check-label" for="sortieEnd">Sorties passées</label>
                 </div>
 
             </div>
         </div>
     </div>
-    <table id="sorties_data" class="table table-striped table-bordered "  width="100%">
+    <table id="sorties_data" class="table table-striped table-bordered " width="100%">
         <thead class="blue lighten-4">
         <tr>
             <th class='th-sm center'>Nom de la sortie</th>
@@ -91,7 +91,8 @@
         </tr>
         </thead>
     </table>
-    <button class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Créer une sortie</button>
+    <a href="{{ path('app_sortie_creer') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Créer
+        une sortie</a>
 {% endblock %}
 
 
@@ -99,7 +100,7 @@
     {{ parent() }}
 
     <script>
-            $(document).ready(function(){
+        $(document).ready(function () {
 
             $('.mdb-select').materialSelect();
             $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
@@ -111,23 +112,23 @@
                 "columnDefs": [
 
                     // These are the column name variables that will be sent to the server
-                    { "name": "nameSortie",   "targets": 0 },
-                    { "name": "dateSortie",   "targets": 1 },
-                    { "name": "cloture",  "targets": 2 },
-                    { "name": "nbinscrit",  "targets": 3 },
-                    { "name": "etat",  "targets": 4 },
-                    { "name": "inscrit",  "targets": 5 },
-                    { "name": "organisateur",  "targets": 6 },
-                    { "name": "actions",  "targets": 7 },
+                    {"name": "nameSortie", "targets": 0},
+                    {"name": "dateSortie", "targets": 1},
+                    {"name": "cloture", "targets": 2},
+                    {"name": "nbinscrit", "targets": 3},
+                    {"name": "etat", "targets": 4},
+                    {"name": "inscrit", "targets": 5},
+                    {"name": "organisateur", "targets": 6},
+                    {"name": "actions", "targets": 7},
                 ],
-                "order" : [],
+                "order": [],
                 "processing": true,
                 "serverSide": true,
                 "paging": false, // false to disable sorting (or any other option)
                 "searching": true,
                 "scrollY": "250vh",
                 "scrollCollapse": true,
-                "drawCallback" : function( settings ) {
+                "drawCallback": function (settings) {
                     gestion_tab();
                 },
                 "language": {

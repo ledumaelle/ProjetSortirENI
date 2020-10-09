@@ -19,39 +19,35 @@ class SortieController extends AbstractController
 
     /**
      *
-     * @Route("/sortie/creer")
+     * @Route("/sortie/creer", name="app_sortie_creer")
      * @param Request $request
      * @return Response
      *
      */
-    public function creerSortie(Request $request,LoggerInterface $logger){
+    public function creerSortie(Request $request, LoggerInterface $logger)
+    {
 
-        $sortie= new Sortie();
+        $sortie = new Sortie();
 
-        $em=$this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
 
-        $userName=$this->getUser()->getUsername();
+        $userName = $this->getUser()->getUsername();
 
         $user = $em->getRepository(Participant::class)->findOneByMail($userName);
 
 
-
-
-
-
-
-        $form = $this->createForm(SortieType::class,$sortie,array('user'=>$user));
+        $form = $this->createForm(SortieType::class, $sortie, array('user' => $user));
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
 
-            if($form->getClickedButton() && 'Enregistrer'=== $form->getClickedButton()->getName()){
+            if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()->getName()) {
 
                 $etat = $em->getRepository(Etat::class)->findOneByLibelle('Créée');
 
-            }else{
+            } else {
                 $etat = $em->getRepository(Etat::class)->findOneByLibelle('Ouverte');
             }
 
@@ -71,12 +67,10 @@ class SortieController extends AbstractController
         }
 
 
-        return $this->render('sortie/new-edit.html.twig',[
-            'form'  =>$form->createView()
+        return $this->render('sortie/new-edit.html.twig', [
+            'form' => $form->createView()
         ]);
     }
-
-
 
 
     /**
@@ -89,13 +83,13 @@ class SortieController extends AbstractController
      * @return Response
      *
      */
-    public function editSortie(Request $request,Sortie $sortie,LoggerInterface $logger){
+    public function editSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
+    {
 
 
+        $em = $this->getDoctrine()->getManager();
 
-        $em=$this->getDoctrine()->getManager();
-
-        $userName=$this->getUser()->getUsername();
+        $userName = $this->getUser()->getUsername();
 
         $user = $em->getRepository(Participant::class)->findOneByMail($userName);
 
@@ -103,20 +97,18 @@ class SortieController extends AbstractController
         //TODO check si sortie est editable (date,etat)
 
 
-
-
-        $form = $this->createForm(SortieType::class,$sortie,array('user'=>$user));
+        $form = $this->createForm(SortieType::class, $sortie, array('user' => $user));
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
 
-            if($form->getClickedButton() && 'Enregistrer'=== $form->getClickedButton()->getName()){
+            if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()->getName()) {
 
                 $etat = $em->getRepository(Etat::class)->findOneByLibelle('Créée');
 
-            }else{
+            } else {
                 $etat = $em->getRepository(Etat::class)->findOneByLibelle('Ouverte');
             }
 
@@ -136,8 +128,8 @@ class SortieController extends AbstractController
         }
 
 
-        return $this->render('sortie/new-edit.html.twig',[
-            'form'  =>$form->createView()
+        return $this->render('sortie/new-edit.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
