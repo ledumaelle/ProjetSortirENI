@@ -7,10 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
@@ -18,7 +20,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @UniqueEntity("mail")
  * @Vich\Uploadable
  */
-class Participant implements UserInterface
+class Participant implements UserInterface,Serializable
 {
     /**
      * @ORM\Id
@@ -82,6 +84,7 @@ class Participant implements UserInterface
      * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="participant", orphanRemoval=true)
      */
     private $inscriptions;
+
 
     /**
      * @Vich\UploadableField(mapping="participant_images", fileNameProperty="imageName", size="imageSize")
@@ -339,38 +342,22 @@ class Participant implements UserInterface
         //PAS BESOIN
     }
 
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(?File $imageFile = null): void
-    {
-        $this->imageFile = $imageFile;
-
-        if (null !== $imageFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->setDateModified();
-        }
-    }
-
-    public function setImageName(?string $imageName): void
-    {
-        $this->imageName = $imageName;
-    }
-
-    public function getImageName(): ?string
+    public function getImageName()
     {
         return $this->imageName;
     }
 
-    public function setImageSize(?int $imageSize): void
+    public function setImageName($imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
+    public function setImageSize($imageSize): void
     {
         $this->imageSize = $imageSize;
     }
 
-    public function getImageSize(): ?int
+    public function getImageSize()
     {
         return $this->imageSize;
     }
@@ -407,5 +394,68 @@ class Participant implements UserInterface
     public function setDateModified()
     {
         $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+    }
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|UploadedFile|null $imageFile
+     * @throws Exception
+     */
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->setDateModified();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+
+    public function serialize() {
+        return serialize(array(
+            $this->id,
+            $this->nom,
+            $this->prenom,
+            $this->pseudo,
+            $this->mail,
+            $this->motPasse,
+            $this->imageName,
+            $this->imageSize,
+            $this->campus,
+            $this->administrateur,
+            $this->actif,
+            $this->dateModified,
+            $this->dateCreated
+        ));
+    }
+
+    public function unserialize($serialized) {
+        list (
+            $this->id,
+            $this->nom,
+            $this->prenom,
+            $this->pseudo,
+            $this->mail,
+            $this->motPasse,
+            $this->imageName,
+            $this->imageSize,
+            $this->campus,
+            $this->administrateur,
+            $this->actif,
+            $this->dateModified,
+            $this->dateCreated,
+            ) = unserialize($serialized);
     }
 }

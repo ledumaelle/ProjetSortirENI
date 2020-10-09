@@ -2,18 +2,31 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class AdminController
+ * @package App\Controller
+ *
+ * @Route("/admin")
+ */
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/utilisateurs", name="app_admin_utilisateurs")
+     * @return Response
      */
-    public function index()
+    public function listUtilisateurs()
     {
-        return $this->render('admin/home.html.twig', [
-            'controller_name' => 'AdminController',
+        $participantRepository = $this->getDoctrine()->getRepository(Participant::class);
+
+        $participants = $participantRepository->getUtilisateursWithCampus();
+
+        return $this->render('admin/listUtilisateurs.html.twig', [
+            'participants' => $participants
         ]);
     }
 }

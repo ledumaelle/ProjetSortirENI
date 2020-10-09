@@ -15,30 +15,36 @@
         <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         <!-- Material Design Bootstrap -->
         <link href="{{ asset('bootstrap/css/mdb.min.css') }}" rel="stylesheet">
+        <!-- Css perso -->
+        <link href="{{ asset('bootstrap/css/style.css') }}" rel="stylesheet">
     {% endblock %}
     {% block js %}
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     {% endblock %}
 </head>
 <body>
-    <header>
-        <!--Navbar -->
-        <nav class="mb-1 navbar navbar-expand-lg navbar-dark default-color">
-            <img src="{{ asset('image/favicon.png') }}" alt="Bucket-List" class="img-fluid mr-2" width="64px" height="64px">
-            <a class="navbar-brand" href="#">Sortir.com</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
-                    aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
-                <ul class="navbar-nav mr-auto">
-                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('app_homepage') }}" title="Sortir.com | Accueil">Accueil
-                                <span class="sr-only">(current)</span>
-                            </a>
+<header>
+    <!--Navbar -->
+    <nav class="mb-1 navbar navbar-expand-lg navbar-dark light-blue darken-4">
+        <img src="{{ asset('image/favicon.png') }}" alt="Bucket-List" class="img-fluid mr-2" width="64px" height="64px">
+        <a class="navbar-brand" href="#">Sortir.com</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
+                aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
+            <ul class="navbar-nav mr-auto">
+                {% if is_granted("ROLE_USER") %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_homepage') }}" title="Sortir.com | Accueil">Accueil
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_admin_utilisateurs') }}"
+                               title="Sortir.com | Utilisateur">Utilisateurs</a>
                         </li>
-                        {% if is_granted("ROLE_ADMIN") %}
                         <li class="nav-item">
                             <a class="nav-link" href="#" title="Sortir.com | Villes">Villes</a>
                         </li>
@@ -48,23 +54,30 @@
                         {% endif %}
                     {% endif %}
                 </ul>
-                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                <ul class="navbar-nav ml-auto nav-flex-icons">
+                {% if is_granted("ROLE_USER") %}
+                <ul class="navbar-nav ml-auto nav-flex-icons mr-3">
+                    <li class="nav-item mr-3">
+                        <span class="nav-link">
+                            {{ app.user.username }}
+                        </span>
+                    </li>
                     <li class="nav-item avatar dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             {% if app.user.imageName %}
                                 <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~app.user.imageName) }}" alt="{{ app.user.imageName }}"/>
                             {% else %}
-                                <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-2.jpg" class="rounded-circle z-depth-0"
+                                <img src="{{ asset('image/participants/empty_picture.png') }}" class="rounded-circle z-depth-0 white"
                                      alt="avatar image">
                             {% endif %}
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg-right dropdown-default"
+                        <div class="dropdown-menu dropdown-menu-lg-right dropdown-info"
                              aria-labelledby="navbarDropdownMenuLink-55">
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                                <a class="dropdown-item" href="{{ path('participant_edit', {id: app.user.id}) }}" title="Sortir.com | Mon profil">Mon profil</a>
-                                <a class="dropdown-item" href="{{ path('app_logout') }}" title="Sortir.com | Se déconnecter">Se déconnecter</a>
+                                <a class="dropdown-item" href="{{ path('participant_edit', {id: app.user.id}) }}"
+                                   title="Sortir.com | Mon profil">Mon profil</a>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}"
+                                   title="Sortir.com | Se déconnecter">Se déconnecter</a>
                             {% endif %}
                         </div>
                     </li>
@@ -76,27 +89,27 @@
     </header>
     <main>
 
-        {# read and display all flash messages #}
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="flash-{{ label }}">
-                    {{ message|raw }}
-                </div>
-            {% endfor %}
+    {# read and display all flash messages #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message|raw }}
+            </div>
         {% endfor %}
+    {% endfor %}
 
         <div class="container-fluid mt-5">
             {% block body %} {% endblock %}
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="page-footer font-small default-color fixed-bottom">
-        <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">&copy {{"now"|date("Y")}} Sortir.com</div>
-        <!-- Copyright -->
-    </footer>
-    <!-- Footer -->
+<!-- Footer -->
+<footer class="page-footer font-small light-blue darken-4 fixed-bottom">
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">&copy {{ "now"|date("Y") }} Sortir.com</div>
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
 
     {% block javascripts %}
         <!-- SCRIPTS -->

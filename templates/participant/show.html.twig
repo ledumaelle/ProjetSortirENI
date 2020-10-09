@@ -1,0 +1,100 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <!--Grid column-->
+            <div class="col-md-2 col-lg-2 mx-auto">
+                <!-- Section: Block Content -->
+                <section>
+                    <!-- Card -->
+                    <div class="card testimonial-card">
+
+                        <!-- Background color -->
+                        <div class="card-up warning-color-dark p-3 white-text">
+                            <p class="mb-0 font-weight-normal">{{ participant.pseudo }}</p>
+                        </div>
+
+                        <!-- Avatar -->
+                        <div class="avatar mx-auto white">
+                            {% if participant and participant.imageName %}
+                                <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~participant.imageName) }}" alt="{{ participant.imageName }}"/>
+                            {% else %}
+                                <img src="{{ asset('image/participants/empty_picture.png') }}" class="rounded-circle z-depth-0"
+                                     alt="avatar image">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Card -->
+
+                </section>
+                <!-- Section: Block Content -->
+            </div>
+            <!--Grid column-->
+            <div class="col-md-8 col-lg-8 mx-auto">
+
+                <!-- Form -->
+                <form class="text-center disabled" style="color: #757575;" action="#!">
+
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Nom -->
+                            <div class="md-form">
+                                <input type="text" id="materialRegisterFormFirstName" class="form-control" value="{{ participant.nom }}">
+                                <label for="materialRegisterFormFirstName">Nom</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Prénom -->
+                            <div class="md-form">
+                                <input type="email" id="materialRegisterFormLastName" class="form-control" value="{{ participant.prenom }}">
+                                <label for="materialRegisterFormLastName">Prénom</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Pseudo -->
+                            <div class="md-form mt-0">
+                                <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.pseudo }}">
+                                <label for="materialRegisterFormEmail">Pseudo</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Mail -->
+                            <div class="md-form mt-0">
+                                <input type="email" id="materialRegisterFormEmail" class="form-control" value="{{ participant.mail }}">
+                                <label for="materialRegisterFormEmail">Mail</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Téléphone -->
+                    <div class="md-form mt-0">
+                        <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.telephone }}">
+                        <label for="materialRegisterFormEmail">Téléphone</label>
+                    </div>
+
+                    <!-- Campus -->
+                    <div class="md-form mt-0">
+                        <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.campus.nom }}">
+                        <label for="materialRegisterFormEmail">Campus</label>
+                    </div>
+
+                </form>
+                <!-- Form -->
+
+                <div class="row d-flex">
+                    <div class="col-sm-4">
+                        <button class="btn btn-outline-default btn-rounded waves-effect my-4 btn-block" type="button" onclick="history.go(-1)">Retour</button>
+                    </div>
+                </div>
+
+            </div>
+            <!--Grid column-->
+        </div>
+    </div>
+{% endblock %}
+
