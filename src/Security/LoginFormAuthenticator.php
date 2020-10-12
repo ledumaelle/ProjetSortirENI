@@ -97,11 +97,17 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
+        /** @var Participant $user */
         $user = $this->entityManager->getRepository(Participant::class)->findOneBy(['mail' => $credentials['mail']]);
 
         if (!$user) {
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Mail could not be found.');
+        }
+
+        //Si le user a été ban !
+        if(!$user->getActif()) {
+            throw new CustomUserMessageAuthenticationException('Votre compte a été ban temporairement. Contactez un admin ou revenez plus tard.');
         }
 
         return $user;

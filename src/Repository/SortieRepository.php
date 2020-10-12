@@ -36,15 +36,18 @@ class SortieRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Sortie
+    public function getSorties()
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->leftJoin('s.organisateur','organisateur')
+            ->addSelect('organisateur')
+            ->leftJoin('s.siteOrganisateur','site_organisateur')
+            ->addSelect('site_organisateur')
+            ->leftJoin('s.etat','etat')
+            ->addSelect('etat')
+            ->leftJoin('s.lieu','lieu')
+            ->addSelect('lieu')
+            ->getQuery();
     }
-    */
+
 }
