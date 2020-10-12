@@ -80,7 +80,8 @@
     {# total items count #}
     <div class="row flex mb-3">
         <div class="justify-content-start col-md-10">
-            <a href="{{ path('sortie_create') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Créer une sortie</a>
+            <a href="{{ path('sortie_create') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i>
+                Créer une sortie</a>
         </div>
         <div class="count col-md-2 text-right">
             <h5 class="text-primary"> Total : {{ sorties.getTotalItemCount }} </h5>
@@ -105,15 +106,31 @@
                 <th scope="row">{{ sortie.nom }}</th>
                 <th>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date("d-m-Y")  : sortie.dateHeureDebut|date("d-m-Y") }}</th>
                 <th>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date("d-m-Y")  : sortie.dateLimiteInscription|date("d-m-Y") }}</th>
-                <th> à définir / {{ sortie.nbInscriptionsMax }}</th>
+                <th> {{ sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}</th>
                 <th>{{ sortie.etat.libelle }}</th>
-                <th> à définir </th>
+                <th> à définir</th>
                 <th>
-                    <a href="{{ path('participant_show', {id: sortie.organisateur.id }) }}" class="text-secondary material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Afficher le profil">
+                    <a href="{{ path('participant_show', {id: sortie.organisateur.id }) }}"
+                       class="text-secondary material-tooltip-main" data-toggle="tooltip" data-placement="top"
+                       title="Afficher le profil">
                         {{ sortie.organisateur.pseudo }}
                     </a>
                 </th>
-                <th> à définir </th>
+                <th>
+                    {% if date(sortie.dateLimiteInscription) >= date() %}
+                        {% if sortie.inscriptions|filter(insc => insc.participant.id == app.user.id)|length == 0 %}
+                            <a href="{{ path('inscrit_sortie', {'id': sortie.id}) }}" data-toggle="tooltip"
+                               title="S'inscrire">
+                                <i class="far fa-bookmark"></i>
+                            </a>
+                        {% else %}
+                            <a href="{{ path('desiste_sortie', {'id': sortie.id}) }}" data-toggle="tooltip"
+                               title="Se désinscrire">
+                                <i class="fas fa-bookmark"></i>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </th>
             </tr>
         {% endfor %}
         </tbody>

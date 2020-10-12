@@ -39,13 +39,15 @@ class SortieRepository extends ServiceEntityRepository
     public function getSorties()
     {
         return $this->createQueryBuilder('s')
-            ->leftJoin('s.organisateur','organisateur')
+            ->leftJoin('s.organisateur', 'organisateur')
             ->addSelect('organisateur')
-            ->leftJoin('s.siteOrganisateur','site_organisateur')
+            ->leftJoin('s.siteOrganisateur', 'site_organisateur')
             ->addSelect('site_organisateur')
-            ->leftJoin('s.etat','etat')
+            ->leftJoin('s.etat', 'etat')
             ->addSelect('etat')
-            ->leftJoin('s.lieu','lieu')
+            ->leftJoin('s.lieu', 'lieu')
+            ->leftJoin('s.inscriptions', 'inscrits')
+            ->addSelect('inscrits')
             ->addSelect('lieu')
             ->getQuery();
     }
