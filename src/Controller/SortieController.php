@@ -90,23 +90,20 @@ class SortieController extends AbstractController
 
     /**
      *
-     * @Route("/edit/{id}", name="sortie_edit", requirements={"id": "\d+"})
-     * @param Request $request
-     * @param Sortie $sortie
-     * @param LoggerInterface $logger
-     * @param ParticipantRepository $participantRepository
-     * @param EtatRepository $etatRepository
-     * @return Response
+     * L'edition ne fait pas parti des feature demander actuelement
      *
      */
     public function edit(Request $request, Sortie $sortie, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager) {
 
+
+
+        /*
         $userName = $this->getUser()->getUsername();
 
         $user = $participantRepository->findOneByMail($userName);
 
 
-        //TODO check si sortie est editable (date,etat)
+
 
 
         $form = $this->createForm(SortieType::class, $sortie, array('user' => $user));
@@ -142,7 +139,7 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/new-edit.html.twig', [
             'form' => $form->createView()
-        ]);
+        ]);*/
     }
 
     /**
