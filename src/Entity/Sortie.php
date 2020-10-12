@@ -269,7 +269,7 @@ class Sortie
 
 
     /**
-     * @return Collection|Participant[]
+     * @return Collection|Inscription[]
      */
     public function getInscriptions(): Collection
     {

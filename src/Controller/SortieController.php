@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Etat;
+use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SortieType;
@@ -13,11 +14,13 @@ use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * Class SortieController
@@ -27,6 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SortieController extends AbstractController
 {
+
     /**
      *
      * @Route("/create", name="sortie_create")
@@ -35,9 +39,12 @@ class SortieController extends AbstractController
      * @param ParticipantRepository $participantRepository
      * @param EtatRepository $etatRepository
      * @return Response
+     *
      */
     public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface  $entityManager) {
         $sortie = new Sortie();
+
+        $em = $this->getDoctrine()->getManager();
 
         $userName = $this->getUser()->getUsername();
 
@@ -83,22 +90,20 @@ class SortieController extends AbstractController
 
     /**
      *
-     * @Route("/edit/{id}", name="sortie_edit", requirements={"id": "\d+"})
-     * @param Request $request
-     * @param Sortie $sortie
-     * @param LoggerInterface $logger
-     * @param ParticipantRepository $participantRepository
-     * @param EtatRepository $etatRepository
-     * @return Response
+     * L'edition ne fait pas parti des feature demander actuelement
+     *
      */
     public function edit(Request $request, Sortie $sortie, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager) {
 
+
+
+        /*
         $userName = $this->getUser()->getUsername();
 
         $user = $participantRepository->findOneByMail($userName);
 
 
-        //TODO check si sortie est editable (date,etat)
+
 
 
         $form = $this->createForm(SortieType::class, $sortie, array('user' => $user));
@@ -134,8 +139,122 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/new-edit.html.twig', [
             'form' => $form->createView()
-        ]);
+        ]);*/
     }
+
+    /**
+     *
+     * @Route("/inscription/{id}",
+     *     name="inscrit_sortie",
+     *     requirements={"id": "\d+"})
+     * @param Request $request
+     * @param Sortie $sortie
+     * @return Response
+     *
+     */
+    public function inscriptionSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $userName = $this->getUser()->getUsername();
+
+        $user = $em->getRepository(Participant::class)->findOneByMail($userName);
+
+
+        foreach($sortie->getInscriptions() as $inscription){
+
+            if($inscription->getParticipant()==$user) {
+
+
+                return $this->render('sortie/confirmation.html.twig', [
+                    'message' => 'vous etes deja inscrit pour cette sortie',
+                    'class'=>'alert alert-warning'
+                ]);
+            }
+
+        }
+
+
+        $newInscription = new Inscription();
+
+
+        $newInscription->setDateCreated();
+        $newInscription->setDateInscription(new DateTime());
+        $newInscription->setParticipant($user);
+
+        $sortie->addInscription($newInscription);
+
+        $em->persist($sortie);
+        $em->persist($newInscription);
+        $em->flush();
+
+        return $this->render('sortie/confirmation.html.twig',[
+            'message'=>'votre inscription a bien etait prise en compte',
+            'class'=>'alert alert-success'
+        ]);
+
+
+
+
+
+
+
+    }
+
+
+    /**
+     *
+     * @Route("/desiste/{id}",
+     *     name="desiste_sortie",
+     *     requirements={"id": "\d+"})
+     * @param Request $request
+     * @param Sortie $sortie
+     * @return Response
+     *
+     */
+    public function desisteSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $userName = $this->getUser()->getUsername();
+
+        $user = $em->getRepository(Participant::class)->findOneByMail($userName);
+
+
+        foreach($sortie->getInscriptions() as $inscription){
+
+            if($inscription->getParticipant()==$user) {
+
+
+
+
+                $sortie->removeInscription($inscription);
+
+                $em->persist($sortie);
+                $em->persist($inscription);
+                $em->flush();
+
+                return $this->render('sortie/confirmation.html.twig',[
+                    'message'=>'votre désistement a bien etait prise en compte',
+                    'class'=>'alert alert-success'
+                ]);
+
+            }
+
+        }
+
+        return $this->render('sortie/confirmation.html.twig', [
+            'message' => 'vous n\'etes pas inscrit pour cette sortie',
+            'class'=>'alert alert-warning'
+        ]);
+
+
+
+
+    }
+
+
+
 
 }
 
