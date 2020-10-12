@@ -198,6 +198,10 @@ class Participant implements UserInterface,Serializable
         return $this;
     }
 
+    public function isAdmin(){
+        return $this->administrateur;
+    }
+
     public function getAdministrateur(): ?bool
     {
         return $this->administrateur;

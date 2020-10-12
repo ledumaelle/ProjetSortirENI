@@ -44,7 +44,7 @@ class SortieController extends AbstractController
     public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface  $entityManager) {
         $sortie = new Sortie();
 
-        $em = $this->getDoctrine()->getManager();
+        
 
         $userName = $this->getUser()->getUsername();
 
@@ -78,7 +78,15 @@ class SortieController extends AbstractController
 
             $entityManager->persist($sortie);
             $entityManager->flush();
-            return $this->render('default/home.html.twig');
+            //TODO redirect
+
+
+            return $this->render('sortie/confirmation.html.twig',[
+                'message'=>'votre sortie a bien était créer',
+                'class'=>'alert alert-success'
+            ]);
+
+
         }
 
 
@@ -149,16 +157,17 @@ class SortieController extends AbstractController
      *     requirements={"id": "\d+"})
      * @param Request $request
      * @param Sortie $sortie
+     * @param ParticipantRepository $participantRepo
      * @return Response
      *
      */
-    public function inscriptionSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
+    public function inscriptionSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo,EntityManagerInterface  $entityManager)
     {
-        $em = $this->getDoctrine()->getManager();
+
 
         $userName = $this->getUser()->getUsername();
 
-        $user = $em->getRepository(Participant::class)->findOneByMail($userName);
+        $user = $participantRepo->findOneByMail($userName);
 
 
         foreach($sortie->getInscriptions() as $inscription){
@@ -184,9 +193,9 @@ class SortieController extends AbstractController
 
         $sortie->addInscription($newInscription);
 
-        $em->persist($sortie);
-        $em->persist($newInscription);
-        $em->flush();
+        $entityManager->persist($sortie);
+        $entityManager->persist($newInscription);
+        $entityManager->flush();
 
         return $this->render('sortie/confirmation.html.twig',[
             'message'=>'votre inscription a bien etait prise en compte',
@@ -209,16 +218,17 @@ class SortieController extends AbstractController
      *     requirements={"id": "\d+"})
      * @param Request $request
      * @param Sortie $sortie
+     * @param ParticipantRepository $participantRepo
      * @return Response
      *
      */
-    public function desisteSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
+    public function desisteSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo,EntityManagerInterface  $entityManager)
     {
-        $em = $this->getDoctrine()->getManager();
+
 
         $userName = $this->getUser()->getUsername();
 
-        $user = $em->getRepository(Participant::class)->findOneByMail($userName);
+        $user = $participantRepo->findOneByMail($userName);
 
 
         foreach($sortie->getInscriptions() as $inscription){
@@ -230,9 +240,9 @@ class SortieController extends AbstractController
 
                 $sortie->removeInscription($inscription);
 
-                $em->persist($sortie);
-                $em->persist($inscription);
-                $em->flush();
+                $entityManager->persist($sortie);
+                $entityManager->persist($inscription);
+                $entityManager->flush();
 
                 return $this->render('sortie/confirmation.html.twig',[
                     'message'=>'votre désistement a bien etait prise en compte',
@@ -246,6 +256,62 @@ class SortieController extends AbstractController
         return $this->render('sortie/confirmation.html.twig', [
             'message' => 'vous n\'etes pas inscrit pour cette sortie',
             'class'=>'alert alert-warning'
+        ]);
+
+
+
+
+    }
+
+
+    /**
+     *
+     * @Route("/cancel/{id}",
+     *     name="annul_sortie",
+     *     requirements={"id": "\d+"})
+     * @param Request $request
+     * @param Sortie $sortie
+     * @param ParticipantRepository $participantRepo
+     * @param EtatRepository $etatRepo
+     * @return Response
+     *
+     */
+    public function annulerSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo,EtatRepository $etatRepo,EntityManagerInterface $entityManager){
+
+        $userName = $this->getUser()->getUsername();
+
+        $user = $participantRepo->findOneByMail($userName);
+
+
+
+        if($sortie->getOrganisateur()!=$user || $user->isAdmin() ){
+            return $this->render('sortie/confirmation.html.twig', [
+                'message' => 'vous n\'etes pas organisateur pour cette sortie',
+                'class'=>'alert alert-warning'
+            ]);
+
+        }else if ( $sortie->getEtat()->getLibelle()=='Annulée'){
+            return $this->render('sortie/confirmation.html.twig', [
+                'message' => 'la sortie est deja annuler',
+                'class'=>'alert alert-warning'
+            ]);
+        }else if ( $sortie->getDateHeureDebut()<new DateTime()){
+            return $this->render('sortie/confirmation.html.twig', [
+                'message' => 'la sortie a deja commencer et ne peut plus etre annuler',
+                'class'=>'alert alert-warning'
+            ]);
+        }
+
+
+        $etat=$etatRepo->findOneByLibelle('Annulée');
+        $sortie->setEtat($etat);
+        $entityManager->persist($sortie);
+
+        $entityManager->flush();
+
+        return $this->render('sortie/confirmation.html.twig', [
+            'message' => 'la sortie a bien etait annuler',
+            'class'=>'alert alert-success'
         ]);
 
 
