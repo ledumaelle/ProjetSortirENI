@@ -144,7 +144,7 @@ class SortieController extends AbstractController
 
     /**
      *
-     * @Route("/inscription/{id}",
+     * @Route("/subscribe/{id}",
      *     name="inscrit_sortie",
      *     requirements={"id": "\d+"})
      * @param Request $request
@@ -204,7 +204,7 @@ class SortieController extends AbstractController
 
     /**
      *
-     * @Route("/desiste/{id}",
+     * @Route("/unsubscribe/{id}",
      *     name="desiste_sortie",
      *     requirements={"id": "\d+"})
      * @param Request $request
