@@ -117,7 +117,7 @@
                     </a>
                 </th>
                 <th>
-                    {% if date(sortie.dateLimiteInscription) >= date() %}
+                    {% if sortie.etat.id == 2 or (sortie.etat.id == 3 or sortie.dateLimiteInscription|date('d-m-Y') == "now"|date('d-m-Y')) %}
                         {% if sortie.inscriptions|filter(insc => insc.participant.id == app.user.id)|length == 0 %}
                             <a href="{{ path('inscrit_sortie', {'id': sortie.id}) }}" data-toggle="tooltip"
                                title="S'inscrire">

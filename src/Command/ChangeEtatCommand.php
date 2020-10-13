@@ -5,14 +5,12 @@ namespace App\Command;
 use App\Entity\Etat;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
-use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Validator\Constraints\Date;
 
 class ChangeEtatCommand extends Command
 {
@@ -65,42 +63,37 @@ class ChangeEtatCommand extends Command
         $etatEnCours = $this->etatRepository->findOneBy(['libelle' => 'Activité en cours']);
         /** @var Etat $etatPassee */
         $etatPassee = $this->etatRepository->findOneBy(['libelle' => 'Passée']);
-        /** @var Etat $etatAnnulee */
-        $etatAnnulee = $this->etatRepository->findOneBy(['libelle' => 'Annulée']);
 
         $sorties = $this->sortieRepository->findAll();
 
         foreach ($sorties as $sortie) {
             $today = new DateTime();
-            $etatSortie = $sortie->getEtat()->getId();
-            $duree = DateInterval::createFromDateString($sortie->getDuree() . ' minutes');
-            $dateFin = date_add($sortie->getDateHeureDebut(), $duree);
+            $todayForCloture = new DateTime();
+            $todayForCloture->setTime(0, 0, 0);
+            $etatInitialSortie = $sortie->getEtat()->getId();
+            $duree = date_interval_create_from_date_string($sortie->getDuree() . ' minutes');
+            $dateFin = date_add(new DateTime($sortie->getDateHeureDebut()->format('Y-m-d H:i')), $duree);
 
-            if ($etatSortie !== $etatClouturee->getId() && $dateFin > $today) {
-                if ($sortie->getDateLimiteInscription() < $today || count($sortie->getInscriptions()) === $sortie->getNbInscriptionsMax()) {
-                    $sortie->setEtat($etatClouturee);
-                }
+            if ($sortie->getDateLimiteInscription() < $todayForCloture || count($sortie->getInscriptions()) === $sortie->getNbInscriptionsMax()) {
+                $sortie->setEtat($etatClouturee);
             }
 
-            if ($etatSortie !== $etatOuverte->getId()) {
-                if ($sortie->getDateLimiteInscription() >= $today && count($sortie->getInscriptions()) < $sortie->getNbInscriptionsMax()) {
-                    $sortie->setEtat($etatOuverte);
-                }
+
+            if ($sortie->getDateLimiteInscription() >= $todayForCloture && count($sortie->getInscriptions()) < $sortie->getNbInscriptionsMax()) {
+                $sortie->setEtat($etatOuverte);
             }
 
-            if ($etatSortie !== $etatEnCours->getId()) {
-                if ($sortie->getDateHeureDebut() <= $today && $dateFin > $today) {
-                    $sortie->setEtat($etatEnCours);
-                }
+            if ($sortie->getDateHeureDebut() <= $today && $dateFin > $today) {
+                $sortie->setEtat($etatEnCours);
             }
 
-            if ($etatSortie !== $etatPassee->getId()) {
-                if ($dateFin <= $today) {
-                    $sortie->setEtat($etatPassee);
-                }
+            if ($dateFin <= $today) {
+                $sortie->setEtat($etatPassee);
             }
 
-            $this->entityManager->persist($sortie);
+            if ($etatInitialSortie !== $sortie->getEtat()->getId()) {
+                $this->entityManager->persist($sortie);
+            }
         }
 
         $this->entityManager->flush();

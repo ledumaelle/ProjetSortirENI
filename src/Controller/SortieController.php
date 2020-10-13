@@ -10,14 +10,12 @@ use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -50,17 +48,16 @@ class SortieController extends AbstractController
      * @param LoggerInterface $logger
      * @param ParticipantRepository $participantRepository
      * @param EtatRepository $etatRepository
+     * @param EntityManagerInterface $entityManager
      * @return Response
-     *
      */
     public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager)
     {
         $sortie = new Sortie();
 
-        $em = $this->getDoctrine()->getManager();
-
         $userName = $this->getUser()->getUsername();
 
+        /** @var Participant $user */
         $user = $participantRepository->findOneByMail($userName);
 
 
@@ -91,7 +88,7 @@ class SortieController extends AbstractController
 
             $entityManager->persist($sortie);
             $entityManager->flush();
-            return $this->render('default/home.html.twig');
+            return $this->redirectToRoute('app_homepage');
         }
 
 
@@ -160,13 +157,13 @@ class SortieController extends AbstractController
      * @Route("/subscribe/{id}",
      *     name="inscrit_sortie",
      *     requirements={"id": "\d+"})
-     * @param Request $request
      * @param Sortie $sortie
+     * @param SortieRepository $sortieRepository
      * @return Response
      *
      * @throws Exception
      */
-    public function inscriptionSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
+    public function inscriptionSortie(Sortie $sortie, SortieRepository $sortieRepository)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -200,7 +197,7 @@ class SortieController extends AbstractController
         $em->persist($newInscription);
         $em->flush();
 
-        $this->changeEtat();
+        $sortieRepository->updateEtatSorties();
 
         $this->addFlash("success", "Votre inscription a bien été prise en compte");
         return $this->redirectToRoute('app_homepage');
@@ -212,13 +209,13 @@ class SortieController extends AbstractController
      * @Route("/unsubscribe/{id}",
      *     name="desiste_sortie",
      *     requirements={"id": "\d+"})
-     * @param Request $request
      * @param Sortie $sortie
+     * @param SortieRepository $sortieRepository
      * @return Response
      *
      * @throws Exception
      */
-    public function desisteSortie(Request $request, Sortie $sortie, LoggerInterface $logger)
+    public function desisteSortie(Sortie $sortie, SortieRepository $sortieRepository)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -245,29 +242,10 @@ class SortieController extends AbstractController
 
         }
 
-        $this->changeEtat();
+        $sortieRepository->updateEtatSorties();
 
         $this->addFlash("warning", "Vous n'êtes pas inscrit pour cette sortie");
         return $this->redirectToRoute('app_homepage');
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function changeEtat()
-    {
-        $application = new Application($this->kernel);
-        $application->setAutoExit(false);
-
-        $input = new ArrayInput(array(
-            'command' => 'change-etat'
-        ));
-
-        $output = new BufferedOutput();
-
-        $application->run($input, $output);
-
-        $output->fetch();
     }
 }
 

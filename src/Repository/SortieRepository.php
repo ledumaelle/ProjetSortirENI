@@ -5,6 +5,11 @@ namespace App\Repository;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @method Sortie|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +19,20 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SortieRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
+
+    /**
+     * SortieRepository constructor.
+     * @param ManagerRegistry $registry
+     * @param KernelInterface $kernel
+     */
+    public function __construct(ManagerRegistry $registry, KernelInterface $kernel)
     {
         parent::__construct($registry, Sortie::class);
+        $this->kernel = $kernel;
     }
 
     // /**
@@ -52,4 +68,22 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
+    /**
+     * @throws Exception
+     */
+    public function updateEtatSorties()
+    {
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'change-etat'
+        ));
+
+        $output = new BufferedOutput();
+
+        $application->run($input, $output);
+
+        $output->fetch();
+    }
 }

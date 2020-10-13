@@ -21,15 +21,6 @@ class DefaultController extends AbstractController
     protected $kernel;
 
     /**
-     * DefaultController constructor.
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
-    }
-
-    /**
      * @Route("/home", name="app_homepage")
      * @param SortieRepository $repo
      * @param PaginatorInterface $paginator
@@ -40,6 +31,8 @@ class DefaultController extends AbstractController
      */
     public function index(SortieRepository $repo, PaginatorInterface $paginator, Request $request, CampusRepository $campusRepository)
     {
+        $repo->updateEtatSorties();
+
         $campus = $campusRepository->getAll()->getResult();
 
 
@@ -51,30 +44,10 @@ class DefaultController extends AbstractController
             5 /*limit per page*/
         );
 
-        $this->changeEtat();
 
         return $this->render('default/home.html.twig', [
             'sorties' => $sorties,
             'campus' => $campus
         ]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function changeEtat()
-    {
-        $application = new Application($this->kernel);
-        $application->setAutoExit(false);
-
-        $input = new ArrayInput(array(
-            'command' => 'change-etat'
-        ));
-
-        $output = new BufferedOutput();
-
-        $application->run($input, $output);
-
-        $output->fetch();
     }
 }
