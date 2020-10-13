@@ -2,163 +2,174 @@
 
 
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6">
-                <h4> Filtrer les sorties </h4>
-                <div class="row">
-                    <div class="col-md-6 select-outline">
+    {% if false == isMobile %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4> Filtrer les sorties </h4>
+                    <div class="row">
+                        <div class="col-md-6 select-outline">
 
-                        <select class="mdb-select md-form" searchable="Rechercher...">
-                            <option value="" disabled selected>Sélectionnez le campus</option>
+                            <select class="mdb-select md-form" searchable="Rechercher...">
+                                <option value="" disabled selected>Sélectionnez le campus</option>
 
-                            {% for c in campus %}
-                                <option value="{{ c.id }}">{{ c.nom }}</option>
-                            {% endfor %}
-                        </select>
+                                {% for c in campus %}
+                                    <option value="{{ c.id }}">{{ c.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                </div>
 
 
-                <div class="md-form">
-                    <i class="fas fa-search prefix"></i>
-                    <input type="text" id="searchSortie" class="form-control">
-                    <label for="searchSortie">Rechercher une sortie</label>
-                </div>
+                    <div class="md-form">
+                        <i class="fas fa-search prefix"></i>
+                        <input type="text" id="searchSortie" class="form-control">
+                        <label for="searchSortie">Rechercher une sortie</label>
+                    </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="md-form mb-0">
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="md-form mb-0">
-                                <div class="md-form">
-                                    <i class="far fa-calendar-alt prefix"></i>
-                                    <input type="date" id="date1" class="form-control">
-                                    <label for="date1">Date début</label>
+                                <div class="md-form mb-0">
+                                    <div class="md-form">
+                                        <i class="far fa-calendar-alt prefix"></i>
+                                        <input type="date" id="date1" class="form-control">
+                                        <label for="date1">Date début</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="md-form mb-0">
+                                <div class="md-form mb-0">
+                                    <div class="md-form">
+                                        <i class="far fa-calendar-alt prefix"></i>
+                                        <input type="date" id="date2" class="form-control">
+                                        <label for="date2">Date fin</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="md-form mb-0">
-                            <div class="md-form mb-0">
-                                <div class="md-form">
-                                    <i class="far fa-calendar-alt prefix"></i>
-                                    <input type="date" id="date2" class="form-control">
-                                    <label for="date2">Date fin</label>
-                                </div>
-                            </div>
-                        </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="inscritAdmin">
+                        <label class="form-check-label" for="inscritAdmin">Sorties dont je suis l'organisateur</label>
                     </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="inscritKO">
+                        <label class="form-check-label" for="inscritKO">Sorties auxquelles je suis inscrit/e</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="inscritOk">
+                        <label class="form-check-label" for="inscritOk">Sorties auxquelles je ne suis pas
+                            inscrit/e</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="sortieEnd">
+                        <label class="form-check-label" for="sortieEnd">Sorties passées</label>
+                    </div>
+
+                    <br>
+                    <button type="button" class="btn btn-secondary btn-rounded">Rechercher</button>
+
                 </div>
 
             </div>
-            <div class="col-md-6">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="inscritAdmin">
-                    <label class="form-check-label" for="inscritAdmin">Sorties dont je suis l'organisateur</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="inscritKO">
-                    <label class="form-check-label" for="inscritKO">Sorties auxquelles je suis inscrit/e</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="inscritOk">
-                    <label class="form-check-label" for="inscritOk">Sorties auxquelles je ne suis pas inscrit/e</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="sortieEnd">
-                    <label class="form-check-label" for="sortieEnd">Sorties passées</label>
-                </div>
-
-                <br>
-                <button type="button" class="btn btn-secondary btn-rounded">Rechercher</button>
-
+        </div>
+        {# total items count #}
+        <div class="row flex mb-3">
+            <div class="justify-content-start col-md-10">
+                <a href="{{ path('sortie_create') }}" class="btn btn-primary btn-rounded"><i
+                            class="fas fa-plus mr-1"></i>
+                    Créer une sortie</a>
             </div>
+            <div class="count col-md-2 text-right">
+                <h5 class="text-primary"> Total : {{ sorties.getTotalItemCount }} </h5>
+            </div>
+        </div>
+    {% endif %}
 
-        </div>
-    </div>
-    {# total items count #}
-    <div class="row flex mb-3">
-        <div class="justify-content-start col-md-10">
-            <a href="{{ path('sortie_create') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i>
-                Créer une sortie</a>
-        </div>
-        <div class="count col-md-2 text-right">
-            <h5 class="text-primary"> Total : {{ sorties.getTotalItemCount }} </h5>
-        </div>
-    </div>
     <table class="table" id="participantsTable">
         <thead>
         <tr>
             <th scope="col" class="font-weight-bold">NOM DE LA SORTIE</th>
             <th scope="col" class="font-weight-bold">DATE DE LA SORTIE</th>
-            <th scope="col" class="font-weight-bold">CLOTURE</th>
-            <th scope="col" class="font-weight-bold">INSCRITS/PLACES</th>
-            <th scope="col" class="font-weight-bold">ETAT</th>
-            <th scope="col" class="font-weight-bold">INSCRIT</th>
-            <th scope="col" class="font-weight-bold">ORGANISATEUR</th>
-            <th scope="col" class="font-weight-bold">ACTIONS</th>
+            {% if false == isMobile %}
+                <th scope="col" class="font-weight-bold">CLOTURE</th>
+                <th scope="col" class="font-weight-bold">INSCRITS/PLACES</th>
+                <th scope="col" class="font-weight-bold">ETAT</th>
+                <th scope="col" class="font-weight-bold">INSCRIT</th>
+                <th scope="col" class="font-weight-bold">ORGANISATEUR</th>
+                <th scope="col" class="font-weight-bold">ACTIONS</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
         {% for sortie in sorties %}
-            <tr class="{{ sortie.organisateur.id == app.user.id ? 'organisteur' : 'notorganisateur' }}">
+            <tr class="{{ sortie.organisateur.id == app.user.id and false == isMobile ? 'organisteur' : 'notorganisateur' }}">
                 <th scope="row">{{ sortie.nom }}</th>
                 <th>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date("d-m-Y")  : sortie.dateHeureDebut|date("d-m-Y") }}</th>
-                <th>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date("d-m-Y")  : sortie.dateLimiteInscription|date("d-m-Y") }}</th>
-                <th> {{ sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}</th>
-                <th>{{ sortie.etat.libelle }}</th>
-                <th> à définir</th>
-                <th>
-                    <a href="{{ path('participant_show', {id: sortie.organisateur.id }) }}"
-                       class="text-secondary material-tooltip-main" data-toggle="tooltip" data-placement="top"
-                       title="Afficher le profil">
-                        {{ sortie.organisateur.pseudo }}
-                    </a>
-                </th>
-                <th>
-                    {% if sortie.etat.id == 2 or sortie.etat.id == 3 %}
-                        {% if sortie.inscriptions|filter(insc => insc.participant.id == app.user.id)|length == 0 %}
-                            <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
-                               href="{{ path('inscrit_sortie', {'id': sortie.id}) }}"
-                               data-toggle="tooltip" data-placement="top"
-                               title="S'inscrire">
-                                <i class="far fa-bookmark"></i>
-                            </a>
-                        {% elseif date(sortie.dateLimiteInscription) > date() or sortie.dateLimiteInscription|date('d-m-Y') == "now"|date('d-m-Y') %}
-                            <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
-                               href="{{ path('desiste_sortie', {'id': sortie.id}) }}"
-                               data-toggle="tooltip" data-placement="top"
-                               title="Se désinscrire">
-                                <i class="fas fa-bookmark"></i>
-                            </a>
-                        {% endif %}
-                        {% if app.user.id == sortie.organisateur.id %}
-                            <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
-                               href="{{ path('update_sortie', {'id': sortie.id}) }}"
-                               data-toggle="tooltip" data-placement="top"
-                               title="Modifier la sortie">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            {% if app.user.isAdmin %}
+                {% if false == isMobile %}
+                    <th>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date("d-m-Y")  : sortie.dateLimiteInscription|date("d-m-Y") }}</th>
+                    <th> {{ sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}</th>
+                    <th>{{ sortie.etat.libelle }}</th>
+                    <th> à définir</th>
+                    <th>
+                        <a href="{{ path('participant_show', {id: sortie.organisateur.id }) }}"
+                           class="text-secondary material-tooltip-main" data-toggle="tooltip" data-placement="top"
+                           title="Afficher le profil">
+                            {{ sortie.organisateur.pseudo }}
+                        </a>
+                    </th>
+                    <th>
+                        {% if sortie.etat.id == 2 or sortie.etat.id == 3 %}
+                            {% if sortie.inscriptions|filter(insc => insc.participant.id == app.user.id)|length == 0 %}
                                 <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
-                                   href="{{ path('annul_sortie', {'id': sortie.id}) }}"
+                                   href="{{ path('inscrit_sortie', {'id': sortie.id}) }}"
                                    data-toggle="tooltip" data-placement="top"
-                                   title="Annuler la sortie">
-                                    <i class="fas fa-ban"></i>
+                                   title="S'inscrire">
+                                    <i class="far fa-bookmark"></i>
+                                </a>
+                            {% elseif date(sortie.dateLimiteInscription) > date() or sortie.dateLimiteInscription|date('d-m-Y') == "now"|date('d-m-Y') %}
+                                <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
+                                   href="{{ path('desiste_sortie', {'id': sortie.id}) }}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Se désinscrire">
+                                    <i class="fas fa-bookmark"></i>
                                 </a>
                             {% endif %}
+                            {% if app.user.id == sortie.organisateur.id %}
+                                <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
+                                   href="{{ path('update_sortie', {'id': sortie.id}) }}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Modifier la sortie">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if app.user.isAdmin %}
+                                    <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
+                                       href="{{ path('annul_sortie', {'id': sortie.id}) }}"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="Annuler la sortie">
+                                        <i class="fas fa-ban"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                </th>
+                    </th>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <div class="navigation">
-        {{ knp_pagination_render(sorties) }}
-    </div>
+    {% if false == isMobile %}
+        <div class="navigation">
+            {{ knp_pagination_render(sorties) }}
+        </div>
+    {% endif %}
 
 
     <!--<table id="sorties_data" class="table table-striped table-bordered " width="100%">
@@ -181,6 +192,11 @@
 {% block javascripts %}
     {{ parent() }}
 
+    <script>
+        $(document).ready(function () {
+
+        })
+    </script>
     <!--<script>
         $(document).ready(function () {
 

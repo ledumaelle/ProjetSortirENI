@@ -26,6 +26,7 @@ class SortieRepository extends ServiceEntityRepository
 
     /**
      * SortieRepository constructor.
+     *
      * @param ManagerRegistry $registry
      * @param KernelInterface $kernel
      */
@@ -55,17 +56,40 @@ class SortieRepository extends ServiceEntityRepository
     public function getSorties()
     {
         return $this->createQueryBuilder('s')
-            ->leftJoin('s.organisateur', 'organisateur')
-            ->addSelect('organisateur')
-            ->leftJoin('s.siteOrganisateur', 'site_organisateur')
-            ->addSelect('site_organisateur')
-            ->leftJoin('s.etat', 'etat')
-            ->addSelect('etat')
-            ->leftJoin('s.lieu', 'lieu')
-            ->leftJoin('s.inscriptions', 'inscrits')
-            ->addSelect('inscrits')
-            ->addSelect('lieu')
-            ->getQuery();
+                    ->leftJoin('s.organisateur', 'organisateur')
+                    ->addSelect('organisateur')
+                    ->leftJoin('s.siteOrganisateur', 'site_organisateur')
+                    ->addSelect('site_organisateur')
+                    ->leftJoin('s.etat', 'etat')
+                    ->addSelect('etat')
+                    ->leftJoin('s.lieu', 'lieu')
+                    ->leftJoin('s.inscriptions', 'inscrits')
+                    ->addSelect('inscrits')
+                    ->addSelect('lieu')
+                    ->getQuery();
+    }
+
+    /**
+     * @param $participant
+     * @return mixed
+     */
+    public function getSortiesByParticipantId($participant)
+    {
+        return $this->createQueryBuilder('s')
+                    ->leftJoin('s.organisateur', 'organisateur')
+                    ->addSelect('organisateur')
+                    ->leftJoin('s.siteOrganisateur', 'site_organisateur')
+                    ->addSelect('site_organisateur')
+                    ->leftJoin('s.etat', 'etat')
+                    ->addSelect('etat')
+                    ->leftJoin('s.lieu', 'lieu')
+                    ->leftJoin('s.inscriptions', 'inscrits')
+                    ->addSelect('inscrits')
+                    ->addSelect('lieu')
+                    ->where('s.organisateur = :organisateur')
+                    ->setParameter('organisateur', $participant)
+                    ->getQuery()
+                    ->execute();
     }
 
     /**
@@ -76,9 +100,9 @@ class SortieRepository extends ServiceEntityRepository
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array(
-            'command' => 'change-etat'
-        ));
+        $input = new ArrayInput([
+            'command' => 'change-etat',
+        ]);
 
         $output = new BufferedOutput();
 
