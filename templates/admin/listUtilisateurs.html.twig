@@ -2,10 +2,8 @@
 
 
 {% block body %}
-    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn grey lighten-2 btn-md mt-2">Ajouter un utilisateur</a>
-    <button data-toggle="modal" data-target="#importUsers" class="btn grey lighten-2 btn-md mt-2">Importer des
-        utilisateurs
-    </button>
+    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn btn-primary btn-rounded" role="button"><i class="fas fa-plus mr-1"></i> Ajouter un utilisateur</a>
+    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn btn-success btn-rounded" data-toggle="modal" data-target="#importUsers" role="button"><i class="far fa-file-excel mr-1"></i></i> Importer des utilisateurs</a>
 
     <div class="modal fade" id="importUsers" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel"
