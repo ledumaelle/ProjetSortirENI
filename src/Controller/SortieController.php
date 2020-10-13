@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 
-use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Entity\Sortie;
@@ -12,9 +11,8 @@ use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * Class SortieController
@@ -53,10 +50,13 @@ class SortieController extends AbstractController
      * @param EtatRepository $etatRepository
      * @param EntityManagerInterface $entityManager
      * @return Response
+     * @throws Exception
      */
     public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager)
     {
         $sortie = new Sortie();
+        $sortie->setDateHeureDebut(new DateTime());
+        $sortie->setDateLimiteInscription(new DateTime());
 
         $userName = $this->getUser()->getUsername();
 
@@ -91,6 +91,7 @@ class SortieController extends AbstractController
 
             $entityManager->persist($sortie);
             $entityManager->flush();
+            $this->addFlash("success", "La sortie a bien été créée");
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -103,20 +104,22 @@ class SortieController extends AbstractController
 
     /**
      *
-     * L'edition ne fait pas parti des feature demander actuelement
-     *
+     * @Route("/update/{id}",
+     *     name="update_sortie",
+     *     requirements={"id": "\d+"})
+     * @param Request $request
+     * @param Sortie $sortie
+     * @param LoggerInterface $logger
+     * @param ParticipantRepository $participantRepository
+     * @param EtatRepository $etatRepository
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function edit(Request $request, Sortie $sortie, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager)
     {
-
-
-        /*
         $userName = $this->getUser()->getUsername();
 
         $user = $participantRepository->findOneByMail($userName);
-
-
-
 
 
         $form = $this->createForm(SortieType::class, $sortie, array('user' => $user));
@@ -124,8 +127,6 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-
             if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()->getName()) {
 
                 $etat = $etatRepository->findOneByLibelle('Créée');
@@ -146,13 +147,14 @@ class SortieController extends AbstractController
 
             $entityManager->persist($sortie);
             $entityManager->flush();
-            return $this->render('default/home.html.twig');
+            $this->addFlash("success", "La sortie a bien été modifiée");
+            return $this->redirectToRoute('app_homepage');
         }
 
 
         return $this->render('sortie/new-edit.html.twig', [
             'form' => $form->createView()
-        ]);*/
+        ]);
     }
 
     /**
@@ -160,15 +162,15 @@ class SortieController extends AbstractController
      * @Route("/subscribe/{id}",
      *     name="inscrit_sortie",
      *     requirements={"id": "\d+"})
-     * @param Request $request
      * @param Sortie $sortie
-     * @param ParticipantRepository $participantRepo
      * @param SortieRepository $sortieRepository
+     * @param ParticipantRepository $participantRepo
+     * @param EntityManagerInterface $entityManager
      * @return Response
      *
      * @throws Exception
      */
-    public function inscriptionSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo,EntityManagerInterface  $entityManager)
+    public function inscriptionSortie(Sortie $sortie, SortieRepository $sortieRepository, ParticipantRepository $participantRepo, EntityManagerInterface $entityManager)
     {
 
 
@@ -214,13 +216,14 @@ class SortieController extends AbstractController
      * @Route("/unsubscribe/{id}",
      *     name="desiste_sortie",
      *     requirements={"id": "\d+"})
-     * @param Request $request
      * @param Sortie $sortie
      * @param ParticipantRepository $participantRepo
+     * @param SortieRepository $sortieRepository
+     * @param EntityManagerInterface $entityManager
      * @return Response
-     *
+     * @throws Exception
      */
-    public function desisteSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo, SortieRepository $sortieRepository,EntityManagerInterface  $entityManager)
+    public function desisteSortie(Sortie $sortie, ParticipantRepository $participantRepo, SortieRepository $sortieRepository, EntityManagerInterface $entityManager)
     {
 
 
@@ -258,54 +261,41 @@ class SortieController extends AbstractController
      * @Route("/cancel/{id}",
      *     name="annul_sortie",
      *     requirements={"id": "\d+"})
-     * @param Request $request
      * @param Sortie $sortie
      * @param ParticipantRepository $participantRepo
      * @param EtatRepository $etatRepo
+     * @param EntityManagerInterface $entityManager
      * @return Response
-     *
+     * @throws Exception
      */
-    public function annulerSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo,EtatRepository $etatRepo,EntityManagerInterface $entityManager){
+    public function annulerSortie(Sortie $sortie, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
+    {
 
         $userName = $this->getUser()->getUsername();
 
+        /** @var Participant $user */
         $user = $participantRepo->findOneByMail($userName);
 
-
-
-        if($sortie->getOrganisateur()!=$user || $user->isAdmin() ){
-            return $this->render('sortie/confirmation.html.twig', [
-                'message' => 'vous n\'etes pas organisateur pour cette sortie',
-                'class'=>'alert alert-warning'
-            ]);
-
-        }else if ( $sortie->getEtat()->getLibelle()=='Annulée'){
-            return $this->render('sortie/confirmation.html.twig', [
-                'message' => 'la sortie est deja annuler',
-                'class'=>'alert alert-warning'
-            ]);
-        }else if ( $sortie->getDateHeureDebut()<new DateTime()){
-            return $this->render('sortie/confirmation.html.twig', [
-                'message' => 'la sortie a deja commencer et ne peut plus etre annuler',
-                'class'=>'alert alert-warning'
-            ]);
+        if ($sortie->getOrganisateur() !== $user || !$user->isAdmin()) {
+            $this->addFlash("warning", "Vous n'êtes pas organisateur pour cette sortie");
+            return $this->redirectToRoute('app_homepage');
+        } else if ($sortie->getEtat()->getLibelle() == 'Annulée') {
+            $this->addFlash("warning", "La sortie a déjà été annulée");
+            return $this->redirectToRoute('app_homepage');
+        } else if ($sortie->getDateHeureDebut() < new DateTime()) {
+            $this->addFlash("warning", "La sortie a déjà commencée et ne peut plus être annulée");
+            return $this->redirectToRoute('app_homepage');
         }
 
 
-        $etat=$etatRepo->findOneByLibelle('Annulée');
+        $etat = $etatRepo->findOneByLibelle('Annulée');
         $sortie->setEtat($etat);
         $entityManager->persist($sortie);
 
         $entityManager->flush();
 
-        return $this->render('sortie/confirmation.html.twig', [
-            'message' => 'la sortie a bien etait annuler',
-            'class'=>'alert alert-success'
-        ]);
-
-
-
-
+        $this->addFlash("success", "La sortie a bien été annulée");
+        return $this->redirectToRoute('app_homepage');
     }
 }
 

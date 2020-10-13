@@ -29,12 +29,11 @@ class LieuController extends AbstractController
      * @Route("/create", name="lieu_create")
      * @param Request $request
      * @param LoggerInterface $logger
-     * @param ParticipantRepository $participantRepository
-     * @param EtatRepository $etatRepository
+     * @param EntityManagerInterface $entityManager
      * @return Response
-     *
      */
-    public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface  $entityManager) {
+    public function create(Request $request, LoggerInterface $logger, EntityManagerInterface $entityManager)
+    {
 
         $lieu = new Lieu();
 
@@ -51,15 +50,10 @@ class LieuController extends AbstractController
 
             $entityManager->persist($lieu);
             $entityManager->flush();
-            
 
 
-            return $this->render('lieu/confirmation.html.twig',[
-                'message'=>'votre lieu a bien était créer',
-                'class'=>'alert alert-success'
-            ]);
-
-
+            $this->addFlash("success", "Votre lieu a bien été créé");
+            return $this->redirectToRoute('sortie_create');
         }
 
 

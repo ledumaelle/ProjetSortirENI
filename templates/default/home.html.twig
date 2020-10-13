@@ -117,17 +117,37 @@
                     </a>
                 </th>
                 <th>
-                    {% if sortie.etat.id == 2 or (sortie.etat.id == 3 or sortie.dateLimiteInscription|date('d-m-Y') == "now"|date('d-m-Y')) %}
+                    {% if sortie.etat.id == 2 or sortie.etat.id == 3 %}
                         {% if sortie.inscriptions|filter(insc => insc.participant.id == app.user.id)|length == 0 %}
-                            <a href="{{ path('inscrit_sortie', {'id': sortie.id}) }}" data-toggle="tooltip"
+                            <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
+                               href="{{ path('inscrit_sortie', {'id': sortie.id}) }}"
+                               data-toggle="tooltip" data-placement="top"
                                title="S'inscrire">
                                 <i class="far fa-bookmark"></i>
                             </a>
-                        {% else %}
-                            <a href="{{ path('desiste_sortie', {'id': sortie.id}) }}" data-toggle="tooltip"
+                        {% elseif date(sortie.dateLimiteInscription) > date() or sortie.dateLimiteInscription|date('d-m-Y') == "now"|date('d-m-Y') %}
+                            <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
+                               href="{{ path('desiste_sortie', {'id': sortie.id}) }}"
+                               data-toggle="tooltip" data-placement="top"
                                title="Se désinscrire">
                                 <i class="fas fa-bookmark"></i>
                             </a>
+                        {% endif %}
+                        {% if app.user.id == sortie.organisateur.id %}
+                            <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
+                               href="{{ path('update_sortie', {'id': sortie.id}) }}"
+                               data-toggle="tooltip" data-placement="top"
+                               title="Modifier la sortie">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            {% if app.user.isAdmin %}
+                                <a class="material-tooltip-main btn-floating btn-sm grey darken-2 text-white shadow-none"
+                                   href="{{ path('annul_sortie', {'id': sortie.id}) }}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Annuler la sortie">
+                                    <i class="fas fa-ban"></i>
+                                </a>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </th>

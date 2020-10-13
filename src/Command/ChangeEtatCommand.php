@@ -63,36 +63,40 @@ class ChangeEtatCommand extends Command
         $etatEnCours = $this->etatRepository->findOneBy(['libelle' => 'Activité en cours']);
         /** @var Etat $etatPassee */
         $etatPassee = $this->etatRepository->findOneBy(['libelle' => 'Passée']);
+        /** @var Etat $etatAnnulee */
+        $etatAnnulee = $this->etatRepository->findOneBy(['libelle' => 'Annulée']);
 
         $sorties = $this->sortieRepository->findAll();
 
         foreach ($sorties as $sortie) {
-            $today = new DateTime();
-            $todayForCloture = new DateTime();
-            $todayForCloture->setTime(0, 0, 0);
-            $etatInitialSortie = $sortie->getEtat()->getId();
-            $duree = date_interval_create_from_date_string($sortie->getDuree() . ' minutes');
-            $dateFin = date_add(new DateTime($sortie->getDateHeureDebut()->format('Y-m-d H:i')), $duree);
+            if ($etatAnnulee->getId() !== $sortie->getEtat()->getId()) {
+                $today = new DateTime();
+                $todayForCloture = new DateTime();
+                $todayForCloture->setTime(0, 0, 0);
+                $etatInitialSortie = $sortie->getEtat()->getId();
+                $duree = date_interval_create_from_date_string($sortie->getDuree() . ' minutes');
+                $dateFin = date_add(new DateTime($sortie->getDateHeureDebut()->format('Y-m-d H:i')), $duree);
 
-            if ($sortie->getDateLimiteInscription() < $todayForCloture || count($sortie->getInscriptions()) === $sortie->getNbInscriptionsMax()) {
-                $sortie->setEtat($etatClouturee);
-            }
+                if ($sortie->getDateLimiteInscription() < $todayForCloture || count($sortie->getInscriptions()) === $sortie->getNbInscriptionsMax()) {
+                    $sortie->setEtat($etatClouturee);
+                }
 
 
-            if ($sortie->getDateLimiteInscription() >= $todayForCloture && count($sortie->getInscriptions()) < $sortie->getNbInscriptionsMax()) {
-                $sortie->setEtat($etatOuverte);
-            }
+                if ($sortie->getDateLimiteInscription() >= $todayForCloture && count($sortie->getInscriptions()) < $sortie->getNbInscriptionsMax()) {
+                    $sortie->setEtat($etatOuverte);
+                }
 
-            if ($sortie->getDateHeureDebut() <= $today && $dateFin > $today) {
-                $sortie->setEtat($etatEnCours);
-            }
+                if ($sortie->getDateHeureDebut() <= $today && $dateFin > $today) {
+                    $sortie->setEtat($etatEnCours);
+                }
 
-            if ($dateFin <= $today) {
-                $sortie->setEtat($etatPassee);
-            }
+                if ($dateFin <= $today) {
+                    $sortie->setEtat($etatPassee);
+                }
 
-            if ($etatInitialSortie !== $sortie->getEtat()->getId()) {
-                $this->entityManager->persist($sortie);
+                if ($etatInitialSortie !== $sortie->getEtat()->getId()) {
+                    $this->entityManager->persist($sortie);
+                }
             }
         }
 
