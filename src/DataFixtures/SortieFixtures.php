@@ -20,6 +20,8 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
     const SORTIE_PATE_A_SEL = 'sortie_pate_a_sel';
     const SORTIE_SORTIE_PASSEE = 'sortie_sortie_passee';
     const SORTIE_SORTIE_PRIVATE = 'sortie_private';
+    const SORTIE_SORTIE_ANNULEE = 'sortie_annulee';
+    const SORTIE_SORTIE_ARCHIVEE = 'sortie_archivee';
 
     public function getDependencies()
     {
@@ -215,6 +217,42 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($sortie);
 
         $this->addReference(self::SORTIE_SORTIE_PRIVATE , $sortie);
+
+        $sortie = new Sortie();
+        $sortie->setNom("Sortie annulée");
+        $date = $faker->dateTimeBetween("now","+1 months");
+        $sortie->setDateHeureDebut($date);
+        $sortie->setDateLimiteInscription($date);
+        $sortie->setNbInscriptionsMax(3);
+        $sortie->setEtat($this->getReference(EtatFixtures::ETAT_ANNULEE));
+        $sortie->setOrganisateur($this->getReference(ParticipantFixtures::ANGELIQUE));
+        $sortie->setDuree(1);
+        $sortie->setIsPrivate(false);
+        $sortie->setLieu($this->getReference(LieuFixtures::LIEU_CINEMA));
+        $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_SAINT_HERBLAIN));
+        $sortie->setInfosSortie("La sortie est annulée donc on s'en balek ! ");
+        $sortie->setDateCreated();
+        $manager->persist($sortie);
+
+        $this->addReference(self::SORTIE_SORTIE_ANNULEE , $sortie);
+
+        $sortie = new Sortie();
+        $sortie->setNom("Sortie archivée");
+        $date = $faker->dateTimeBetween("-2 months","-1 months");
+        $sortie->setDateHeureDebut($date);
+        $sortie->setDateLimiteInscription($date);
+        $sortie->setNbInscriptionsMax(12);
+        $sortie->setEtat($this->getReference(EtatFixtures::ETAT_PASSEE));
+        $sortie->setOrganisateur($this->getReference(ParticipantFixtures::MAELLE));
+        $sortie->setDuree(8);
+        $sortie->setIsPrivate(false);
+        $sortie->setLieu($this->getReference(LieuFixtures::LIEU_ZOO));
+        $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_SAINT_HERBLAIN));
+        $sortie->setInfosSortie("La sortie a été réalisé ya 2 mois donc elle est archivée !");
+        $sortie->setDateCreated();
+        $manager->persist($sortie);
+
+        $this->addReference(self::SORTIE_SORTIE_ARCHIVEE , $sortie);
 
         $manager->flush();
     }

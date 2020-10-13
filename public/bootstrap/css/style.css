@@ -7,10 +7,16 @@
     height: 50px;
 }
 
-.ban{
+.ban {
     background-color: #ffcdd2;
 }
 
-.organisteur{
-    background-color: #bbdefb;
+.organisateur {
+    border-color: #0d47a1;
+    border-left-style: solid;
+    border-width: 10px;
+}
+
+.sortie_passee {
+    background-color: #E7E7DD;
 }

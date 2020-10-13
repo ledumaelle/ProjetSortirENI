@@ -11,6 +11,13 @@ use Exception;
  */
 class Etat
 {
+    const CREEE = 1;
+    const OUVERTE = 2;
+    const CLOTUREE = 3;
+    const ACTIVITE_EN_COURS = 4;
+    const PASSEE = 5;
+    const ANNULEE = 6;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

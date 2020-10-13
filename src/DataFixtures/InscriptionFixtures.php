@@ -63,37 +63,7 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
 
 
 
-        $sortie = $this->getReference(SortieFixtures::SORTIE_CINEMA);
-
-        $inscriptionThomasToCinema = new Inscription();
-        $inscriptionThomasToCinema->setDateInscription($sortie->getDateHeureDebut());
-        $inscriptionThomasToCinema->setParticipant($thomas);
-        $inscriptionThomasToCinema->setSortie($sortie);
-        $inscriptionThomasToCinema->setDateCreated();
-
-        $manager->persist($inscriptionThomasToCinema);
-
-        $inscriptionJulienToCinema = new Inscription();
-        $inscriptionJulienToCinema->setDateInscription($sortie->getDateHeureDebut());
-        $inscriptionJulienToCinema->setParticipant($julien);
-        $inscriptionJulienToCinema->setSortie($sortie);
-        $inscriptionJulienToCinema->setDateCreated();
-
-        $manager->persist($inscriptionJulienToCinema);
-
-        $sortie->addInscription($inscriptionThomasToCinema);
-        $sortie->addInscription($inscriptionJulienToCinema);
-
-        $sortie->setDateModified();
-
-        $manager->persist($sortie);
-
-
-
-
-
-
-        $sortie = $this->getReference(SortieFixtures::SORTIE_SORTIE_PRIVATE);
+       $sortie = $this->getReference(SortieFixtures::SORTIE_SORTIE_PRIVATE);
 
         $inscriptionMaelleToPrivate = new Inscription();
         $inscriptionMaelleToPrivate->setDateInscription($sortie->getDateHeureDebut());

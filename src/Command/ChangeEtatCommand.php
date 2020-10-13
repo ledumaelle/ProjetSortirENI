@@ -55,21 +55,23 @@ class ChangeEtatCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var Etat $etatCreation */
+        $etatCreation = $this->etatRepository->find(Etat::CREEE);
         /** @var Etat $etatOuverte */
-        $etatOuverte = $this->etatRepository->findOneBy(['libelle' => 'Ouverte']);
+        $etatOuverte = $this->etatRepository->find(Etat::OUVERTE);
         /** @var Etat $etatClouturee */
-        $etatClouturee = $this->etatRepository->findOneBy(['libelle' => 'Clôturée']);
+        $etatClouturee = $this->etatRepository->find(Etat::CLOTUREE);
         /** @var Etat $etatEnCours */
-        $etatEnCours = $this->etatRepository->findOneBy(['libelle' => 'Activité en cours']);
+        $etatEnCours = $this->etatRepository->find(Etat::ACTIVITE_EN_COURS);
         /** @var Etat $etatPassee */
-        $etatPassee = $this->etatRepository->findOneBy(['libelle' => 'Passée']);
+        $etatPassee = $this->etatRepository->find(Etat::PASSEE);
         /** @var Etat $etatAnnulee */
-        $etatAnnulee = $this->etatRepository->findOneBy(['libelle' => 'Annulée']);
+        $etatAnnulee = $this->etatRepository->find(Etat::ANNULEE);
 
         $sorties = $this->sortieRepository->findAll();
 
         foreach ($sorties as $sortie) {
-            if ($etatAnnulee->getId() !== $sortie->getEtat()->getId()) {
+            if ($etatAnnulee->getId() !== $sortie->getEtat()->getId() && $etatCreation->getId() !== $sortie->getEtat()->getId()) {
                 $today = new DateTime();
                 $todayForCloture = new DateTime();
                 $todayForCloture->setTime(0, 0, 0);
