@@ -15,10 +15,12 @@ use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use DateTime;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 
@@ -30,6 +32,17 @@ use Symfony\Component\Validator\Constraints\Date;
  */
 class SortieController extends AbstractController
 {
+    /** @var KernelInterface */
+    protected $kernel;
+
+    /**
+     * SortieController constructor.
+     * @param KernelInterface $kernel
+     */
+    public function __construct(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+    }
 
     /**
      *
@@ -38,16 +51,16 @@ class SortieController extends AbstractController
      * @param LoggerInterface $logger
      * @param ParticipantRepository $participantRepository
      * @param EtatRepository $etatRepository
+     * @param EntityManagerInterface $entityManager
      * @return Response
-     *
      */
-    public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface  $entityManager) {
+    public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager)
+    {
         $sortie = new Sortie();
-
-        
 
         $userName = $this->getUser()->getUsername();
 
+        /** @var Participant $user */
         $user = $participantRepository->findOneByMail($userName);
 
 
@@ -78,15 +91,7 @@ class SortieController extends AbstractController
 
             $entityManager->persist($sortie);
             $entityManager->flush();
-            //TODO redirect
-
-
-            return $this->render('sortie/confirmation.html.twig',[
-                'message'=>'votre sortie a bien était créer',
-                'class'=>'alert alert-success'
-            ]);
-
-
+            return $this->redirectToRoute('app_homepage');
         }
 
 
@@ -101,8 +106,8 @@ class SortieController extends AbstractController
      * L'edition ne fait pas parti des feature demander actuelement
      *
      */
-    public function edit(Request $request, Sortie $sortie, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager) {
-
+    public function edit(Request $request, Sortie $sortie, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager)
+    {
 
 
         /*
@@ -158,8 +163,10 @@ class SortieController extends AbstractController
      * @param Request $request
      * @param Sortie $sortie
      * @param ParticipantRepository $participantRepo
+     * @param SortieRepository $sortieRepository
      * @return Response
      *
+     * @throws Exception
      */
     public function inscriptionSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo,EntityManagerInterface  $entityManager)
     {
@@ -170,15 +177,13 @@ class SortieController extends AbstractController
         $user = $participantRepo->findOneByMail($userName);
 
 
-        foreach($sortie->getInscriptions() as $inscription){
+        foreach ($sortie->getInscriptions() as $inscription) {
 
-            if($inscription->getParticipant()==$user) {
+            if ($inscription->getParticipant() == $user) {
 
 
-                return $this->render('sortie/confirmation.html.twig', [
-                    'message' => 'vous etes deja inscrit pour cette sortie',
-                    'class'=>'alert alert-warning'
-                ]);
+                $this->addFlash("warning", "Vous êtes déjà inscrit pour cette sortie");
+                return $this->redirectToRoute('app_homepage');
             }
 
         }
@@ -197,17 +202,10 @@ class SortieController extends AbstractController
         $entityManager->persist($newInscription);
         $entityManager->flush();
 
-        return $this->render('sortie/confirmation.html.twig',[
-            'message'=>'votre inscription a bien etait prise en compte',
-            'class'=>'alert alert-success'
-        ]);
+        $sortieRepository->updateEtatSorties();
 
-
-
-
-
-
-
+        $this->addFlash("success", "Votre inscription a bien été prise en compte");
+        return $this->redirectToRoute('app_homepage');
     }
 
 
@@ -222,7 +220,7 @@ class SortieController extends AbstractController
      * @return Response
      *
      */
-    public function desisteSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo,EntityManagerInterface  $entityManager)
+    public function desisteSortie(Request $request, Sortie $sortie, LoggerInterface $logger,ParticipantRepository $participantRepo, SortieRepository $sortieRepository,EntityManagerInterface  $entityManager)
     {
 
 
@@ -231,11 +229,9 @@ class SortieController extends AbstractController
         $user = $participantRepo->findOneByMail($userName);
 
 
-        foreach($sortie->getInscriptions() as $inscription){
+        foreach ($sortie->getInscriptions() as $inscription) {
 
-            if($inscription->getParticipant()==$user) {
-
-
+            if ($inscription->getParticipant() == $user) {
 
 
                 $sortie->removeInscription($inscription);
@@ -244,25 +240,18 @@ class SortieController extends AbstractController
                 $entityManager->persist($inscription);
                 $entityManager->flush();
 
-                return $this->render('sortie/confirmation.html.twig',[
-                    'message'=>'votre désistement a bien etait prise en compte',
-                    'class'=>'alert alert-success'
-                ]);
 
+                $this->addFlash("success", "Votre désistement a bien été pris en compte");
+                return $this->redirectToRoute('app_homepage');
             }
 
         }
 
-        return $this->render('sortie/confirmation.html.twig', [
-            'message' => 'vous n\'etes pas inscrit pour cette sortie',
-            'class'=>'alert alert-warning'
-        ]);
+        $sortieRepository->updateEtatSorties();
 
-
-
-
+        $this->addFlash("warning", "Vous n'êtes pas inscrit pour cette sortie");
+        return $this->redirectToRoute('app_homepage');
     }
-
 
     /**
      *
@@ -318,10 +307,6 @@ class SortieController extends AbstractController
 
 
     }
-
-
-
-
 }
 
 
