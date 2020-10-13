@@ -117,7 +117,7 @@ class SortieType extends AbstractType
 
             ],
             'query_builder' => function(EntityRepository $er)  {
-                return $er->createQueryBuilder('c')//->where('c.campus=?1')->setParameters(array(1=>$user->getCampus()))
+                return $er->createQueryBuilder('c')
                 ->orderBy('c.nom',"ASC");
             }
         ]);
@@ -131,6 +131,7 @@ class SortieType extends AbstractType
                     'placeholder' => 'Sélectionnez un lieu',
                     'required' => true,
                     'label' => false,
+                    'row_attr' => ['class' => 'flex-grow-1'],
                     'attr' => [
                         'class' => 'browser-default custom-select mb-4',
                         'onChange'=>'changeLieu'
@@ -151,6 +152,7 @@ class SortieType extends AbstractType
                     'placeholder' => 'Sélectionnez un lieu',
                     'required' => true,
                     'label' => false,
+                    'row_attr' => ['class' => 'flex-grow-1'],
                     'attr' => [
                         'class' => 'browser-default custom-select mb-4',
                         'onChange'=>'changeLieu'

@@ -25,7 +25,9 @@
 
         {{ form_row(form.siteOrganisateur) }}
         {{ form_row(form.ville) }}
-        {{ form_row(form.lieu) }}
+        <div class=" mb-4 d-flex flex-row align-items-baseline justify-content-between">
+            {{ form_row(form.lieu) }} <a href="{{ path('lieu_create') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Ajouter un lieu</a>
+        </div>
         <div class=" mb-4">
             {{ form_widget(form.Enregistrer) }}
             {{ form_widget(form.Publier) }}
