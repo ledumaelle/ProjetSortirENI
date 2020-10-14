@@ -266,86 +266,72 @@
         {% endif %}
 
     </div>
-
-    <!--<table id="sorties_data" class="table table-striped table-bordered " width="100%">
-        <thead class="blue lighten-4">
-        <tr>
-            <th class='th-sm center'>Nom de la sortie</th>
-            <th class='th-sm center'>Date de la sortie</th>
-            <th class='th-sm center'>Clôture</th>
-            <th class='th-sm center'>Inscrits/places</th>
-            <th class='th-sm center'>Etat</th>
-            <th class='th-sm center'>Inscrit</th>
-            <th class='th-sm center'>Organisateur</th>
-            <th class='th-sm center'>Actions</th>
-        </tr>
-        </thead>
-    </table> -->
 {% endblock %}
 
 
 {% block javascripts %}
     {{ parent() }}
+    {% if false == isMobile %}
+        <script>
+            $(document).ready(function () {
 
-    <script>
-        $(document).ready(function () {
+                $('.datepicker').pickadate({
 
-            $('.datepicker').pickadate({
+                    monthsFull: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre',
+                        'Novembre', 'Décembre'],
+                    monthsShort: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    weekdaysFull: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+                    weekdaysShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+                    showMonthsShort: true,
+                    showWeekdaysFull: undefined,
 
-                monthsFull: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre',
-                    'Novembre', 'Décembre'],
-                monthsShort: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Dec'],
-                weekdaysFull: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-                weekdaysShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-                showMonthsShort: true,
-                showWeekdaysFull: undefined,
+                    // Buttons
+                    today: 'Aujourd\'hui',
+                    clear: 'Effacer',
+                    close: 'Fermer',
 
-                // Buttons
-                today: 'Aujourd\'hui',
-                clear: 'Effacer',
-                close: 'Fermer',
+                    format: 'dd/mm/yyyy',
+                    formatSubmit: 'yyyy/mm/dd',
 
-                format: 'dd/mm/yyyy',
-                formatSubmit: 'yyyy/mm/dd',
+                    // Accessibility labels
+                    labelMonthNext: 'Mois suivant',
+                    labelMonthPrev: 'Mois précédent',
+                    labelMonthSelect: 'Sélectionner un mois',
+                    labelYearSelect: 'Sélectionner une année',
 
-                // Accessibility labels
-                labelMonthNext: 'Mois suivant',
-                labelMonthPrev: 'Mois précédent',
-                labelMonthSelect: 'Sélectionner un mois',
-                labelYearSelect: 'Sélectionner une année',
+                    // First day of the week
+                    firstDay: 1
+                });
 
-                // First day of the week
-                firstDay: 1
-            });
+                // Get the elements
+                var from_input = $('#dateDebut').pickadate(),
+                    from_picker = from_input.pickadate('picker')
+                var to_input = $('#dateFin').pickadate(),
+                    to_picker = to_input.pickadate('picker')
 
-            // Get the elements
-            var from_input = $('#dateDebut').pickadate(),
-                from_picker = from_input.pickadate('picker')
-            var to_input = $('#dateFin').pickadate(),
-                to_picker = to_input.pickadate('picker')
-
-            // Check if there’s a “from” or “to” date to start with and if so, set their appropriate properties.
-            if (from_picker.get('value')) {
-                to_picker.set('min', from_picker.get('select'))
-            }
-
-            // Apply event listeners in case of setting new “from” / “to” limits to have them update on the other end. If ‘clear’ button is pressed, reset the value.
-            from_picker.on('set', function (event) {
-                if (event.select) {
+                // Check if there’s a “from” or “to” date to start with and if so, set their appropriate properties.
+                if (from_picker.get('value')) {
                     to_picker.set('min', from_picker.get('select'))
-                } else if ('clear' in event) {
-                    to_picker.set('min', false)
                 }
-            })
-            to_picker.on('set', function (event) {
-                if (event.select) {
-                    from_picker.set('max', to_picker.get('select'))
-                } else if ('clear' in event) {
-                    from_picker.set('max', false)
-                }
-            })
+
+                // Apply event listeners in case of setting new “from” / “to” limits to have them update on the other end. If ‘clear’ button is pressed, reset the value.
+                from_picker.on('set', function (event) {
+                    if (event.select) {
+                        to_picker.set('min', from_picker.get('select'))
+                    } else if ('clear' in event) {
+                        to_picker.set('min', false)
+                    }
+                })
+                to_picker.on('set', function (event) {
+                    if (event.select) {
+                        from_picker.set('max', to_picker.get('select'))
+                    } else if ('clear' in event) {
+                        from_picker.set('max', false)
+                    }
+                })
 
 
-        });
-    </script>
+            });
+        </script>
+    {% endif %}
 {% endblock %}
