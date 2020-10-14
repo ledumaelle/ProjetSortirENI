@@ -41,11 +41,11 @@ class Participant implements UserInterface, Serializable
      */
     private $telephone;
     /**
-     * @ORM\Column(type="string", length=125)
+     * @ORM\Column(type="string", length=125, unique=true)
      */
     private $pseudo;
     /**
-     * @ORM\Column(type="string", length=125)
+     * @ORM\Column(type="string", length=125, unique=true)
      */
     private $mail;
     /**
