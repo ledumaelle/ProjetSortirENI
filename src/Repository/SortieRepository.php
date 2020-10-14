@@ -2,7 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Etat;
+use App\Entity\Participant;
 use App\Entity\Sortie;
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -53,27 +57,74 @@ class SortieRepository extends ServiceEntityRepository
     }
     */
 
-    public function getSorties()
+    public function getSorties($params = [])
     {
-        return $this->createQueryBuilder('s')
-                    ->leftJoin('s.organisateur', 'organisateur')
-                    ->addSelect('organisateur')
-                    ->leftJoin('s.siteOrganisateur', 'site_organisateur')
-                    ->addSelect('site_organisateur')
-                    ->leftJoin('s.etat', 'etat')
-                    ->addSelect('etat')
-                    ->leftJoin('s.lieu', 'lieu')
-                    ->leftJoin('s.inscriptions', 'inscrits')
-                    ->addSelect('inscrits')
-                    ->addSelect('lieu')
-                    ->getQuery();
+        $qb = $this->createQueryBuilder('s')
+                   ->leftJoin('s.organisateur', 'organisateur')
+                   ->addSelect('organisateur')
+                   ->leftJoin('s.siteOrganisateur', 'site_organisateur')
+                   ->addSelect('site_organisateur')
+                   ->leftJoin('s.etat', 'etat')
+                   ->addSelect('etat')
+                   ->leftJoin('s.lieu', 'lieu')
+                   ->addSelect('lieu')
+                   ->leftJoin('s.inscriptions', 'inscriptions')
+                   ->addSelect('inscriptions')
+                   ->andWhere('s.dateHeureDebut > :dateMoinsDunMois')
+                   ->setParameter('dateMoinsDunMois', (new DateTime('now'))->sub(new DateInterval('P1M')));
+
+        if (isset($params['nomSortie'])) {
+            $qb->andWhere('s.nom like :nomSortie')
+               ->setParameter('nomSortie', '%' . $params['nomSortie'] . '%');
+        }
+
+        if (isset($params['campus'])) {
+            $qb->andWhere('site_organisateur.id = :campus')
+               ->setParameter('campus', $params['campus']);
+        }
+
+        if (isset($params['dateDebut'])) {
+            $qb->andWhere('s.dateHeureDebut > :dateDebut')
+               ->setParameter('dateDebut', $params['dateDebut_submit']);
+        }
+
+        if (isset($params['dateFin'])) {
+            $qb->andWhere('s.dateHeureDebut < :dateFin')
+               ->setParameter('dateFin', $params['dateFin_submit']);
+        }
+
+        if (isset($params['isOrganisateur'])) {
+            $qb->andWhere('s.organisateur = :organisateur')
+               ->setParameter('organisateur', $params['participant_id']);
+        }
+
+        if (isset($params['isInscrit'])) {
+            $qb->andWhere('inscriptions.participant = :participantInscrit')
+               ->setParameter('participantInscrit', $params['participant_id']);
+        }
+
+        if (isset($params['isNotInscrit'])) {
+            $qb->andWhere('inscriptions.participant <> :participantNonInscrit')
+               ->setParameter('participantNonInscrit', $params['participant_id']);
+        }
+
+        if (isset($params['isSortiesPassees'])) {
+            $qb->andWhere('s.dateHeureDebut < :now')
+               ->setParameter('now', date('Y-m-d'));
+        }
+
+        $qb->orderBy('s.dateHeureDebut', "ASC")
+           ->orderBy('s.etat', 'ASC');
+
+        return $qb->getQuery();
     }
 
     /**
-     * @param $participant
+     * @param Participant $user
      * @return mixed
+     * @throws Exception
      */
-    public function getSortiesByParticipantId($participant)
+    public function getSortiesByParticipant(Participant $user)
     {
         return $this->createQueryBuilder('s')
                     ->leftJoin('s.organisateur', 'organisateur')
@@ -83,11 +134,15 @@ class SortieRepository extends ServiceEntityRepository
                     ->leftJoin('s.etat', 'etat')
                     ->addSelect('etat')
                     ->leftJoin('s.lieu', 'lieu')
-                    ->leftJoin('s.inscriptions', 'inscrits')
-                    ->addSelect('inscrits')
                     ->addSelect('lieu')
-                    ->where('s.organisateur = :organisateur')
-                    ->setParameter('organisateur', $participant)
+                    ->leftJoin('s.inscriptions', 'inscriptions')
+                    ->addSelect('inscriptions')
+                    ->andWhere('s.dateHeureDebut > :dateMoinsDunMois')
+                    ->setParameter('dateMoinsDunMois', (new DateTime('now'))->sub(new DateInterval('P1M')))
+                    ->andWhere('s.organisateur = :user')
+                    ->setParameter('user', $user)
+                    ->orderBy('s.dateHeureDebut', "ASC")
+                    ->orderBy('s.etat', 'ASC')
                     ->getQuery()
                     ->execute();
     }

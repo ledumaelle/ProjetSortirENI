@@ -32,29 +32,53 @@ class DefaultController extends AbstractController
      */
     public function index(SortieRepository $repo, PaginatorInterface $paginator, Request $request, CampusRepository $campusRepository, ParticipantRepository $participantRepository)
     {
+        $userName = $this->getUser()
+                         ->getUsername();
+        /** @var Participant $user */
+        $user = $participantRepository->findOneBy(["mail" => $userName]);
+
+        if (empty($user)) {
+            throw $this->createNotFoundException("User non trouvé.");
+        }
+
+        //$repo->updateEtatSorties();
         $mobileDetect = new Mobile_Detect();
         $isMobile = $mobileDetect->isMobile();
         $repo->updateEtatSorties();
 
-        $campus = [];
+        $campus = $campusRepository->getAll()
+                                   ->getResult();
+        $nbSorties = 0;
+        //Appliquer les filtres
+        $params = $request->query->all();
+        $params = array_filter($params);
         if ($isMobile) {
-            $userName = $this->getUser()
-                             ->getUsername();
-            /** @var Participant $participant */
-            $participant = $participantRepository->findOneBy(["mail" => $userName]);
-            $sorties = $repo->getSortiesByParticipantId($participant);
+            $sorties = $repo->getSortiesByParticipant($user);
+            $nbSorties = count($sorties);
         } else {
             $campus = $campusRepository->getAll()
                                        ->getResult();
 
-            $query = $repo->getSorties();
+            $params['participant_id'] = $user->getId();
 
-            $sorties = $paginator->paginate($query, /* query NOT result */ $request->query->getInt('page', 1), /*page number*/ 5 /*limit per page*/);
+            $query = $repo->getSorties($params);
+
+            $sorties = $paginator->paginate($query, /* query NOT result */ $request->query->getInt('page', 1), /*page number*/ 4 /*limit per page*/);
+            $nbSorties = $sorties->getTotalItemCount();
         }
 
         return $this->render('default/home.html.twig', [
             'sorties' => $sorties,
+            'nbSorties' => $nbSorties,
             'campus' => $campus,
+            'nomSortie' => $params['nomSortie'] ?? '',
+            'campusParam' => $params['campus'] ?? '',
+            'dateDebut' => (isset($params['dateDebut_submit']) && $params['dateDebut_submit']) ? date_create($params['dateDebut_submit'])->format('d/m/Y') : '',
+            'dateFin' => (isset($params['dateFin_submit']) && $params['dateFin_submit']) ? date_create($params['dateFin_submit'])->format('d/m/Y') : '',
+            'isOrganisateur' => $params['isOrganisateur'] ?? '',
+            'isInscrit' => $params['isInscrit'] ?? '',
+            'isNotInscrit' => $params['isNotInscrit'] ?? '',
+            'isSortiesPassees' => $params['isSortiesPassees'] ?? '',
             'isMobile' => $isMobile,
         ]);
     }
