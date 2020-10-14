@@ -12,15 +12,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
  * @UniqueEntity("mail")
+ * @UniqueEntity("pseudo")
  * @Vich\Uploadable
  */
-class Participant implements UserInterface,Serializable
+class Participant implements UserInterface, Serializable
 {
     /**
      * @ORM\Id
@@ -28,84 +28,67 @@ class Participant implements UserInterface,Serializable
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
      * @ORM\Column(type="string", length=125)
      */
     private $nom;
-
     /**
      * @ORM\Column(type="string", length=125)
      */
     private $prenom;
-
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
      */
     private $telephone;
-
     /**
      * @ORM\Column(type="string", length=125)
      */
     private $pseudo;
-
     /**
      * @ORM\Column(type="string", length=125)
      */
     private $mail;
-
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $motPasse;
-
     /**
      * @ORM\Column(type="boolean")
      */
     private $administrateur;
-
     /**
      * @ORM\Column(type="boolean")
      */
     private $actif;
-
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="participants")
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
-
     /**
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="organisateur", orphanRemoval=true)
      */
     private $sortiesOrganisees;
-
     /**
      * @ORM\OneToMany(targetEntity=Inscription::class, mappedBy="participant", orphanRemoval=true)
      */
     private $inscriptions;
-
-
     /**
      * @Vich\UploadableField(mapping="participant_images", fileNameProperty="imageName", size="imageSize")
      */
     private $imageFile;
-
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $imageName;
-
     /**
      * @ORM\Column(type="integer",nullable=true)
      */
     private $imageSize;
-
     /**
      * @ORM\Column(type="datetime")
      */
     private $dateCreated;
-
     /**
      * @ORM\Column(type="datetime",nullable=true)
      */
@@ -198,7 +181,8 @@ class Participant implements UserInterface,Serializable
         return $this;
     }
 
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return $this->administrateur;
     }
 
@@ -321,9 +305,9 @@ class Participant implements UserInterface,Serializable
      */
     public function getRoles()
     {
-        $roles = [ "ROLE_USER" ];
+        $roles = ["ROLE_USER"];
 
-        if($this->getAdministrateur()) {
+        if ($this->getAdministrateur()) {
             $roles[] = "ROLE_ADMIN";
         }
 
@@ -380,7 +364,7 @@ class Participant implements UserInterface,Serializable
      */
     public function setDateCreated()
     {
-        $this->dateCreated = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+        $this->dateCreated = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
 
     /**
@@ -397,7 +381,7 @@ class Participant implements UserInterface,Serializable
      */
     public function setDateModified()
     {
-        $this->dateModified = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+        $this->dateModified = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
 
     /**
@@ -426,27 +410,9 @@ class Participant implements UserInterface,Serializable
         return $this->imageFile;
     }
 
-
-    public function serialize() {
-        return serialize(array(
-            $this->id,
-            $this->nom,
-            $this->prenom,
-            $this->pseudo,
-            $this->mail,
-            $this->motPasse,
-            $this->imageName,
-            $this->imageSize,
-            $this->campus,
-            $this->administrateur,
-            $this->actif,
-            $this->dateModified,
-            $this->dateCreated
-        ));
-    }
-
-    public function unserialize($serialized) {
-        list (
+    public function serialize()
+    {
+        return serialize([
             $this->id,
             $this->nom,
             $this->prenom,
@@ -460,6 +426,25 @@ class Participant implements UserInterface,Serializable
             $this->actif,
             $this->dateModified,
             $this->dateCreated,
-            ) = unserialize($serialized);
+        ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        [
+            $this->id,
+            $this->nom,
+            $this->prenom,
+            $this->pseudo,
+            $this->mail,
+            $this->motPasse,
+            $this->imageName,
+            $this->imageSize,
+            $this->campus,
+            $this->administrateur,
+            $this->actif,
+            $this->dateModified,
+            $this->dateCreated,
+        ] = unserialize($serialized);
     }
 }
