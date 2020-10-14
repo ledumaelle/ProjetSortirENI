@@ -2,11 +2,12 @@
 
 
 {% block body %}
-    <a href="{{ path('app_admin_campus_add') }}" class="btn btn-primary btn-rounded" role="button"><i class="fas fa-plus mr-1"></i> Ajouter un campus</a>
+    <a href="{{ path('app_admin_campus_add') }}" class="btn light-blue darken-3 text-white btn-rounded" role="button"><i
+                class="fas fa-plus mr-1"></i> Ajouter un campus</a>
 
     {# total items count #}
     <div class="count mt-3  mb-3 flex row justify-content-end mr-5">
-        <h5 class="text-primary"> Total : {{ campus.getTotalItemCount }} </h5>
+        <span class="btn btn-outline-info shadow-none">Total : {{ campus.getTotalItemCount }}</span>
     </div>
     <table class="table" id="participantsTable">
         <thead>

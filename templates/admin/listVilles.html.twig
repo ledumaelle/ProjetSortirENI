@@ -2,11 +2,12 @@
 
 
 {% block body %}
-    <a href="{{ path('app_admin_villes_add') }}" class="btn btn-primary btn-rounded" role="button"><i class="fas fa-plus mr-1"></i> Ajouter une ville</a>
+    <a href="{{ path('app_admin_villes_add') }}" class="btn light-blue darken-3 text-white btn-rounded" role="button"><i
+                class="fas fa-plus mr-1"></i> Ajouter une ville</a>
 
     {# total items count #}
     <div class="count mt-3  mb-3 flex row justify-content-end mr-5">
-        <h5 class="text-primary"> Total : {{ villes.getTotalItemCount }} </h5>
+        <span class="btn btn-outline-info shadow-none">Total : {{ villes.getTotalItemCount }}</span>
     </div>
     <table class="table" id="participantsTable">
         <thead>
