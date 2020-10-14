@@ -3,7 +3,9 @@
 namespace App\Security;
 
 use App\Entity\Participant;
+use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,12 +25,12 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 /**
  * Class LoginFormAuthenticator
+ *
  * @package App\Security
  */
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
-
     /** @var string */
     public const LOGIN_ROUTE = 'app_login';
     /** @var EntityManagerInterface */
@@ -42,13 +44,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     /**
      * LoginFormAuthenticator constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param CsrfTokenManagerInterface $csrfTokenManager
+     *
+     * @param EntityManagerInterface       $entityManager
+     * @param UrlGeneratorInterface        $urlGenerator
+     * @param CsrfTokenManagerInterface    $csrfTokenManager
      * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager,
-                                UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
@@ -62,8 +64,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function supports(Request $request)
     {
-        return self::LOGIN_ROUTE === $request->attributes->get('_route')
-            && $request->isMethod('POST');
+        return self::LOGIN_ROUTE === $request->attributes->get('_route') && $request->isMethod('POST');
     }
 
     /**
@@ -77,18 +78,17 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
-        $request->getSession()->set(
-            Security::LAST_USERNAME,
-            $credentials['mail']
-        );
+        $request->getSession()
+                ->set(Security::LAST_USERNAME, $credentials['mail']);
 
         return $credentials;
     }
 
     /**
-     * @param mixed $credentials
+     * @param mixed                 $credentials
      * @param UserProviderInterface $userProvider
      * @return UserInterface|null
+     * @throws NonUniqueResultException
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
@@ -97,8 +97,15 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        /** @var Participant $user */
-        $user = $this->entityManager->getRepository(Participant::class)->findOneBy(['mail' => $credentials['mail']]);
+        /** @var ParticipantRepository $repository */
+        $repository = $this->entityManager->getRepository(Participant::class);
+
+        $user = $repository->createQueryBuilder('u')
+                           ->where('u.pseudo = :pseudo OR u.mail = :mail')
+                           ->setParameter('pseudo', $credentials['mail'])
+                           ->setParameter('mail', $credentials['mail'])
+                           ->getQuery()
+                           ->getOneOrNullResult();
 
         if (!$user) {
             // fail authentication with a custom error
@@ -106,7 +113,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         }
 
         //Si le user a été ban !
-        if(!$user->getActif()) {
+        if (!$user->getActif()) {
             throw new CustomUserMessageAuthenticationException('Votre compte a été ban temporairement. Contactez un admin ou revenez plus tard.');
         }
 
@@ -114,7 +121,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * @param mixed $credentials
+     * @param mixed         $credentials
      * @param UserInterface $user
      * @return bool
      */
@@ -124,9 +131,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * @param Request $request
+     * @param Request        $request
      * @param TokenInterface $token
-     * @param string $providerKey
+     * @param string         $providerKey
      * @return RedirectResponse|Response|null
      * @throws Exception
      */

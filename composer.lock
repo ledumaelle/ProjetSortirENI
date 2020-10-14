@@ -3629,16 +3629,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.9.8",
+            "version": "v1.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "1cc70238036f54760ce9180484c973b1a3c87b05"
+                "reference": "5c71110ad383ada3d5305c19ff8419a58f799c00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/1cc70238036f54760ce9180484c973b1a3c87b05",
-                "reference": "1cc70238036f54760ce9180484c973b1a3c87b05",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/5c71110ad383ada3d5305c19ff8419a58f799c00",
+                "reference": "5c71110ad383ada3d5305c19ff8419a58f799c00",
                 "shasum": ""
             },
             "require": {
@@ -3688,7 +3688,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-13T17:37:40+00:00"
+            "time": "2020-10-07T12:55:56+00:00"
         },
         {
             "name": "symfony/form",

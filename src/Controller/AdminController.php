@@ -23,6 +23,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class AdminController
+ *
  * @package App\Controller
  *
  * @Route("/admin")
@@ -32,29 +33,25 @@ class AdminController extends AbstractController
     /**
      * @Route("/utilisateurs", name="app_admin_utilisateurs")
      * @param ParticipantRepository $repo
-     * @param PaginatorInterface $paginator
-     * @param Request $request
+     * @param PaginatorInterface    $paginator
+     * @param Request               $request
      * @return Response
      */
     public function listUtilisateurs(ParticipantRepository $repo, PaginatorInterface $paginator, Request $request)
     {
         $query = $repo->getUtilisateursWithCampus();
 
-        $participants = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            4 /*limit per page*/
-        );
+        $participants = $paginator->paginate($query, /* query NOT result */ $request->query->getInt('page', 1), /*page number*/ 4 /*limit per page*/);
 
         return $this->render('admin/listUtilisateurs.html.twig', [
-            'participants' => $participants
+            'participants' => $participants,
         ]);
     }
 
     /**
      * @Route("/utilisateur/{id}/desactiver", name="app_admin_utilisateur_desactiver", requirements={"id": "\d+"})
-     * @param $id
-     * @param ParticipantRepository $participantRepository
+     * @param                        $id
+     * @param ParticipantRepository  $participantRepository
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
@@ -71,13 +68,14 @@ class AdminController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash("success", "L'utilisateur a bien été désactivé temporairement ! ");
+
         return $this->redirectToRoute("app_admin_utilisateurs");
     }
 
     /**
      * @Route("/utilisateur/{id}/reactiver", name="app_admin_utilisateur_reactiver", requirements={"id": "\d+"})
-     * @param $id
-     * @param ParticipantRepository $participantRepository
+     * @param                        $id
+     * @param ParticipantRepository  $participantRepository
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
@@ -94,13 +92,14 @@ class AdminController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash("success", "L'utilisateur a bien été réactivé ! ");
+
         return $this->redirectToRoute("app_admin_utilisateurs");
     }
 
     /**
      * @Route("/utilisateur/{id}/delete", name="app_admin_utilisateur_delete")
-     * @param $id
-     * @param ParticipantRepository $participantRepository
+     * @param                        $id
+     * @param ParticipantRepository  $participantRepository
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
@@ -120,13 +119,14 @@ class AdminController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash("success", "L'utilisateur a bien été supprimé ! ");
+
         return $this->redirectToRoute("app_admin_utilisateurs");
     }
 
     /**
      * @Route("/utilisateurs/add", name="app_admin_add_utilisateurs")
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param Request                      $request
+     * @param EntityManagerInterface       $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return RedirectResponse|Response
      */
@@ -161,19 +161,19 @@ class AdminController extends AbstractController
 
             return $this->render('participant/edit.html.twig', [
                 'isAdmin' => true,
-                'formParticipant' => $formParticipant->createView()
+                'formParticipant' => $formParticipant->createView(),
             ]);
         }
 
         return $this->render('participant/edit.html.twig', [
             'isAdmin' => true,
-            'formParticipant' => $formParticipant->createView()
+            'formParticipant' => $formParticipant->createView(),
         ]);
     }
 
     /**
      * @Route("/utilisateurs/import", name="app_admin_import_users")
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface       $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return RedirectResponse
      */
@@ -186,15 +186,23 @@ class AdminController extends AbstractController
                 return $this->redirectToRoute("app_admin_utilisateurs");
             }
 
-            $campusRepository = $this->getDoctrine()->getRepository(Campus::class);
-            $participantRepository = $this->getDoctrine()->getRepository(Participant::class);
+            $campusRepository = $this->getDoctrine()
+                                     ->getRepository(Campus::class);
+            $participantRepository = $this->getDoctrine()
+                                          ->getRepository(Participant::class);
 
             move_uploaded_file($_FILES["csvFile"]["tmp_name"], "import/" . $_FILES["csvFile"]["name"]);
             $users = fopen("import/" . $_FILES["csvFile"]["name"], 'r');
 
-            while (($user = fgetcsv($users)) !== FALSE) {
-                if (null !== $participantRepository->findOneBy(["mail" => $user[1]])) {
-                    $this->addFlash("danger", 'Veuillez vérifier les informations utilisateurs!');
+            while (($user = fgetcsv($users)) !== false) {
+                $find = $participantRepository->createQueryBuilder('u')
+                                              ->where('u.pseudo = :pseudo OR u.mail = :mail')
+                                              ->setParameter('pseudo', $user[0])
+                                              ->setParameter('mail', $user[1])
+                                              ->getQuery()
+                                              ->getOneOrNullResult();
+                if (null !== $find) {
+                    $this->addFlash("danger", 'Veuillez vérifier les informations utilisateurs! Certaines données peuvent ne pas être uniques');
 
                     return $this->redirectToRoute("app_admin_utilisateurs");
                 }
@@ -233,29 +241,25 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/villes", name="app_admin_villes")
-     * @param VilleRepository $villeRepository
+     * @param VilleRepository    $villeRepository
      * @param PaginatorInterface $paginator
-     * @param Request $request
+     * @param Request            $request
      * @return Response
      */
     public function listVilles(VilleRepository $villeRepository, PaginatorInterface $paginator, Request $request)
     {
         $query = $villeRepository->findAll();
 
-        $villes = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            4 /*limit per page*/
-        );
+        $villes = $paginator->paginate($query, /* query NOT result */ $request->query->getInt('page', 1), /*page number*/ 4 /*limit per page*/);
 
         return $this->render('admin/listVilles.html.twig', [
-            'villes' => $villes
+            'villes' => $villes,
         ]);
     }
 
     /**
      * @Route("/villes/add", name="app_admin_villes_add")
-     * @param Request $request
+     * @param Request                $request
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
@@ -276,47 +280,41 @@ class AdminController extends AbstractController
                 $entityManager->flush();
 
                 $this->addFlash("success", "Votre ville a été ajoutée ! ");
-
             } catch (Exception $exception) {
                 $this->addFlash("danger", $exception->getMessage());
             }
 
             return $this->render('ville/edit.html.twig', [
-                'formVille' => $formVille->createView()
+                'formVille' => $formVille->createView(),
             ]);
         }
 
-
         return $this->render('ville/edit.html.twig', [
-            'formVille' => $formVille->createView()
+            'formVille' => $formVille->createView(),
         ]);
     }
 
     /**
      * @Route("/campus", name="app_admin_campus")
-     * @param CampusRepository $campusRepository
+     * @param CampusRepository   $campusRepository
      * @param PaginatorInterface $paginator
-     * @param Request $request
+     * @param Request            $request
      * @return Response
      */
     public function listCampus(CampusRepository $campusRepository, PaginatorInterface $paginator, Request $request)
     {
         $query = $campusRepository->findAll();
 
-        $campus = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            4 /*limit per page*/
-        );
+        $campus = $paginator->paginate($query, /* query NOT result */ $request->query->getInt('page', 1), /*page number*/ 4 /*limit per page*/);
 
         return $this->render('admin/listCampus.html.twig', [
-            'campus' => $campus
+            'campus' => $campus,
         ]);
     }
 
     /**
      * @Route("/campus/add", name="app_admin_campus_add")
-     * @param Request $request
+     * @param Request                $request
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
@@ -337,19 +335,17 @@ class AdminController extends AbstractController
                 $entityManager->flush();
 
                 $this->addFlash("success", "Votre campus a été ajouté ! ");
-
             } catch (Exception $exception) {
                 $this->addFlash("danger", $exception->getMessage());
             }
 
             return $this->render('campus/edit.html.twig', [
-                'formCampus' => $formCampus->createView()
+                'formCampus' => $formCampus->createView(),
             ]);
         }
 
-
         return $this->render('campus/edit.html.twig', [
-            'formCampus' => $formCampus->createView()
+            'formCampus' => $formCampus->createView(),
         ]);
     }
 }
