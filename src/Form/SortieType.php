@@ -104,7 +104,6 @@ class SortieType extends AbstractType
                 'class' => Ville::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Sélectionnez une ville',
-                'required' => true,
                 'label' => false,
                 'mapped' => false,
                 'required' => false,
@@ -118,7 +117,7 @@ class SortieType extends AbstractType
                 }
             ]);
 
-        $formModifier = function (Form $form, Ville $ville = null) {
+        $formModifier = function (Form $form, Ville $ville = null) use ($user) {
 
             if ($ville == null) {
                 $form->add('lieu', EntityType::class, [
@@ -164,6 +163,47 @@ class SortieType extends AbstractType
                 ]);
             }
 
+
+            //TODO if privé
+
+
+            $form->add('userAll', EntityType::class, [
+                'class' => Participant::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'Liste des Utilisateur',
+                'label' => false,
+                'mapped' => false,
+                'required' => false,
+                'multiple'=>'multiple',
+
+                'attr' => [
+                    'class' => 'browser-default custom-select mb-4',
+
+                ],
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.nom', "ASC");
+                }
+            ])->add('userInscrit', EntityType::class, [
+                'class' => Participant::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'Liste des Utilisateur',
+                'label' => false,
+
+                'empty_data'=>[],
+                'mapped' => false,
+                'required' => false,
+                'multiple'=>'multiple',
+
+                'attr' => [
+                    'class' => 'msel-selected browser-default custom-select mb-4',
+
+                ],'query_builder' => function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.id=?1')->setParameters(array(1=>$user->getId()));
+                }
+            ]);
+
         };
 
 
@@ -189,6 +229,8 @@ class SortieType extends AbstractType
                 $formModifier($event->getForm()->getParent(), $ville);
             }
         );
+
+
 
 
     }

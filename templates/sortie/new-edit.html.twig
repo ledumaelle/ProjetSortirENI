@@ -25,8 +25,21 @@
 
         {{ form_row(form.siteOrganisateur) }}
         {{ form_row(form.ville) }}
-        <div class=" mb-4 d-flex flex-row align-items-baseline justify-content-between">
+        <div class="msel-wrapper mb-4 d-flex flex-row align-items-baseline justify-content-between">
             {{ form_row(form.lieu) }} <a href="{{ path('lieu_create') }}" class="btn btn-primary btn-rounded"><i class="fas fa-plus mr-1"></i> Ajouter un lieu</a>
+        </div>
+
+        <div class=" mb-4 d-flex flex-row align-items-baseline ">
+            <div class="msel-from-wrapper" style="display: table-cell;">
+                {{ form_widget(form.userAll) }}
+            </div>
+            <div class="msel-button-wrapper" style="display: table-cell; vertical-align: middle;">
+                <button type="button" id="addButton" class="msel-button-promote" style="display: block;">&gt;&gt;</button>
+                <button type="button" id="removeButton" class="msel-button-demote" style="display: block;">&lt;&lt;</button>
+            </div>
+            <div class="msel-to-wrapper" style="display: table-cell;">
+                {{ form_widget(form.userInscrit) }}
+            </div>
         </div>
         <div class=" mb-4">
             {{ form_widget(form.Enregistrer) }}
@@ -39,6 +52,8 @@
 
     <script>
         var $ville = $('#sortie_ville');
+        var $addButton = $('#addButton');
+        var $removeButton = $('#removeButton');
         var dateHeureDebut= $('#sortie_dateHeureDebut');
         var dateLimiteInscription= $('#sortie_dateLimiteInscription');
         // When ville gets selected ...
@@ -67,7 +82,25 @@
             });
         });
 
-        console.log(data);
+        $addButton.click(function (){
+
+            var user = $('#sortie_userAll :selected');
+            console.log(user)
+            var userInscrit = $('#sortie_userInscrit')
+           // var user = userAll.options[userAll.selectedIndex].value;
+            userInscrit.append(user);
+        });
+
+        $removeButton.click(function (){
+
+            var user = $('#sortie_userInscrit :selected');
+            console.log(user)
+            var userInscrit = $('#sortie_userAll')
+            // var user = userAll.options[userAll.selectedIndex].value;
+            userInscrit.append(user);
+        });
+
+
     </script>
 
 {% endblock %}
