@@ -141,7 +141,9 @@
                 </thead>
                 <tbody>
                 {% for sortie in sorties %}
-                    <tr class="{{ sortie.dateHeureDebut|date('Y-m-d') < "now"|date('Y-m-d') ? 'sortie_passee' : '' }} {{ sortie.organisateur == app.user ? 'organisateur' : '' }}">
+                    <tr class="{{ sortie.dateHeureDebut|date('Y-m-d') < "now"|date('Y-m-d') ? 'sortie_passee' : '' }}
+                                {{ sortie.organisateur == app.user ? 'organisateur' : '' }}
+                                {{ sortie.etat.id == 6 ? 'annulee' : '' }}">
                         <th scope="row">
                             {% if false == isMobile %}
                                 {{ sortie.nom }}
@@ -164,7 +166,15 @@
                         <th> {{ sortie.lieu ? sortie.lieu.ville ? sortie.lieu.ville.nom : '' }} </th>
                         {% if false == isMobile %}
                             <th> {{ sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }} </th>
-                            <th> {{ sortie.etat.libelle }} </th>
+                            <th>
+                                {{ sortie.etat.libelle }}
+                                {% if sortie.etat.id == 6 %}
+                                    <a href="#" class="mx-2 material-tooltip-main" data-toggle="tooltip" data-html="true"
+                                            title="<b>Motif : </b></br> {{ sortie.motifAnnulation }}">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                {% endif %}
+                            </th>
                             <th>
                                 {% if sortie.inscriptions|filter(insc => insc.participant.id == app.user.id)|length != 0 %}
                                     <i class="fas fa-check green-text fa-lg"></i>
@@ -233,11 +243,11 @@
                                 {% endif %}
 
                                 <!-- ANNULER LA SORTIE -->
-                                {% if (sortie.organisateur == app.user and (sortie.etat.id == 2 or sortie.etat.id == 3)) or is_granted("ROLE_ADMIN") %}
+                                {% if (sortie.organisateur == app.user or is_granted("ROLE_ADMIN")) and (sortie.etat.id == 2 or sortie.etat.id == 3) %}
                                     <a href="{{ path('annul_sortie', {id: sortie.id}) }}"
                                        class="btn-floating btn-danger mr-2 btn-sm material-tooltip-main"
                                        data-toggle="tooltip" data-placement="top" title="Annuler la sortie">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="fas fa-ban"></i>
                                     </a>
                                 {% endif %}
                             </th>
