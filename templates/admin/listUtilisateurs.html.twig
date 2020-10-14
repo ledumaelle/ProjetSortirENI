@@ -2,30 +2,37 @@
 
 
 {% block body %}
-    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn btn-primary btn-rounded" role="button"><i class="fas fa-plus mr-1"></i> Ajouter un utilisateur</a>
-    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn btn-success btn-rounded" data-toggle="modal" data-target="#importUsers" role="button"><i class="far fa-file-excel mr-1"></i></i> Importer des utilisateurs</a>
+    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn light-blue darken-3 text-white btn-rounded"
+       role="button"><i
+                class="fas fa-plus mr-1"></i> Ajouter un utilisateur</a>
+    <a href="{{ path('app_admin_add_utilisateurs') }}" class="btn green darken-3 text-white btn-rounded"
+       data-toggle="modal"
+       data-target="#importUsers" role="button"><i class="far fa-file-excel mr-1"></i> Importer des utilisateurs</a>
 
     <div class="modal fade" id="importUsers" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header grey lighten-4">
+                <div class="modal-header light-blue darken-4 text-white">
                     <h4 class="modal-title">Importer des utilisateurs</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body mx-3">
                     <form method="post" action="{{ path('app_admin_import_users') }}" enctype="multipart/form-data">
                         <div class="input-file-container">
-                            <input class="input-file" type="file" name="csvFile" id="csvFile" accept=".csv"/>
-                            <label for="my-file" class="input-file-trigger" tabindex="0">
+                            <input class="input-file" type="file" name="csvFile"
+                                   id="csvFile" accept=".csv"/>
+                            <label for="my-file" class="input-file-trigger btn green darken-3 text-white btn-rounded"
+                                   tabindex="0">
                                 Choisir une liste d'utilisateurs (.csv)
                             </label>
                         </div>
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                        <button class="btn grey lighten-2 btn-md mt-4" type="submit">Importer
+                        <button class="btn btn-rounded light-blue darken-3 text-white lighten-2 btn-md mt-4"
+                                type="submit">Importer
                         </button>
                     </form>
                 </div>
@@ -35,7 +42,7 @@
 
     {# total items count #}
     <div class="count mt-3  mb-3 flex row justify-content-end mr-5">
-        <h5 class="text-primary"> Total : {{ participants.getTotalItemCount }} </h5>
+        <span class="btn btn-outline-info shadow-none">Total : {{ participants.getTotalItemCount }}</span>
     </div>
     <table class="table" id="participantsTable">
         <thead>
@@ -51,7 +58,7 @@
         </thead>
         <tbody>
         {% for participant in participants %}
-            <tr class="{{ participant.actif ? 'unban' : 'ban'}}">
+            <tr class="{{ participant.actif ? 'unban' : 'ban' }}">
                 <th scope="row">{{ participant.pseudo }}</th>
                 <th>{{ participant.mail }}</th>
                 <th>{{ participant.nom }}</th>
@@ -60,15 +67,21 @@
                 <th>{{ participant.campus.nom }}</th>
                 <th>
                     {% if participant.actif %}
-                        <a href="{{ path('app_admin_utilisateur_desactiver', {id: participant.id}) }}" class="btn-floating btn-secondary mr-2 btn-sm material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Désactiver cet utilisateur">
+                        <a href="{{ path('app_admin_utilisateur_desactiver', {id: participant.id}) }}"
+                           class="btn-floating amber darken-3 mr-2 btn-sm material-tooltip-main" data-toggle="tooltip"
+                           data-placement="top" title="Désactiver cet utilisateur">
                             <i class="fas fa-ban"></i>
                         </a>
                     {% else %}
-                        <a href="{{ path('app_admin_utilisateur_reactiver', {id: participant.id}) }}" class="btn-floating btn-success mr-2 btn-sm material-tooltip-main" data-toggle="tooltip" data-placement="top" title="Réactiver cet utilisateur">
+                        <a href="{{ path('app_admin_utilisateur_reactiver', {id: participant.id}) }}"
+                           class="btn-floating green darken-1 mr-2 btn-sm material-tooltip-main" data-toggle="tooltip"
+                           data-placement="top" title="Réactiver cet utilisateur">
                             <i class="fas fa-check"></i>
                         </a>
                     {% endif %}
-                    <a class="btn-floating btn-danger btn-sm material-tooltip-main openModalDeleteUser" data-id="{{participant.id}}" data-toggle="tooltip" data-placement="top" title="Supprimer cet utilisateur">
+                    <a class="btn-floating btn-danger btn-sm material-tooltip-main openModalDeleteUser"
+                       data-id="{{ participant.id }}" data-toggle="tooltip" data-placement="top"
+                       title="Supprimer cet utilisateur">
                         <i class="far fa-trash-alt"></i>
                     </a>
                 </th>
@@ -101,8 +114,8 @@
 
                 <!--Footer-->
                 <div class="modal-footer flex-center">
-                    <a id="deleteUser" class="btn  btn-outline-danger">Oui</a>
-                    <a type="button" class="btn  btn-danger waves-effect" data-dismiss="modal">Non</a>
+                    <a id="deleteUser" class="btn btn-rounded btn-outline-danger">Oui</a>
+                    <a type="button" class="btn btn-rounded btn-danger waves-effect" data-dismiss="modal">Non</a>
                 </div>
             </div>
             <!--/.Content-->
@@ -110,41 +123,41 @@
     </div>
     <!--Modal: modalConfirmDelete-->
 
-        <style>
-            /* styles de base si JS est activé */
-            .input-file-container {
-                position: relative;
-            }
+    <style>
+        /* styles de base si JS est activé */
+        .input-file-container {
+            position: relative;
+        }
 
-            .input-file-trigger {
-                display: block;
-                padding: 14px 45px;
-                background: #4285F4;
-                color: #fff;
-                font-size: 1em;
-                transition: all .4s;
-                cursor: pointer;
-            }
+        .input-file-trigger {
+            display: block;
+            padding: 14px 45px;
+            background: #4285F4;
+            color: #fff;
+            font-size: 1em;
+            transition: all .4s;
+            cursor: pointer;
+        }
 
-            .input-file {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 225px;
-                padding: 14px 0;
-                opacity: 0;
-                cursor: pointer;
-            }
-        </style>
+        .input-file {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 225px;
+            padding: 14px 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
-            $('.openModalDeleteUser').on("click", function() {
+            $('.openModalDeleteUser').on("click", function () {
                 let participantId = ($(this).attr('data-id'));
 
                 var url = '{{ path('app_admin_utilisateur_delete',  {'id': 'participantId'})|escape('js') }}';

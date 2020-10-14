@@ -12,16 +12,19 @@
                     <div class="card testimonial-card">
 
                         <!-- Background color -->
-                        <div class="card-up warning-color-dark p-3 white-text">
+                        <div class="card-up green darken-3 p-3 white-text">
                             <p class="mb-0 font-weight-normal">{{ participant.pseudo }}</p>
                         </div>
 
                         <!-- Avatar -->
                         <div class="avatar mx-auto white">
                             {% if participant and participant.imageName %}
-                                <img class="rounded-circle z-depth-0" src="{{ asset('image/participants/'~participant.imageName) }}" alt="{{ participant.imageName }}"/>
+                                <img class="rounded-circle z-depth-0"
+                                     src="{{ asset('image/participants/'~participant.imageName) }}"
+                                     alt="{{ participant.imageName }}"/>
                             {% else %}
-                                <img src="{{ asset('image/participants/empty_picture.png') }}" class="rounded-circle z-depth-0"
+                                <img src="{{ asset('image/participants/empty_picture.png') }}"
+                                     class="rounded-circle z-depth-0"
                                      alt="avatar image">
                             {% endif %}
                         </div>
@@ -41,14 +44,16 @@
                         <div class="col">
                             <!-- Nom -->
                             <div class="md-form">
-                                <input type="text" id="materialRegisterFormFirstName" class="form-control" value="{{ participant.nom }}">
+                                <input type="text" id="materialRegisterFormFirstName" class="form-control"
+                                       value="{{ participant.nom }}">
                                 <label for="materialRegisterFormFirstName">Nom</label>
                             </div>
                         </div>
                         <div class="col">
                             <!-- Prénom -->
                             <div class="md-form">
-                                <input type="email" id="materialRegisterFormLastName" class="form-control" value="{{ participant.prenom }}">
+                                <input type="email" id="materialRegisterFormLastName" class="form-control"
+                                       value="{{ participant.prenom }}">
                                 <label for="materialRegisterFormLastName">Prénom</label>
                             </div>
                         </div>
@@ -58,14 +63,16 @@
                         <div class="col">
                             <!-- Pseudo -->
                             <div class="md-form mt-0">
-                                <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.pseudo }}">
+                                <input type="text" id="materialRegisterFormEmail" class="form-control"
+                                       value="{{ participant.pseudo }}">
                                 <label for="materialRegisterFormEmail">Pseudo</label>
                             </div>
                         </div>
                         <div class="col">
                             <!-- Mail -->
                             <div class="md-form mt-0">
-                                <input type="email" id="materialRegisterFormEmail" class="form-control" value="{{ participant.mail }}">
+                                <input type="email" id="materialRegisterFormEmail" class="form-control"
+                                       value="{{ participant.mail }}">
                                 <label for="materialRegisterFormEmail">Mail</label>
                             </div>
                         </div>
@@ -73,13 +80,15 @@
 
                     <!-- Téléphone -->
                     <div class="md-form mt-0">
-                        <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.telephone }}">
+                        <input type="text" id="materialRegisterFormEmail" class="form-control"
+                               value="{{ participant.telephone }}">
                         <label for="materialRegisterFormEmail">Téléphone</label>
                     </div>
 
                     <!-- Campus -->
                     <div class="md-form mt-0">
-                        <input type="text" id="materialRegisterFormEmail" class="form-control" value="{{ participant.campus.nom }}">
+                        <input type="text" id="materialRegisterFormEmail" class="form-control"
+                               value="{{ participant.campus.nom }}">
                         <label for="materialRegisterFormEmail">Campus</label>
                     </div>
 
@@ -88,7 +97,9 @@
 
                 <div class="row d-flex">
                     <div class="col-sm-4">
-                        <button class="btn btn-outline-default btn-rounded waves-effect my-4 btn-block" type="button" onclick="history.go(-1)">Retour</button>
+                        <button class="btn btn-outline-default btn-rounded waves-effect my-4 btn-block" type="button"
+                                onclick="history.go(-1)">Retour
+                        </button>
                     </div>
                 </div>
 

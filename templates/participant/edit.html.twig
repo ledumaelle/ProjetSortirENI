@@ -12,7 +12,7 @@
                     <div class="card testimonial-card">
 
                         <!-- Background color -->
-                        <div class="card-up warning-color-dark p-3 white-text">
+                        <div class="card-up green darken-3 p-3 white-text">
                             <p class="mb-0 font-weight-normal">Mon Profil</p>
                         </div>
 
@@ -106,7 +106,7 @@
                 <!-- Mot de Passe -->
                 <div class="form-row">
                     <div class="col">
-                        <!-- Pseudo -->
+                        <!-- Mot de passe -->
                         <div class="md-form">
                             {{ form_widget(formParticipant.motPasse.first) }}
 
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <div class="col">
-                        <!-- Mail -->
+                        <!-- Confirmation -->
                         <div class="md-form">
                             {{ form_widget(formParticipant.motPasse.second) }}
 
@@ -164,7 +164,7 @@
                 <!-- Photo -->
                 <div class="md-form">
                     <div class="file-field">
-                        <div class="btn btn-primary btn-sm float-left">
+                        <div class="btn light-blue darken-3 text-white btn-sm float-left">
                             <span>Photo de Profil</span>
                             {{ form_widget(formParticipant.imageFile) }}
                         </div>
@@ -186,7 +186,8 @@
 
                 <div class="form-row mb-4 flex justify-content-center">
                     <div class="col-sm-2 mr-5">
-                        <button class="btn btn-primary btn-rounded waves-effect my-4 btn-block" type="submit">
+                        <button class="btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block"
+                                type="submit">
                             Enregistrer
                         </button>
                     </div>
