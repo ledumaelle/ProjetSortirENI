@@ -46,6 +46,8 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setMotPasse($this->encoder->encodePassword($participant, 'leroux'));
         $participant->setAdministrateur(true);
         $participant->setActif(true);
+        $participant->setImageName('avatar-angelique.jpg');
+        $participant->setImageSize(41057);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $participant->setDateCreated();
         $manager->persist($participant);
@@ -62,6 +64,8 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setMotPasse($this->encoder->encodePassword($participant, 'ledu'));
         $participant->setAdministrateur(true);
         $participant->setActif(true);
+        $participant->setImageName('avatar-maelle.jpg');
+        $participant->setImageSize(67167);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $participant->setDateCreated();
         $manager->persist($participant);
@@ -77,6 +81,8 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setMotPasse($this->encoder->encodePassword($participant, 'collin'));
         $participant->setAdministrateur(false);
         $participant->setActif(true);
+        $participant->setImageName('avatar-thomas.jpg');
+        $participant->setImageSize(44685);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $participant->setDateCreated();
         $manager->persist($participant);
@@ -91,6 +97,8 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $participant->setMail('julien.vandamme@gmail.com');
         $participant->setMotPasse($this->encoder->encodePassword($participant, 'vandamme'));
         $participant->setAdministrateur(false);
+        $participant->setImageName('avatar-julien.jpg');
+        $participant->setImageSize(107012);
         $participant->setActif(true);
         $participant->setCampus($this->getReference(CampusFixtures::CAMPUS_CHARTRES_DE_BRETAGNE));
         $participant->setDateCreated();

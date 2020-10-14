@@ -55,6 +55,11 @@ class Sortie
     private $infosSortie;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $motifAnnulation;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $isPrivate;
@@ -187,6 +192,23 @@ class Sortie
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMotifAnnulation()
+    {
+        return $this->motifAnnulation;
+    }
+
+    /**
+     * @param mixed $motifAnnulation
+     */
+    public function setMotifAnnulation($motifAnnulation): void
+    {
+        $this->motifAnnulation = $motifAnnulation;
+    }
+
 
     public function getIsPrivate(): ?bool
     {

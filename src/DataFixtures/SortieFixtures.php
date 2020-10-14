@@ -231,6 +231,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $sortie->setLieu($this->getReference(LieuFixtures::LIEU_CINEMA));
         $sortie->setSiteOrganisateur($this->getReference(CampusFixtures::CAMPUS_SAINT_HERBLAIN));
         $sortie->setInfosSortie("La sortie est annulée donc on s'en balek ! ");
+        $sortie->setMotifAnnulation("Motif de la sortie annulée : Elle est annulée et tu vas faire quoi ? NADA ! ");
         $sortie->setDateCreated();
         $manager->persist($sortie);
 
