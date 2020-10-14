@@ -1,0 +1,137 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!--Grid column-->
+            <div class="col-md-8 col-lg-8 mx-auto">
+
+                <!-- Form -->
+
+                <form>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Nom -->
+                            <div class="md-form">
+                                <input type="text" id="nom"  class="form-control" value="{{ sortie.nom }}">
+                                <label for="nom">Nom</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Nom -->
+                            <div class="md-form">
+                                <input type="text" id="campus"  class="form-control" value="{{ sortie.siteOrganisateur.nom }}">
+                                <label for="campus">Campus</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Date sortie -->
+                            <div class="md-form">
+                                <input type="text" id="dateDeb" class="form-control" value="{{ sortie.dateHeureDebut | date("d/m/Y") }}">
+                                <label for="dateDeb">Date Sortie</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Date sortie -->
+                            <div class="md-form">
+                                <input type="text" id="lieu" class="form-control" value="{{ sortie.lieu.nom }}">
+                                <label for="lieu">Lieu</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Date inscr -->
+                            <div class="md-form">
+                                <input type="text" id="dateInsc" class="form-control" value="{{ sortie.dateLimiteInscription | date("d/m/Y") }}">
+                                <label for="dateInsc">Infos Sortie</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Date sortie -->
+                            <div class="md-form">
+                                <input type="text" id="rue" class="form-control" value="{{ sortie.lieu.rue }}">
+                                <label for="rue">Rue</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Nb participant sortie -->
+                            <div class="md-form">
+                                <input type="text" id="NbInsc" class="form-control" value="{{ sortie.nbInscriptionsMax }}">
+                                <label for="NbInsc">Nobre de participant</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Date sortie -->
+                            <div class="md-form">
+                                <input type="text" id="CP" class="form-control" value="{{ sortie.lieu.ville.codePostal }}">
+                                <label for="CP">Code Postal</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- duree sortie -->
+                            <div class="md-form">
+                                <input type="text" id="duree" class="form-control" value="{{ sortie.duree }}">
+                                <label for="duree">Duree Sortie</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Date sortie -->
+                            <div class="md-form">
+                                <input type="text" id="long" class="form-control" value="{{ sortie.lieu.longitude }}">
+                                <label for="long">Longitude</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <!-- Infos sortie -->
+                            <div class="md-form">
+                                <input type="text" id="infos" class="form-control" value="{{ sortie.infosSortie }}">
+                                <label for="infos">Infos Sortie</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Date sortie -->
+                            <div class="md-form">
+                                <input type="text" id="lat" class="form-control" value="{{ sortie.lieu.latitude }}">
+                                <label for="lat">Latitude</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if not private %}
+                        <div class="form-row">
+                    <!-- List user -->
+                            <div class="md-form ">
+                               <p>Liste participant</p>
+                                    <ul>
+                                    {%  for inscri in sortie.inscriptions  %}
+                                        <p>{{ inscri.participant.nom }}</p>
+                                    {% endfor %}
+                                    </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+                </form>
+
+
+
+
+            </div>
+            <!--Grid column-->
+        </div>
+    </div>
+{% endblock %}
+
