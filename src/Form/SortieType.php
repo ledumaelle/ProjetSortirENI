@@ -7,6 +7,7 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Repository\LieuRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -28,15 +29,36 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SortieType extends AbstractType
 {
     protected $em;
+    /** @var LieuRepository */
+    protected $lieuRepository;
+    protected $villeSelected = null;
+    protected $lieuSelected = null;
 
-    function __construct(EntityManagerInterface $em)
+    function __construct(EntityManagerInterface $em, LieuRepository $lieuRepository)
     {
         $this->em = $em;
+        $this->lieuRepository = $lieuRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+
+        if (null !== $options['data']->getLieu()) {
+            $this->lieuSelected = $options['data']->getLieu()
+                                                  ->getId();
+            $this->lieuRepository->createQueryBuilder('l')
+                                 ->innerJoin('l.ville', 'v')
+                                 ->where('l.id = :id')
+                                 ->setParameter('id', $options['data']->getLieu()
+                                                                      ->getId())
+                                 ->addSelect('v')
+                                 ->getQuery()
+                                 ->getOneOrNullResult();
+            $this->villeSelected = $options['data']->getLieu()
+                                                   ->getVille()
+                                                   ->getId();
+        }
 
         $user = $options['user'];
 
@@ -109,6 +131,7 @@ class SortieType extends AbstractType
                     'label' => false,
                     'mapped' => false,
                     'attr' => [
+                        'data-ville-selected' => $this->villeSelected,
                         'class' => 'browser-default custom-select mb-4',
 
                     ],
@@ -128,8 +151,8 @@ class SortieType extends AbstractType
                     'label' => false,
                     'row_attr' => ['class' => 'flex-grow-1'],
                     'attr' => [
+                        'data-lieu-selected' => $this->lieuSelected,
                         'class' => 'browser-default custom-select mb-4',
-                        'onChange' => 'changeLieu',
                     ],
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('c')
@@ -141,7 +164,13 @@ class SortieType extends AbstractType
                                                    ->getId(),
                         ];
                     },
-                ]);
+                ])
+                     ->add('Enregistrer', SubmitType::class, [
+                         'attr' => ['class' => 'btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
+                     ])
+                     ->add('Publier', SubmitType::class, [
+                         'attr' => ['class' => 'btn green darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
+                     ]);
             } else {
                 $form->add('lieu', EntityType::class, [
                     'class' => Lieu::class,
@@ -150,6 +179,7 @@ class SortieType extends AbstractType
                     'label' => false,
                     'row_attr' => ['class' => 'flex-grow-1'],
                     'attr' => [
+                        'data-lieu-selected' => $this->lieuSelected,
                         'class' => 'browser-default custom-select mb-4',
                         'onChange' => 'changeLieu',
                     ],
@@ -165,7 +195,13 @@ class SortieType extends AbstractType
                                                    ->getId(),
                         ];
                     },
-                ]);
+                ])
+                     ->add('Enregistrer', SubmitType::class, [
+                         'attr' => ['class' => 'btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
+                     ])
+                     ->add('Publier', SubmitType::class, [
+                         'attr' => ['class' => 'btn green darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
+                     ]);
             }
         };
 
@@ -202,6 +238,7 @@ class SortieType extends AbstractType
             'label' => false,
             'mapped' => false,
             'attr' => [
+                'data-ville-selected' => $this->villeSelected,
                 'class' => 'browser-default custom-select',
                 'onChange' => 'changeVille()',
             ],
@@ -219,6 +256,7 @@ class SortieType extends AbstractType
                 'required' => true,
                 'label' => false,
                 'attr' => [
+                    'data-lieu-selected' => $this->lieuSelected,
                     'class' => 'browser-default custom-select',
                     'onChange' => 'changeLieu',
                 ],
@@ -243,6 +281,7 @@ class SortieType extends AbstractType
                 'required' => true,
                 'label' => false,
                 'attr' => [
+                    'data-lieu-selected' => $this->lieuSelected,
                     'class' => 'browser-default custom-select',
                     'onChange' => 'changeLieu',
                 ],

@@ -137,7 +137,6 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()
                                                                     ->getName()) {
-
                 $etat = $etatRepository->findOneByLibelle('Créée');
             } else {
                 $etat = $etatRepository->findOneByLibelle('Ouverte');
@@ -162,6 +161,8 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/new-edit.html.twig', [
             'form' => $form->createView(),
+            'sortieId' => $sortie->getId(),
+            'isUpdate' => true,
         ]);
     }
 
