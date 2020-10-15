@@ -53,7 +53,7 @@ class SortieRepository extends ServiceEntityRepository
                    ->addSelect('lieu')
                    ->leftJoin('s.inscriptions', 'inscriptions')
                    ->addSelect('inscriptions')
-                    ->join('inscriptions.participant', 'participants')
+                    ->leftJoin('inscriptions.participant', 'participants')
                     ->addSelect('participants')
                    ->andWhere('s.dateHeureDebut > :dateMoinsDunMois')
                    ->setParameter('dateMoinsDunMois', (new DateTime('now'))->sub(new DateInterval('P1M')));

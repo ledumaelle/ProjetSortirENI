@@ -28,8 +28,7 @@
 
                         <div class="md-form">
                             <i class="fas fa-search prefix"></i>
-                            <input type="text" id="nomSortie" class="form-control" name="nomSortie"
-                                   value="{{ nomSortie }}">
+                            <input type="text" id="nomSortie" class="form-control" name="nomSortie" value="{{ nomSortie }}"/>
                             <label for="searchSortie">Rechercher une sortie</label>
                         </div>
 
@@ -151,7 +150,7 @@
                                 <a href="#">{{ sortie.nom }}</a>
                             {% endif %}</th>
                         <th>
-                            {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date("d/m/Y")  : '' }}
+                            {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date("d/m/Y H:i")  : '' }}
 
                             {% if (sortie.dateHeureDebut|date('Y-m-d') == "now"|date('Y-m-d')) %}
                                 <a href="#" class="indigo-text mx-2 text-secondary material-tooltip-main"
@@ -221,7 +220,7 @@
                                 {% if sortie.inscriptions|filter(insc => insc.participant.id == app.user.id)|length == 0 %}
 
                                     <!-- S'INSCRIRE A LA SORTIE -->
-                                    {% if sortie.etat.id == 2 and (date(sortie.dateLimiteInscription) > date() or sortie.dateLimiteInscription|date('d-m-Y') == "now"|date('d-m-Y')) %}
+                                    {% if sortie.etat.id == 2 and (date(sortie.dateLimiteInscription) > date() or sortie.dateLimiteInscription|date('d-m-Y') == "now"|date('d-m-Y')) and sortie.nbInscriptionsMax > sortie.inscriptions|length %}
                                         <a href="{{ path('inscrit_sortie', {id: sortie.id}) }}"
                                            class="btn-floating btn-light-green mr-2 btn-sm material-tooltip-main"
                                            data-toggle="tooltip" data-placement="top" title="S'inscrire">
