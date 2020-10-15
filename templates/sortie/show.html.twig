@@ -134,34 +134,31 @@
 
             <!--Grid column-->
             <div class="col-md-4 col-lg-4">
+                <div class="form-row justify-content-center">
+                    <!-- List user -->
+                    <div class="md-form">
+                        <h5>Liste des participants inscrits : </h5>
 
-                {% if not private %}
-                    <div class="form-row justify-content-center">
-                        <!-- List user -->
-                        <div class="md-form">
-                            <h5>Liste des participants inscrits : </h5>
-
-                            <table class="table" id="participantsTable">
-                                <thead>
+                        <table class="table" id="participantsTable">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="font-weight-bold">PSEUDO</th>
+                                <th scope="col" class="font-weight-bold">NOM</th>
+                                <th scope="col" class="font-weight-bold">PRENOM</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for inscri in sortie.inscriptions %}
                                 <tr>
-                                    <th scope="col" class="font-weight-bold">PSEUDO</th>
-                                    <th scope="col" class="font-weight-bold">NOM</th>
-                                    <th scope="col" class="font-weight-bold">PRENOM</th>
+                                    <th scope="row"> {{ inscri.participant.pseudo }}</th>
+                                    <th scope="row"> {{ inscri.participant.nom }}</th>
+                                    <th scope="row"> {{ inscri.participant.prenom }}</th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                {% for inscri in sortie.inscriptions %}
-                                    <tr>
-                                        <th scope="row"> {{ inscri.participant.pseudo }}</th>
-                                        <th scope="row"> {{ inscri.participant.nom }}</th>
-                                        <th scope="row"> {{ inscri.participant.prenom }}</th>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>

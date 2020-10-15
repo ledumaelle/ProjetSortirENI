@@ -350,30 +350,42 @@ class SortieController extends AbstractController
      */
     public function showSortie(Sortie $sortie, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
     {
+        if (empty($sortie)) {
+            throw $this->createNotFoundException("Sortie non trouvée.");
+        }
+
         //si prive et user  affiche
         //si prive et pas user masque
         //sinon affich
 
-        $private=$sortie->getIsPrivate();
+        $private = $sortie->getIsPrivate();
 
-        $userName = $this->getUser()
+        $mail = $this->getUser()
             ->getUsername();
 
-        $user = $participantRepo->findOneByMail($userName);
+        $user = $participantRepo->findOneByMail($mail);
 
-        foreach ($sortie->getInscriptions() as $inscription) {
+        $participantFound = false;
+        if($private) {
 
-            if ($inscription->getParticipant() == $user) {
-                $private=false;
+            if ($sortie->getOrganisateur() === $user) {
+
+                $participantFound = true;
+            }
+            else {
+
+                foreach ($sortie->getInscriptions() as $inscription) {
+
+                    if ($inscription->getParticipant() === $user) {
+                        $participantFound = true;
+                    }
+                }
             }
         }
 
-        if ($sortie->getOrganisateur() == $user){
-            $private=false;
-        }
+        if($private && !$participantFound) {
 
-        if (empty($sortie)) {
-            throw $this->createNotFoundException("Participant non trouvé");
+            throw $this->createNotFoundException("Sortie non trouvée.");
         }
 
         return $this->render('sortie/show.html.twig', [
