@@ -151,14 +151,20 @@
 
         <div class="form-row mb-4 flex justify-content-center">
             <div class="col-sm-2 mr-5">
-                <button class="btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block"
-                        type="submit">
-                    Enregistrer
-                </button>
+                {{ form_widget(form.Enregistrer) }}
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2 mr-5">
+                {{ form_widget(form.Publier) }}
+            </div>
+            {% if isUpdate|default(false) %}
+                <div class="col-sm-2 mr-5">
+                    <a href="{{ path('sortie_annuler', {'id':sortieId}) }}"
+                       class="btn danger-color-dark text-white btn-rounded waves-effect my-4 btn-block">Supprimer</a>
+                </div>
+            {% endif %}
+            <div class="col-sm-2 mr-5">
                 <button class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
-                        type="submit">Publier
+                        onclick="history.go(-1)">Annuler
                 </button>
             </div>
         </div>
@@ -169,9 +175,32 @@
 
     <script>
         const ville = $('#sortie_ville');
+        const lieu = $('#sortie_lieu');
         $(document).ready(function () {
-            $("#sortie_ville").prop('selectedIndex', 0);
+            if (ville.data('ville-selected') === '') {
+                ville.prop('selectedIndex', 0);
+            } else {
+                let indexSelected = 0;
+                $('#sortie_ville option').each(function (index) {
+                    if (parseInt($(this).val()) === ville.data('ville-selected')) {
+                        indexSelected = index
+                    }
+                });
+                ville.prop('selectedIndex', indexSelected);
+            }
+
             changeVille();
+
+            if (lieu.data('lieu-selected') !== '') {
+                let indexSelected = 0;
+                $('#sortie_lieu option').each(function (index) {
+                    if (parseInt($(this).val()) === lieu.data('lieu-selected')) {
+                        indexSelected = index
+                    }
+                });
+                lieu.prop('selectedIndex', indexSelected);
+            }
+
             ville.change(function () {
                 changeVille()
             });
@@ -180,7 +209,7 @@
         function changeVille() {
             let firstIndex = null;
             $('#sortie_lieu option').each(function (index) {
-                if ($(this).data('ville') != ville.val()) {
+                if ($(this).data('ville') !== parseInt(ville.val())) {
                     $(this).hide()
                 } else {
                     $(this).show()
@@ -189,7 +218,7 @@
                     }
                 }
             });
-            $("#sortie_lieu").prop('selectedIndex', firstIndex);
+            lieu.prop('selectedIndex', firstIndex);
         }
     </script>
 {% endblock %}
