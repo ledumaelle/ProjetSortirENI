@@ -3,6 +3,10 @@
 {% block body %}
 
     <div class="container-fluid">
+        <div class="row col-md-8 col-lg-8 mx-auto mb-5 flex justify-content-center">
+            <h3 class="font-weight-bold">{{ isUpdate|default(false) ? 'Modifier' : 'Ajouter' }} une sortie</h3>
+        </div>
+
         {{ form_start(form, {'class': 'md-form'}) }}
 
         {{ form_errors(form) }}
@@ -38,7 +42,6 @@
             </div>
         </div>
 
-        <!-- TODO: à voir -->
         <div class="form-row">
             <div class="col">
                 <!-- date debut -->
@@ -103,30 +106,28 @@
         <div class="form-row">
             <div class="col">
                 <!-- ville -->
-                <div class="md-form">
-                    {{ form_widget(form.ville) }}
+                <span id="labelVille">Date et heure de début</span>
+                {{ form_widget(form.ville) }}
 
-                    {{ form_label(form.ville) }}
+                {{ form_label(form.ville) }}
 
-                    <small>{{ form_help(form.ville) }}</small>
+                <small>{{ form_help(form.ville) }}</small>
 
-                    <div class="form-error">
-                        {{ form_errors(form.ville) }}
-                    </div>
+                <div class="form-error">
+                    {{ form_errors(form.ville) }}
                 </div>
             </div>
             <div class="col-5">
                 <!-- lieu -->
-                <div class="md-form">
-                    {{ form_widget(form.lieu) }}
+                <span id="labelLieu">Lieu</span>
+                {{ form_widget(form.lieu) }}
 
-                    {{ form_label(form.lieu) }}
+                {{ form_label(form.lieu) }}
 
-                    <small>{{ form_help(form.lieu) }}</small>
+                <small>{{ form_help(form.lieu) }}</small>
 
-                    <div class="form-error">
-                        {{ form_errors(form.lieu) }}
-                    </div>
+                <div class="form-error">
+                    {{ form_errors(form.lieu) }}
                 </div>
             </div>
             <div class="col-1 align-items-end pt-3">
@@ -148,69 +149,73 @@
                 </div>
             </div>
         </div>
-        <div class=" mb-4 d-flex flex-row align-items-baseline ">
-            <div class="msel-from-wrapper" style="display: table-cell;">
-                {{ form_widget(form.userAll) }}
-            </div>
-            <div class="msel-button-wrapper" style="display: table-cell; vertical-align: middle;">
-                <button type="button" id="addButton" class="msel-button-promote" style="display: block;">&gt;&gt;</button>
-                <button type="button" id="removeButton" class="msel-button-demote" style="display: block;">&lt;&lt;</button>
-            </div>
-            <div class="msel-to-wrapper" style="display: table-cell;">
-                {{ form_widget(form.userInscrit) }}
-            </div>
-        </div>
 
         <div class="form-row mb-4 flex justify-content-center">
             <div class="col-sm-2 mr-5">
-                <button onclick="select()" class="btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block"
-                        type="submit">
-                    Enregistrer
-                </button>
+                {{ form_widget(form.Enregistrer) }}
             </div>
-            <div class="col-sm-2">
-                <button onclick="select()" class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
-                        type="submit">Publier
+            <div class="col-sm-2 mr-5">
+                {{ form_widget(form.Publier) }}
+            </div>
+            {% if isUpdate|default(false) %}
+                <div class="col-sm-2 mr-5">
+                    <a href="{{ path('sortie_delete', { 'id' : sortieId }) }}"
+                       class="btn danger-color-dark text-white btn-rounded waves-effect my-4 btn-block">Supprimer</a>
+                </div>
+            {% endif %}
+            <div class="col-sm-2 mr-5">
+                <button class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
+                        onclick="history.go(-1)">Annuler
                 </button>
             </div>
         </div>
-
-
 
         {{ form_end(form) }}
         <!--Grid column-->
     </div>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
     <script>
         const ville = $('#sortie_ville');
+        const lieu = $('#sortie_lieu');
+        const dateInscr = $('#sortie_dateLimiteInscription');
+        $(document).ready(function () {
+            dateInscr.attr('type', 'date');
+
+            dateInscr.on('blur', function () {
+                dateInscr.attr('type', 'date');
+            });
+
+            if (ville.data('ville-selected') === '') {
+                ville.prop('selectedIndex', 0);
+            } else {
+                let indexSelected = 0;
+                $('#sortie_ville option').each(function (index) {
+                    if (parseInt($(this).val()) === ville.data('ville-selected')) {
+                        indexSelected = index
+                    }
+                });
+                ville.prop('selectedIndex', indexSelected);
+            }
+
+            changeVille();
+
+            if (lieu.data('lieu-selected') !== '') {
+                let indexSelected = 0;
+                $('#sortie_lieu option').each(function (index) {
+                    if (parseInt($(this).val()) === lieu.data('lieu-selected')) {
+                        indexSelected = index
+                    }
+                });
+                lieu.prop('selectedIndex', indexSelected);
+            }
+
 
         const $addButton = $('#addButton');
         const $removeButton = $('#removeButton');
 
-        $(document).ready(function () {
-
-
-
-            $("#sortie_ville").prop('selectedIndex', 0);
-            changeVille();
-            ville.change(function () {
-                changeVille()
-            });
-        });
-        function changeVille() {
-            let firstIndex = null;
-            $('#sortie_lieu option').each(function (index) {
-                if ($(this).data('ville') != ville.val()) {
-                    $(this).hide()
-                } else {
-                    $(this).show()
-                    if (null === firstIndex) {
-                        firstIndex = index;
-                    }
-                }
-            });
-            $("#sortie_lieu").prop('selectedIndex', firstIndex);
-        }
 
         $addButton.click(function (){
 

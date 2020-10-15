@@ -8,6 +8,7 @@ use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=InscriptionRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Inscription
 {

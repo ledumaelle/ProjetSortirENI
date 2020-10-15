@@ -1,19 +1,115 @@
 {% extends 'layout.html.twig' %}
 
-
-
 {% block body %}
 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-lg-8 mx-auto">
+
+                {{ form_start(form, {'class': 'md-form'}) }}
+
+                {{ form_errors(form) }}
+
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Ville -->
+                        <div class="md-form">
+                            {{ form_widget(form.ville) }}
+
+                            {{ form_label(form.ville) }}
+
+                            <small>{{ form_help(form.ville) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(form.ville) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Nom -->
+                        <div class="md-form">
+                            {{ form_widget(form.nom) }}
+
+                            {{ form_label(form.nom) }}
+
+                            <small>{{ form_help(form.nom) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(form.nom) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Adresse -->
+                        <div class="md-form">
+                            {{ form_widget(form.rue) }}
+
+                            {{ form_label(form.rue) }}
+
+                            <small>{{ form_help(form.rue) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(form.rue) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <!-- Latitude -->
+                        <div class="md-form">
+                            {{ form_widget(form.latitude) }}
+
+                            {{ form_label(form.latitude) }}
+
+                            <small>{{ form_help(form.latitude) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(form.latitude) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <!-- Longitude -->
+                        <div class="md-form">
+                            {{ form_widget(form.longitude) }}
+
+                            {{ form_label(form.longitude) }}
+
+                            <small>{{ form_help(form.longitude) }}</small>
+
+                            <div class="form-error">
+                                {{ form_errors(form.longitude) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row mb-4 flex justify-content-center">
+                    <div class="col-sm-2 mr-5">
+                        {{ form_widget(form.Enregistrer) }}
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
+                                onclick="history.go(-1)">Annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
 
 
+            {{ form_end(form) }}
 
-<div class="card-body">
-    {{ form(form) }}
-</div>
-
-
-
+        </div>
+    </div>
+    </div>
 {% endblock %}
+
+
 
 
 

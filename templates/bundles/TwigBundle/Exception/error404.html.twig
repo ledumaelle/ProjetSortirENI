@@ -1,11 +1,33 @@
 {% extends 'layout.html.twig' %}
 
 {% block body %}
-    <h1> Oops i dit again ! 404 </h1>
+    <div class="container my-5 py-5">
+        <!--Section: Content-->
+        <section class="px-md-5 mx-md-5 text-center text-lg-left dark-grey-text">
 
-    <br>
-    <div class="tenor-gif-embed" data-postid="6182978" data-share-method="host" data-width="100%" data-aspect-ratio="1.2842105263157895"><a href="https://tenor.com/view/oops-did-it-again-gif-6182978">Oops IDid It Again Britney Spears GIF</a> from <a href="https://tenor.com/search/oopsididitagain-gifs">Oopsididitagain GIFs</a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+            <!--Grid row-->
+            <div class="row d-flex justify-content-center">
+
+                <!--Grid column-->
+                <div class="col-lg-8 text-center">
+
+                    <h3 class="font-weight-bold mb-4"> Oups, page non trouvée</h3>
+
+                    <!--Image-->
+                    <div>
+                        <img src="{{ asset('image/404-error.png') }}"
+                             class="z-depth-0 img-fluid"
+                             alt="Error 404">
+                    </div>
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+
+        </section>
+        <!--Section: Content-->
+    </div>
 
 {% endblock %}
 
-{% block title %} Error 404 {% endblock %}
+{% block title %} Page non trouvée {% endblock %}

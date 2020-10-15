@@ -8,6 +8,7 @@ use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=VilleRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Ville
 {

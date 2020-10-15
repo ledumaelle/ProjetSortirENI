@@ -1,10 +1,34 @@
 {% extends 'layout.html.twig' %}
 
 {% block body %}
-    <h1> You should not pass </h1>
+    <div class="container my-5 py-5">
+        <!--Section: Content-->
+        <section class="px-md-5 mx-md-5 text-center text-lg-left dark-grey-text">
 
-    <br>
-    <div class="tenor-gif-embed" data-postid="5234772" data-share-method="host" data-width="100%" data-aspect-ratio="2.0618556701030926"><a href="https://tenor.com/view/pass-you-shall-not-pass-lord-of-the-rings-not-pass-fellowship-of-the-ring-gif-5234772">You. Shall. Not. Pass. GIF</a> from <a href="https://tenor.com/search/youshallnotpass-gifs">Youshallnotpass GIFs</a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+            <!--Grid row-->
+            <div class="row d-flex justify-content-center">
+
+                <!--Grid column-->
+                <div class="col-lg-8 text-center">
+
+                    <h3 class="font-weight-bold mb-4"> Accès restreint</h3>
+
+                    <!--Image-->
+                    <div>
+                        <img src="{{ asset('image/403-error.png') }}"
+                             class="img-fluid"
+                             alt="Error 403">
+                    </div>
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+
+        </section>
+        <!--Section: Content-->
+    </div>
+
 {% endblock %}
 
-{% block title %} Error 403 {% endblock %}
+
+{% block title %} Accès restreint {% endblock %}

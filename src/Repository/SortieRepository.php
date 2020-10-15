@@ -40,23 +40,6 @@ class SortieRepository extends ServiceEntityRepository
         $this->kernel = $kernel;
     }
 
-    // /**
-    //  * @return Sortie[] Returns an array of Sortie objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
     public function getSorties($params = [])
     {
         $qb = $this->createQueryBuilder('s')
@@ -70,8 +53,15 @@ class SortieRepository extends ServiceEntityRepository
                    ->addSelect('lieu')
                    ->leftJoin('s.inscriptions', 'inscriptions')
                    ->addSelect('inscriptions')
+                   ->leftJoin('inscriptions.participant', 'participants')
+                   ->addSelect('participants')
                    ->andWhere('s.dateHeureDebut > :dateMoinsDunMois')
                    ->setParameter('dateMoinsDunMois', (new DateTime('now'))->sub(new DateInterval('P1M')));
+
+        $qb->andWhere("s.isPrivate = true")
+           ->andWhere("participants.id = :participant_id OR s.organisateur = :participant_id")
+           ->setParameter('participant_id', $params['participant_id'])
+           ->orWhere("s.isPrivate = false");
 
         if (isset($params['nomSortie'])) {
             $qb->andWhere('s.nom like :nomSortie')
@@ -113,38 +103,16 @@ class SortieRepository extends ServiceEntityRepository
                ->setParameter('now', date('Y-m-d'));
         }
 
+        if (isset($params['organisateur'])) {
+            $qb->andWhere('s.organisateur = :user OR participants.id = :participant_id')
+               ->setParameter('user', $params['organisateur'])
+               ->setParameter('participant_id', $params['participant_id']);
+        }
+
         $qb->orderBy('s.dateHeureDebut', "ASC")
            ->orderBy('s.etat', 'ASC');
 
         return $qb->getQuery();
-    }
-
-    /**
-     * @param Participant $user
-     * @return mixed
-     * @throws Exception
-     */
-    public function getSortiesByParticipant(Participant $user)
-    {
-        return $this->createQueryBuilder('s')
-                    ->leftJoin('s.organisateur', 'organisateur')
-                    ->addSelect('organisateur')
-                    ->leftJoin('s.siteOrganisateur', 'site_organisateur')
-                    ->addSelect('site_organisateur')
-                    ->leftJoin('s.etat', 'etat')
-                    ->addSelect('etat')
-                    ->leftJoin('s.lieu', 'lieu')
-                    ->addSelect('lieu')
-                    ->leftJoin('s.inscriptions', 'inscriptions')
-                    ->addSelect('inscriptions')
-                    ->andWhere('s.dateHeureDebut > :dateMoinsDunMois')
-                    ->setParameter('dateMoinsDunMois', (new DateTime('now'))->sub(new DateInterval('P1M')))
-                    ->andWhere('s.organisateur = :user')
-                    ->setParameter('user', $user)
-                    ->orderBy('s.dateHeureDebut', "ASC")
-                    ->orderBy('s.etat', 'ASC')
-                    ->getQuery()
-                    ->execute();
     }
 
     /**

@@ -41,10 +41,9 @@ class DefaultController extends AbstractController
             throw $this->createNotFoundException("User non trouvé.");
         }
 
-        //$repo->updateEtatSorties();
+        $repo->updateEtatSorties();
         $mobileDetect = new Mobile_Detect();
         $isMobile = $mobileDetect->isMobile();
-        $repo->updateEtatSorties();
 
         $campus = $campusRepository->getAll()
                                    ->getResult();
@@ -53,7 +52,11 @@ class DefaultController extends AbstractController
         $params = $request->query->all();
         $params = array_filter($params);
         if ($isMobile) {
-            $sorties = $repo->getSortiesByParticipant($user);
+            $sorties = $repo->getSorties([
+                'organisateur' => $user,
+                'participant_id' => $user->getId(),
+            ])
+                            ->execute();
             $nbSorties = count($sorties);
         } else {
             $campus = $campusRepository->getAll()

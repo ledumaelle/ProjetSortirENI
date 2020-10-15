@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Sortie
 {
@@ -29,7 +30,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\GreaterThanOrEqual("today",message="La date doit etre superieur a la date d'aujourd'hui")
+     * @Assert\GreaterThanOrEqual("today",message="La date doit etre superieur a la date d'aujourd'hui", groups={"createForm"})
      */
     private $dateHeureDebut;
 
@@ -41,7 +42,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\GreaterThanOrEqual("today",message="La date doit etre superieur a la date d'aujourd'hui")
+     * @Assert\GreaterThanOrEqual("today",message="La date doit etre superieur a la date d'aujourd'hui" , groups={"createForm"})
      */
     private $dateLimiteInscription;
 
@@ -57,6 +58,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank(message="L'annulation ne peut pas être vide", groups={"annulationForm"})
      */
     private $motifAnnulation;
 

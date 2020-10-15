@@ -3,134 +3,206 @@
 {% block body %}
 
     <div class="container-fluid">
-        <div class="row">
+
+        <div class="row col-md-8 col-lg-8 mx-auto mb-5 flex justify-content-center">
+            <h3 class="font-weight-bold">Affichage d'une sortie</h3>
+        </div>
+
+        <div class="row flex">
+            <div class="col-md-2 col-lg-2">
+            </div>
 
             <!--Grid column-->
-            <div class="col-md-8 col-lg-8 mx-auto">
+            <div class="col-md-6 col-lg-6">
 
                 <!-- Form -->
-
-                <form>
-
+                <form class="disabled">
+                    {% if false == isMobile %}
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Nom -->
                             <div class="md-form">
-                                <input type="text" id="nom"  class="form-control" value="{{ sortie.nom }}">
+                                <input type="text" id="nom" class="form-control" value="{{ sortie.nom }}">
                                 <label for="nom">Nom</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
-                            <!-- Nom -->
+                            {% endif %}
+                            <!-- Campus -->
                             <div class="md-form">
-                                <input type="text" id="campus"  class="form-control" value="{{ sortie.siteOrganisateur.nom }}">
+                                <input type="text" id="campus" class="form-control"
+                                       value="{{ sortie.siteOrganisateur.nom }}">
                                 <label for="campus">Campus</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Date sortie -->
                             <div class="md-form">
-                                <input type="text" id="dateDeb" class="form-control" value="{{ sortie.dateHeureDebut | date("d/m/Y") }}">
-                                <label for="dateDeb">Date Sortie</label>
+                                <input type="text" id="dateDeb" class="form-control"
+                                       value="{{ sortie.dateHeureDebut | date("d/m/Y H:i") }}">
+                                <label for="dateDeb">Date et heure de la sortie</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
-                            <!-- Date sortie -->
+                            <!-- Lieu -->
+                            {% endif %}
                             <div class="md-form">
                                 <input type="text" id="lieu" class="form-control" value="{{ sortie.lieu.nom }}">
                                 <label for="lieu">Lieu</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="col">
-                            <!-- Date inscr -->
+                            {% endif %}
+                            <!-- Date Limite d'inscription -->
                             <div class="md-form">
-                                <input type="text" id="dateInsc" class="form-control" value="{{ sortie.dateLimiteInscription | date("d/m/Y") }}">
-                                <label for="dateInsc">Infos Sortie</label>
+                                <input type="text" id="dateLimite" class="form-control"
+                                       value="{{ sortie.dateLimiteInscription | date("d/m/Y") }}">
+                                <label for="dateLimite">Date limite d'inscription</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
-                            <!-- Date sortie -->
+                            {% endif %}
+                            <!-- Rue -->
                             <div class="md-form">
                                 <input type="text" id="rue" class="form-control" value="{{ sortie.lieu.rue }}">
                                 <label for="rue">Rue</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Nb participant sortie -->
                             <div class="md-form">
-                                <input type="text" id="NbInsc" class="form-control" value="{{ sortie.nbInscriptionsMax }}">
-                                <label for="NbInsc">Nobre de participant</label>
+                                <input type="text" id="NbInsc" class="form-control"
+                                       value="{{ sortie.nbInscriptionsMax }}">
+                                <label for="NbInsc">Nombre de participants</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
-                            <!-- Date sortie -->
+                            {% endif %}
+                            <!-- Code Postal -->
                             <div class="md-form">
-                                <input type="text" id="CP" class="form-control" value="{{ sortie.lieu.ville.codePostal }}">
+                                <input type="text" id="CP" class="form-control"
+                                       value="{{ sortie.lieu.ville.codePostal }}">
                                 <label for="CP">Code Postal</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="col">
-                            <!-- duree sortie -->
+                            {% endif %}
+                            <!-- Durée sortie -->
                             <div class="md-form">
-                                <input type="text" id="duree" class="form-control" value="{{ sortie.duree }}">
-                                <label for="duree">Duree Sortie</label>
+                                <input type="text" id="duree" class="form-control" value="{{ sortie.duree }} minutes">
+                                <label for="duree">Durée Sortie</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
-                            <!-- Date sortie -->
+                            {% endif %}
+                            <!-- Ville -->
+                            <div class="md-form">
+                                <input type="text" id="ville" class="form-control" value="{{ sortie.lieu.ville.nom }}">
+                                <label for="ville">Ville</label>
+                            </div>
+                            {% if false == isMobile %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            {% endif %}
+                            <!-- Longitude -->
                             <div class="md-form">
                                 <input type="text" id="long" class="form-control" value="{{ sortie.lieu.longitude }}">
                                 <label for="long">Longitude</label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <!-- Infos sortie -->
-                            <div class="md-form">
-                                <input type="text" id="infos" class="form-control" value="{{ sortie.infosSortie }}">
-                                <label for="infos">Infos Sortie</label>
-                            </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
+                            {% endif %}
                             <!-- Date sortie -->
                             <div class="md-form">
                                 <input type="text" id="lat" class="form-control" value="{{ sortie.lieu.latitude }}">
                                 <label for="lat">Latitude</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
 
-                    {% if not private %}
-                        <div class="form-row">
-                    <!-- List user -->
-                            <div class="md-form ">
-                               <p>Liste participant</p>
-                                    <ul>
-                                    {%  for inscri in sortie.inscriptions  %}
-                                        <p>{{ inscri.participant.nom }}</p>
-                                    {% endfor %}
-                                    </ul>
+                    <div class="form-row">
+                        <div class="col">
+                            {% endif %}
+                            <div class="md-form">
+                                <textarea type="text" id="infosSortie"
+                                          class="form-control md-textarea">{{ sortie.infosSortie }}</textarea>
+                                <label for="infosSortieinfosSortie">Description et infos</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
+                    </div>
                     {% endif %}
-
-
                 </form>
-
-
-
 
             </div>
             <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-md-4 col-lg-4">
+                <div class="form-row justify-content-center">
+                    <!-- List participants -->
+                    <div>
+                        <h5>Liste des participants inscrits : </h5>
+
+                        {% if sortie.inscriptions is not empty %}
+
+                            <table class="table" id="participantsTable">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="font-weight-bold">PSEUDO</th>
+                                    <th scope="col" class="font-weight-bold">NOM</th>
+                                    <th scope="col" class="font-weight-bold">PRENOM</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for inscri in sortie.inscriptions %}
+                                    <tr>
+                                        <th scope="row"> {{ inscri.participant.pseudo }}</th>
+                                        <th scope="row"> {{ inscri.participant.nom }}</th>
+                                        <th scope="row"> {{ inscri.participant.prenom }}</th>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        {% else %}
+                            <div class="text-center dark-grey-text mt-3">
+                                <h5 class="font-weight-bold">Aucun participant pour le moment </h5>
+                            </div>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

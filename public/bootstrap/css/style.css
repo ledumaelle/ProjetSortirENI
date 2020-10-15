@@ -77,7 +77,9 @@ body {
 }
 
 #labelDateLimite,
-#labelDateHeureDebut {
+#labelDateHeureDebut,
+#labelVille,
+#labelLieu {
     font-size: 0.85rem;
     color: #757575;
 }

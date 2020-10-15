@@ -37,6 +37,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = \Faker\Factory::create("fr_FR");
 
+        // ------------------------ SORTIE ZOO
         $sortie = new Sortie();
         $sortie->setNom("Sortie au zoo");
         $date = $faker->dateTimeBetween("now","now");
@@ -55,6 +56,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_ZOO , $sortie);
 
+        // ------------------------ SORTIE ORIGAMIE
         $sortie = new Sortie();
         $sortie->setNom("Origamie");
         $date = $faker->dateTimeBetween("now","+15 days");
@@ -73,6 +75,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_ORIGAMIE , $sortie);
 
+        // ------------------------ SORTIE PERLES
         $sortie = new Sortie();
         $sortie->setNom("Perles");
         $date = $faker->dateTimeBetween("now","+2 days");
@@ -91,6 +94,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_PERLES , $sortie);
 
+        // ------------------------ SORTIE PHILO
         $sortie = new Sortie();
         $sortie->setNom("Philo");
         $date = $faker->dateTimeBetween("now","+2 days");
@@ -110,12 +114,13 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_PHILO , $sortie);
 
+        // ------------------------ SORTIE CONCERT METAL
         $sortie = new Sortie();
         $sortie->setNom("Concert métal");
         $date = $faker->dateTimeBetween("now","+20 days");
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($faker->dateTimeBetween("-7 days", $date));
-        $sortie->setNbInscriptionsMax(10);
+        $sortie->setNbInscriptionsMax(2);
         $sortie->setEtat($this->getReference(EtatFixtures::ETAT_OUVERTE));
         $sortie->setOrganisateur($this->getReference(ParticipantFixtures::JULIEN));
         $sortie->setDuree(9);
@@ -128,12 +133,13 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_CONCERT_METAL , $sortie);
 
+        // ------------------------ SORTIE JARDINAGE
         $sortie = new Sortie();
         $sortie->setNom("Jardinage");
         $date = $faker->dateTimeBetween("now","+1 months");
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($faker->dateTimeBetween("-15 days", $date));
-        $sortie->setNbInscriptionsMax(5);
+        $sortie->setNbInscriptionsMax(3);
         $sortie->setEtat($this->getReference(EtatFixtures::ETAT_OUVERTE));
         $sortie->setOrganisateur($this->getReference(ParticipantFixtures::THOMAS));
         $sortie->setDuree(4);
@@ -146,12 +152,14 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_JARDINAGE , $sortie);
 
+
+        // ------------------------ SORTIE CINEMA
         $sortie = new Sortie();
         $sortie->setNom("Cinéma");
         $date = $faker->dateTimeBetween("now","+5 days");
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($date);
-        $sortie->setNbInscriptionsMax(10);
+        $sortie->setNbInscriptionsMax(3);
         $sortie->setEtat($this->getReference(EtatFixtures::ETAT_CREEE));
         $sortie->setOrganisateur($this->getReference(ParticipantFixtures::MAELLE));
         $sortie->setDuree(2);
@@ -164,12 +172,14 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_CINEMA , $sortie);
 
+
+        // ------------------------ SORTIE PATE A SEL
         $sortie = new Sortie();
         $sortie->setNom("Pâte à sel");
         $date = $faker->dateTimeBetween("now","+1 months");
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($faker->dateTimeBetween("-15 days", $date));
-        $sortie->setNbInscriptionsMax(5);
+        $sortie->setNbInscriptionsMax(3);
         $sortie->setEtat($this->getReference(EtatFixtures::ETAT_OUVERTE));
         $sortie->setOrganisateur($this->getReference(ParticipantFixtures::ANGELIQUE));
         $sortie->setDuree(1);
@@ -182,12 +192,14 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_PATE_A_SEL , $sortie);
 
+
+        // ------------------------ SORTIE SORTIE PASSEE
         $sortie = new Sortie();
         $sortie->setNom("Sortie passée");
         $date = $faker->dateTimeBetween("-1 months","now");
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($date);
-        $sortie->setNbInscriptionsMax(12);
+        $sortie->setNbInscriptionsMax(5);
         $sortie->setEtat($this->getReference(EtatFixtures::ETAT_PASSEE));
         $sortie->setOrganisateur($this->getReference(ParticipantFixtures::MAELLE));
         $sortie->setDuree(8);
@@ -200,12 +212,13 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_SORTIE_PASSEE , $sortie);
 
+        // ------------------------ SORTIE SORTIE PRIVATE
         $sortie = new Sortie();
         $sortie->setNom("Sortie PRIVATE");
         $date = $faker->dateTimeBetween("now","+1 months");
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($date);
-        $sortie->setNbInscriptionsMax(3);
+        $sortie->setNbInscriptionsMax(4);
         $sortie->setEtat($this->getReference(EtatFixtures::ETAT_OUVERTE));
         $sortie->setOrganisateur($this->getReference(ParticipantFixtures::MAELLE));
         $sortie->setDuree(1);
@@ -218,6 +231,9 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_SORTIE_PRIVATE , $sortie);
 
+
+
+        // ------------------------ SORTIE SORTIE ANNULEE
         $sortie = new Sortie();
         $sortie->setNom("Sortie annulée");
         $date = $faker->dateTimeBetween("now","+1 months");
@@ -237,6 +253,8 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference(self::SORTIE_SORTIE_ANNULEE , $sortie);
 
+
+        // ------------------------ SORTIE SORTIE ARCHIVEE
         $sortie = new Sortie();
         $sortie->setNom("Sortie archivée");
         $date = $faker->dateTimeBetween("-2 months","-1 months");
