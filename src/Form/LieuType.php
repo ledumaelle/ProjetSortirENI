@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Form;
-
 
 use App\Entity\Lieu;
 use App\Entity\Ville;
@@ -18,7 +16,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LieuType extends AbstractType
 {
-
     protected $em;
 
     function __construct(EntityManagerInterface $em)
@@ -26,62 +23,57 @@ class LieuType extends AbstractType
         $this->em = $em;
     }
 
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('ville',EntityType::class,[
+        $builder->add('ville', EntityType::class, [
             'class' => Ville::class,
             'choice_label' => 'nom',
-            'placeholder' => 'Sélectionnez une ville',
             'required' => true,
-            'label' => false,
-            'required'=>false,
+            'label' => 'Sélectionnez une ville',
             'attr' => [
-                'class' => 'browser-default custom-select mb-4',
+                'class' => 'mdb-select md-form',
 
             ],
-            'query_builder' => function(EntityRepository $er)  {
+            'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('c')
-                    ->orderBy('c.nom',"ASC");
-            }
-        ])->add('nom',TextType::class,[
-            'attr' => [
-                'class' => 'form-control mb-4',
-                'placeholder' => 'Nom du lieu'
-            ],
-            'label' => false
-        ])->add('rue',TextType::class,[
-            'attr' => [
-                'class' => 'form-control mb-4',
-                'placeholder' => 'Adresse de sortie'
-            ],
-            'label' => false
-        ])->add('latitude',NumberType::class,[
-            'attr' => [
-                'class' => 'form-control mb-4',
-                'placeholder' => 'latitude'
-            ],
-            'label' => false,
-            'required'=>false
-        ])->add('longitude',NumberType::class,[
-            'attr' => [
-                'class' => 'form-control mb-4',
-                'placeholder' => 'longitude'
-            ],
-            'label' => false,
-            'required'=>false
-        ])->add('Enregistrer',SubmitType::class,[
-            'attr'=>['class'=>'btn btn-primary btn-rounded waves-effect waves-light']
-        ]);
+                          ->orderBy('c.nom', "ASC");
+            },
+        ])
+                ->add('nom', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control mb-4',
+                    ],
+                    'label' => 'Nom du lieu',
+                ])
+                ->add('rue', TextType::class, [
+                    'attr' => [
+                        'class' => 'form-control mb-4',
+                    ],
+                    'label' => 'Adresse de sortie',
+                ])
+                ->add('latitude', NumberType::class, [
+                    'attr' => [
+                        'class' => 'form-control mb-4',
+                    ],
+                    'label' => 'Latitude',
+                    'required' => false,
+                ])
+                ->add('longitude', NumberType::class, [
+                    'attr' => [
+                        'class' => 'form-control mb-4',
+                    ],
+                    'label' => 'Longitude',
+                    'required' => false,
+                ])
+                ->add('Enregistrer', SubmitType::class, [
+                    'attr' => ['class' => 'btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
+                ]);
     }
-
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class'=>Lieu::class
-        ));
-
+        $resolver->setDefaults([
+            'data_class' => Lieu::class,
+        ]);
     }
-
 }

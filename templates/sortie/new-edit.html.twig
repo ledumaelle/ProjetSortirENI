@@ -3,6 +3,10 @@
 {% block body %}
 
     <div class="container-fluid">
+        <div class="row col-md-8 col-lg-8 mx-auto mb-5 flex justify-content-center">
+            <h3 class="font-weight-bold">{{ isUpdate|default(false) ? 'Modifier' : 'Ajouter' }} une sortie</h3>
+        </div>
+
         {{ form_start(form, {'class': 'md-form'}) }}
 
         {{ form_errors(form) }}
@@ -38,7 +42,6 @@
             </div>
         </div>
 
-        <!-- TODO: à voir -->
         <div class="form-row">
             <div class="col">
                 <!-- date debut -->

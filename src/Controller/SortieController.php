@@ -58,11 +58,13 @@ class SortieController extends AbstractController
     public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager)
     {
         $sortie = new Sortie();
-        $sortie->setDateHeureDebut(new DateTime());
-        $sortie->setDateLimiteInscription(new DateTime());
+        $date = new DateTime();
+        $date->setTime($date->format('H'), $date->format('i'), null);
+        $sortie->setDateHeureDebut($date);
+        $sortie->setDateLimiteInscription($date);
 
         $mail = $this->getUser()
-                         ->getUsername();
+                     ->getUsername();
 
         /** @var Participant $user */
         $user = $participantRepository->findOneByMail($mail);
@@ -97,9 +99,10 @@ class SortieController extends AbstractController
 
                 return $this->redirectToRoute('app_homepage');
             }
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
 
             $this->addFlash("danger", "Erreur lors de la création de la visite.");
+
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -131,11 +134,13 @@ class SortieController extends AbstractController
         }
 
         $mail = $this->getUser()
-                         ->getUsername();
+                     ->getUsername();
 
         $user = $participantRepository->findOneByMail($mail);
 
-
+        $date = $sortie->getDateHeureDebut();
+        $date->setTime($date->format('H'), $date->format('i'), null);
+        $sortie->setDateHeureDebut($date);
         try {
 
             $form = $this->createForm(SortieType::class, $sortie, ['user' => $user]);
@@ -145,7 +150,7 @@ class SortieController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
 
                 if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()
-                        ->getName()) {
+                                                                        ->getName()) {
                     $etat = $etatRepository->find(Etat::CREEE);
                 } else {
                     $etat = $etatRepository->find(Etat::OUVERTE);
@@ -161,10 +166,10 @@ class SortieController extends AbstractController
 
                 return $this->redirectToRoute('app_homepage');
             }
-        }
-        catch(Exception $exception) {
+        } catch (Exception $exception) {
 
             $this->addFlash("error", "Erreur lors de la modification de la visite.");
+
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -192,7 +197,7 @@ class SortieController extends AbstractController
     {
 
         $mail = $this->getUser()
-                         ->getUsername();
+                     ->getUsername();
 
         $user = $participantRepo->findOneByMail($mail);
 
@@ -223,9 +228,7 @@ class SortieController extends AbstractController
             $sortieRepository->updateEtatSorties();
 
             $this->addFlash("success", "Votre inscription a bien été prise en compte.");
-
-        }
-        catch(Exception $exception) {
+        } catch (Exception $exception) {
 
             $this->addFlash("danger", "Erreur lors de l'inscription à la visite.");
         }
@@ -245,12 +248,13 @@ class SortieController extends AbstractController
      * @return Response
      * @throws Exception
      */
-    public function desisteSortie(Sortie $sortie, ParticipantRepository $participantRepo, SortieRepository $sortieRepository, EntityManagerInterface $entityManager) {
+    public function desisteSortie(Sortie $sortie, ParticipantRepository $participantRepo, SortieRepository $sortieRepository, EntityManagerInterface $entityManager)
+    {
 
         try {
 
             $mail = $this->getUser()
-                             ->getUsername();
+                         ->getUsername();
 
             $user = $participantRepo->findOneByMail($mail);
 
@@ -277,9 +281,7 @@ class SortieController extends AbstractController
 
                 $this->addFlash("warning", "Vous n'êtes pas inscrit pour cette sortie");
             }
-
-        }
-        catch(Exception $exception) {
+        } catch (Exception $exception) {
 
             $this->addFlash("error", "Erreur lors du désistement à la visite.");
         }
@@ -292,12 +294,12 @@ class SortieController extends AbstractController
      * @Route("/cancel/{id}",
      *     name="sortie_annuler",
      *     requirements={"id": "\d+"})
-     * @param $id
-     * @param SortieRepository $repo
-     * @param ParticipantRepository $participantRepo
-     * @param EtatRepository $etatRepo
+     * @param                        $id
+     * @param SortieRepository       $repo
+     * @param ParticipantRepository  $participantRepo
+     * @param EtatRepository         $etatRepo
      * @param EntityManagerInterface $entityManager
-     * @param Request $request
+     * @param Request                $request
      * @return Response
      */
     public function annulerSortie($id, SortieRepository $repo, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager, Request $request)
@@ -305,12 +307,12 @@ class SortieController extends AbstractController
 
         $sortie = $repo->find($id);
 
-        if(empty($sortie)) {
+        if (empty($sortie)) {
             throw $this->createNotFoundException("Sortie non trouvée.");
         }
 
         $mail = $this->getUser()
-                         ->getUsername();
+                     ->getUsername();
 
         /** @var Participant $user */
         $user = $participantRepo->findOneByMail($mail);
@@ -320,14 +322,12 @@ class SortieController extends AbstractController
             $this->addFlash("warning", "Vous n'êtes pas organisateur pour cette sortie.");
 
             return $this->redirectToRoute('app_homepage');
-
         } else if ($sortie->getEtat()
                           ->getId() == Etat::ANNULEE) {
 
             $this->addFlash("warning", "La sortie a déjà été annulée.");
 
             return $this->redirectToRoute('app_homepage');
-
         } else if ($sortie->getDateHeureDebut() < new DateTime()) {
 
             $this->addFlash("warning", "La sortie a déjà commencé et ne peut plus être annulée.");
@@ -352,30 +352,28 @@ class SortieController extends AbstractController
 
                 return $this->redirectToRoute('app_homepage');
             }
-
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
 
             $this->addFlash("danger", "Erreur lors de l'annulation de la visite.");
+
             return $this->redirectToRoute('app_homepage');
         }
 
         return $this->render('sortie/annulation.html.twig', [
             'formAnnulation' => $formAnnulation->createView(),
-            'sortie' => $sortie
+            'sortie' => $sortie,
         ]);
-
     }
-
 
     /**
      *
      * @Route("/{id}",
      *     name="show_sortie",
      *     requirements={"id": "\d+"})
-     * @param $id
-     * @param SortieRepository $repo
-     * @param ParticipantRepository $participantRepo
-     * @param EtatRepository $etatRepo
+     * @param                        $id
+     * @param SortieRepository       $repo
+     * @param ParticipantRepository  $participantRepo
+     * @param EtatRepository         $etatRepo
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
@@ -394,18 +392,17 @@ class SortieController extends AbstractController
         $private = $sortie->getIsPrivate();
 
         $mail = $this->getUser()
-            ->getUsername();
+                     ->getUsername();
 
         $user = $participantRepo->findOneByMail($mail);
 
         $participantFound = false;
-        if($private) {
+        if ($private) {
 
             if ($sortie->getOrganisateur() === $user) {
 
                 $participantFound = true;
-            }
-            else {
+            } else {
 
                 foreach ($sortie->getInscriptions() as $inscription) {
 
@@ -416,14 +413,14 @@ class SortieController extends AbstractController
             }
         }
 
-        if($private && !$participantFound) {
+        if ($private && !$participantFound) {
 
             throw $this->createNotFoundException("Sortie non trouvée.");
         }
 
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
-            'private'=>$private
+            'private' => $private,
         ]);
     }
 
@@ -431,17 +428,18 @@ class SortieController extends AbstractController
      * @Route("/publish/{id}",
      *     name="sortie_publish",
      *     requirements={"id": "\d+"})
-     * @param $id
+     * @param                        $id
      * @param EntityManagerInterface $entityManager
-     * @param SortieRepository $repo
-     * @param EtatRepository $etatRepository
+     * @param SortieRepository       $repo
+     * @param EtatRepository         $etatRepository
      * @return RedirectResponse
      */
-    public function publier($id, EntityManagerInterface $entityManager, SortieRepository $repo, EtatRepository $etatRepository) {
+    public function publier($id, EntityManagerInterface $entityManager, SortieRepository $repo, EtatRepository $etatRepository)
+    {
 
         $sortie = $repo->find($id);
 
-        if(empty($sortie)) {
+        if (empty($sortie)) {
             throw $this->createNotFoundException("Sortie non trouvée.");
         }
 
@@ -454,8 +452,7 @@ class SortieController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash("success", "La sortie a bien été publiée.");
-
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
 
             $this->addFlash("danger", "Erreur lors de l'affichage de la visite.");
         }
@@ -467,16 +464,17 @@ class SortieController extends AbstractController
      * @Route("/delete/{id}",
      *     name="sortie_delete",
      *     requirements={"id": "\d+"})
-     * @param $id
+     * @param                        $id
      * @param EntityManagerInterface $entityManager
-     * @param SortieRepository $repo
+     * @param SortieRepository       $repo
      * @return RedirectResponse
      */
-    public function delete($id, EntityManagerInterface $entityManager, SortieRepository $repo) {
+    public function delete($id, EntityManagerInterface $entityManager, SortieRepository $repo)
+    {
 
         $sortie = $repo->find($id);
 
-        if(empty($sortie)) {
+        if (empty($sortie)) {
             throw $this->createNotFoundException("Sortie non trouvée.");
         }
 
@@ -486,15 +484,13 @@ class SortieController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash("success", "La sortie a bien été supprimée.");
-
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
 
             $this->addFlash("danger", "Erreur lors de l'affichage de la visite.");
         }
 
         return $this->redirectToRoute('app_homepage');
     }
-
 }
 
 
