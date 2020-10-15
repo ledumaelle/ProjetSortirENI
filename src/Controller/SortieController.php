@@ -123,6 +123,9 @@ class SortieController extends AbstractController
             }
         } catch (Exception $exception) {
 
+
+            $logger->error($exception->getMessage());
+
             $this->addFlash("danger", "Erreur lors de la création de la visite.");
 
             return $this->redirectToRoute('app_homepage');
