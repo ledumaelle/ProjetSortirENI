@@ -17,116 +17,150 @@
 
                 <!-- Form -->
                 <form class="disabled">
+                    {% if false == isMobile %}
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Nom -->
                             <div class="md-form">
-                                <input type="text" id="nom"  class="form-control" value="{{ sortie.nom }}">
+                                <input type="text" id="nom" class="form-control" value="{{ sortie.nom }}">
                                 <label for="nom">Nom</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
+                            {% endif %}
                             <!-- Campus -->
                             <div class="md-form">
-                                <input type="text" id="campus"  class="form-control" value="{{ sortie.siteOrganisateur.nom }}">
+                                <input type="text" id="campus" class="form-control"
+                                       value="{{ sortie.siteOrganisateur.nom }}">
                                 <label for="campus">Campus</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Date sortie -->
                             <div class="md-form">
-                                <input type="text" id="dateDeb" class="form-control" value="{{ sortie.dateHeureDebut | date("d/m/Y H:i") }}">
+                                <input type="text" id="dateDeb" class="form-control"
+                                       value="{{ sortie.dateHeureDebut | date("d/m/Y H:i") }}">
                                 <label for="dateDeb">Date et heure de la sortie</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
                             <!-- Lieu -->
+                            {% endif %}
                             <div class="md-form">
                                 <input type="text" id="lieu" class="form-control" value="{{ sortie.lieu.nom }}">
                                 <label for="lieu">Lieu</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Date Limite d'inscription -->
                             <div class="md-form">
-                                <input type="text" id="dateLimite" class="form-control" value="{{ sortie.dateLimiteInscription | date("d/m/Y") }}">
+                                <input type="text" id="dateLimite" class="form-control"
+                                       value="{{ sortie.dateLimiteInscription | date("d/m/Y") }}">
                                 <label for="dateLimite">Date limite d'inscription</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
+                            {% endif %}
                             <!-- Rue -->
                             <div class="md-form">
                                 <input type="text" id="rue" class="form-control" value="{{ sortie.lieu.rue }}">
                                 <label for="rue">Rue</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Nb participant sortie -->
                             <div class="md-form">
-                                <input type="text" id="NbInsc" class="form-control" value="{{ sortie.nbInscriptionsMax }}">
+                                <input type="text" id="NbInsc" class="form-control"
+                                       value="{{ sortie.nbInscriptionsMax }}">
                                 <label for="NbInsc">Nombre de participants</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
+                            {% endif %}
                             <!-- Code Postal -->
                             <div class="md-form">
-                                <input type="text" id="CP" class="form-control" value="{{ sortie.lieu.ville.codePostal }}">
+                                <input type="text" id="CP" class="form-control"
+                                       value="{{ sortie.lieu.ville.codePostal }}">
                                 <label for="CP">Code Postal</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Durée sortie -->
                             <div class="md-form">
                                 <input type="text" id="duree" class="form-control" value="{{ sortie.duree }} minutes">
                                 <label for="duree">Durée Sortie</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
+                            {% endif %}
                             <!-- Ville -->
                             <div class="md-form">
                                 <input type="text" id="ville" class="form-control" value="{{ sortie.lieu.ville.nom }}">
                                 <label for="ville">Ville</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <!-- Longitude -->
                             <div class="md-form">
                                 <input type="text" id="long" class="form-control" value="{{ sortie.lieu.longitude }}">
                                 <label for="long">Longitude</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                         <div class="col">
+                            {% endif %}
                             <!-- Date sortie -->
                             <div class="md-form">
                                 <input type="text" id="lat" class="form-control" value="{{ sortie.lieu.latitude }}">
                                 <label for="lat">Latitude</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="col">
+                            {% endif %}
                             <div class="md-form">
-                                <textarea type="text" id="infosSortie" class="form-control md-textarea">{{ sortie.infosSortie}}</textarea>
+                                <textarea type="text" id="infosSortie"
+                                          class="form-control md-textarea">{{ sortie.infosSortie }}</textarea>
                                 <label for="infosSortieinfosSortie">Description et infos</label>
                             </div>
+                            {% if false == isMobile %}
                         </div>
                     </div>
+                    {% endif %}
                 </form>
 
             </div>
@@ -141,24 +175,24 @@
 
                         {% if sortie.inscriptions is not empty %}
 
-                        <table class="table" id="participantsTable">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="font-weight-bold">PSEUDO</th>
-                                <th scope="col" class="font-weight-bold">NOM</th>
-                                <th scope="col" class="font-weight-bold">PRENOM</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for inscri in sortie.inscriptions %}
+                            <table class="table" id="participantsTable">
+                                <thead>
                                 <tr>
-                                    <th scope="row"> {{ inscri.participant.pseudo }}</th>
-                                    <th scope="row"> {{ inscri.participant.nom }}</th>
-                                    <th scope="row"> {{ inscri.participant.prenom }}</th>
+                                    <th scope="col" class="font-weight-bold">PSEUDO</th>
+                                    <th scope="col" class="font-weight-bold">NOM</th>
+                                    <th scope="col" class="font-weight-bold">PRENOM</th>
                                 </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                {% for inscri in sortie.inscriptions %}
+                                    <tr>
+                                        <th scope="row"> {{ inscri.participant.pseudo }}</th>
+                                        <th scope="row"> {{ inscri.participant.nom }}</th>
+                                        <th scope="row"> {{ inscri.participant.prenom }}</th>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
 
                         {% else %}
                             <div class="text-center dark-grey-text mt-3">

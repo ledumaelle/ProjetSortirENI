@@ -14,6 +14,7 @@ use App\Repository\SortieRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Mobile_Detect;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -379,6 +380,7 @@ class SortieController extends AbstractController
      */
     public function showSortie($id, SortieRepository $repo, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
     {
+        $isMobile = new Mobile_Detect();
         $sortie = $repo->find($id);
 
         if (empty($sortie)) {
@@ -421,6 +423,7 @@ class SortieController extends AbstractController
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
             'private' => $private,
+            'isMobile' => $isMobile,
         ]);
     }
 

@@ -115,12 +115,15 @@
         {% if (nbSorties > 0) %}
             {# total items count #}
             <div class="row flex mb-3 h-100 align-items-end">
-                {% if false == isMobile %}
-                    <div class="justify-content-start col-md-10">
+                <div class="justify-content-start col-md-10">
+                    {% if false == isMobile %}
                         <a href="{{ path('sortie_create') }}" class="btn light-blue darken-3 btn-rounded white-text"><i
                                     class="fas fa-plus mr-1"></i> Créer une sortie</a>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                    {% if true == isMobile %}
+                        <h4 class="font-weight-bold">Mes sorties</h4>
+                    {% endif %}
+                </div>
                 <div class="count col-md-2 text-right">
                     <span class="btn btn-outline-info shadow-none"> Total : {{ nbSorties }} </span>
                 </div>
@@ -128,8 +131,8 @@
             <table class="table" id="participantsTable">
                 <thead>
                 <tr>
-                    <th scope="col" class="font-weight-bold">NOM DE LA SORTIE</th>
-                    <th scope="col" class="font-weight-bold">DATE DE LA SORTIE</th>
+                    <th scope="col" class="font-weight-bold">NOM {% if false == isMobile %}DE LA SORTIE{% endif %}</th>
+                    <th scope="col" class="font-weight-bold">DATE {% if false == isMobile %}DE LA SORTIE{% endif %}</th>
                     {% if false == isMobile %}
                         <th scope="col" class="font-weight-bold">CLOTURE</th>
                     {% endif %}
@@ -152,7 +155,8 @@
                             {% if false == isMobile %}
                                 {{ sortie.nom }}
                             {% else %}
-                                <a href="#">{{ sortie.nom }}</a>
+                                <a href="{{ path('show_sortie', {id: sortie.id}) }}"
+                                   class="indigo-text font-weight-bold">{{ sortie.nom }}</a>
                             {% endif %}</th>
                         <th>
                             {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date("d/m/Y H:i")  : '' }}
@@ -174,8 +178,9 @@
                             <th>
                                 {{ sortie.etat.libelle }}
                                 {% if sortie.etat.id == 6 %}
-                                    <a href="#" class="mx-2 material-tooltip-main" data-toggle="tooltip" data-html="true"
-                                            title="<b>Motif : </b></br> {{ sortie.motifAnnulation }}">
+                                    <a href="#" class="mx-2 material-tooltip-main" data-toggle="tooltip"
+                                       data-html="true"
+                                       title="<b>Motif : </b></br> {{ sortie.motifAnnulation }}">
                                         <i class="fas fa-info-circle"></i>
                                     </a>
                                 {% endif %}
@@ -206,7 +211,8 @@
                             </th>
                             <th>
                                 <!-- AFFICHER LA SORTIE -->
-                                <a href="{{ path('show_sortie', {id: sortie.id}) }}" class="btn-floating btn-primary mr-2 btn-sm material-tooltip-main"
+                                <a href="{{ path('show_sortie', {id: sortie.id}) }}"
+                                   class="btn-floating btn-primary mr-2 btn-sm material-tooltip-main"
                                    data-toggle="tooltip" data-placement="top" title="Afficher la sortie">
                                     <i class="far fa-eye"></i>
                                 </a>
@@ -217,7 +223,8 @@
                                        data-toggle="tooltip" data-placement="top" title="Modifier la sortie">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <a href="{{ path('sortie_publish', {id: sortie.id}) }}" class="btn-floating green darken-1 mr-2 btn-sm material-tooltip-main"
+                                    <a href="{{ path('sortie_publish', {id: sortie.id}) }}"
+                                       class="btn-floating green darken-1 mr-2 btn-sm material-tooltip-main"
                                        data-toggle="tooltip" data-placement="top" title="Publier la sortie">
                                         <i class="fas fa-arrow-up"></i>
                                     </a>
