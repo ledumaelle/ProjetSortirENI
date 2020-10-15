@@ -215,6 +215,8 @@ class SortieType extends AbstractType
             }
         };
 
+        
+
 
         $builder->add('userAll', EntityType::class, [
             'class' => Participant::class,
