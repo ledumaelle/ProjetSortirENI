@@ -150,6 +150,24 @@
             </div>
         </div>
 
+        <div class=" mb-4 form-row ">
+
+            <div class="col">
+                {{ form_widget(form.userAll) }}
+            </div>
+
+
+                <div class="col-1 pt-3">
+                    <button type="button" id="addButton" class="btn btn-default " > -></button>
+                    <button type="button" id="removeButton" class="btn btn-default "  ><- </button>
+                </div>
+
+            <div class="col-5">
+                {{ form_widget(form.userInscrit) }}
+            </div>
+
+        </div>
+
         <div class="form-row mb-4 flex justify-content-center">
             <div class="col-sm-2 mr-5">
                 {{ form_widget(form.Enregistrer) }}
@@ -181,13 +199,15 @@
         const ville = $('#sortie_ville');
         const lieu = $('#sortie_lieu');
         const dateInscr = $('#sortie_dateLimiteInscription');
+
+        const $addButton = $('#addButton');
+        const $removeButton = $('#removeButton');
+
         $(document).ready(function () {
             dateInscr.attr('type', 'date');
-
             dateInscr.on('blur', function () {
                 dateInscr.attr('type', 'date');
             });
-
             if (ville.data('ville-selected') === '') {
                 ville.prop('selectedIndex', 0);
             } else {
@@ -199,9 +219,7 @@
                 });
                 ville.prop('selectedIndex', indexSelected);
             }
-
             changeVille();
-
             if (lieu.data('lieu-selected') !== '') {
                 let indexSelected = 0;
                 $('#sortie_lieu option').each(function (index) {
@@ -211,12 +229,10 @@
                 });
                 lieu.prop('selectedIndex', indexSelected);
             }
-
             ville.change(function () {
                 changeVille()
             });
         });
-
         function changeVille() {
             let firstIndex = null;
             $('#sortie_lieu option').each(function (index) {
@@ -231,5 +247,37 @@
             });
             lieu.prop('selectedIndex', firstIndex);
         }
+
+
+        $addButton.click(function (){
+
+            var $user = $('#sortie_userAll :selected');
+
+
+
+
+            console.log($user);
+            var userInscrit = $('#sortie_userInscrit');
+            // var user = userAll.options[userAll.selectedIndex].value;
+            userInscrit.append($user);
+        });
+
+        $removeButton.click(function (){
+
+            var user = $('#sortie_userInscrit :selected');
+            console.log(user);
+            var userInscrit = $('#sortie_userAll');
+            // var user = userAll.options[userAll.selectedIndex].value;
+            userInscrit.append(user);
+        });
+
+        function select(){
+            $('#sortie_userInscrit option').prop('selected',true);
+
+        }
+
     </script>
 {% endblock %}
+
+
+

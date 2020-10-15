@@ -35,14 +35,17 @@ class SortieController extends AbstractController
     /** @var KernelInterface */
     protected $kernel;
 
+    private $logger;
+
     /**
      * SortieController constructor.
      *
      * @param KernelInterface $kernel
      */
-    public function __construct(KernelInterface $kernel)
+    public function __construct(KernelInterface $kernel,LoggerInterface $logger)
     {
         $this->kernel = $kernel;
+        $this->logger=$logger;
     }
 
     /**
@@ -90,9 +93,27 @@ class SortieController extends AbstractController
                     $messageSuccess = "La sortie a bien été créée et publiée.";
                 }
 
-                $sortie->setEtat($etat);
-                $sortie->setOrganisateur($user);
-                $sortie->setSiteOrganisateur($user->getCampus());
+            $listUser=$form->get('userInscrit')->getViewData();
+
+
+
+            foreach ($listUser as $idInscrit){
+
+                $inscrit=$participantRepository->findOneById($idInscrit);
+
+                $inscription = new Inscription();
+                $inscription->setDateInscription(new DateTime());
+                $inscription->setParticipant($inscrit);
+                $inscription->setDateCreated();
+                $inscription->setSortie($sortie);
+                $sortie->addInscription($inscription);
+                $entityManager->persist($inscription);
+
+            }
+
+            $sortie->setEtat($etat);
+            $sortie->setOrganisateur($user);
+            $sortie->setSiteOrganisateur($user->getCampus());
 
                 $entityManager->persist($sortie);
                 $entityManager->flush();
@@ -101,6 +122,9 @@ class SortieController extends AbstractController
                 return $this->redirectToRoute('app_homepage');
             }
         } catch (Exception $exception) {
+
+
+            $logger->error($exception->getMessage());
 
             $this->addFlash("danger", "Erreur lors de la création de la visite.");
 
@@ -142,6 +166,8 @@ class SortieController extends AbstractController
         $date = $sortie->getDateHeureDebut();
         $date->setTime($date->format('H'), $date->format('i'), null);
         $sortie->setDateHeureDebut($date);
+
+
         try {
 
             $form = $this->createForm(SortieType::class, $sortie, ['user' => $user]);
@@ -156,6 +182,36 @@ class SortieController extends AbstractController
                 } else {
                     $etat = $etatRepository->find(Etat::OUVERTE);
                 }
+
+                $listUser=$form->get('userInscrit')->getViewData();
+
+
+
+                foreach ($listUser as $idInscrit){
+
+                    $inscrit=$participantRepository->findOneById($idInscrit);
+
+                    $inscription = new Inscription();
+                    $inscription->setDateInscription(new DateTime());
+                    $inscription->setParticipant($inscrit);
+                    $inscription->setDateCreated();
+                    $inscription->setSortie($sortie);
+                    $sortie->addInscription($inscription);
+                    $entityManager->persist($inscription);
+
+                }
+
+                $listUser2=$form->get('userAll')->getViewData();
+                foreach ($listUser2 as $idInscrit) {
+
+                    foreach ($sortie->getInscriptions() as $inscription){
+                        if($inscription->getParticipant()->getId()==$idInscrit){
+                            $sortie->getInscriptions()->removeElement($inscription);
+                        }
+                    }
+
+                }
+
 
                 $sortie->setEtat($etat);
                 $sortie->setOrganisateur($user);
