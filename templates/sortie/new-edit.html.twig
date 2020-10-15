@@ -56,6 +56,11 @@
         var $removeButton = $('#removeButton');
         var dateHeureDebut= $('#sortie_dateHeureDebut');
         var dateLimiteInscription= $('#sortie_dateLimiteInscription');
+        var nom=$('#sortie_nom');
+        var nom=$('#sortie_nom');
+        var nom=$('#sortie_nom');
+        var nom=$('#sortie_nom');
+        var nom=$('#sortie_nom');
         // When ville gets selected ...
         $ville.change(function() {
             // ... retrieve the corresponding form.
@@ -65,6 +70,7 @@
             data[$ville.attr('name')] = $ville.val();
             data[dateHeureDebut.attr('name')] =dateHeureDebut.val();
             data[dateLimiteInscription.attr('name')] =dateLimiteInscription.val();
+            data[nom.attr('name')]=nom.val();
             // Submit data via AJAX to the form's action path.
             $.ajax({
                 url : $form.attr('action'),

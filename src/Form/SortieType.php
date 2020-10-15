@@ -180,8 +180,8 @@ class SortieType extends AbstractType
                     'class' => 'browser-default custom-select mb-4',
 
                 ],
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('c')->where('c.id!=?1')->setParameters(array(1=>$user->getId()))
                         ->orderBy('c.nom', "ASC");
                 }
             ])->add('userInscrit', EntityType::class, [
@@ -190,7 +190,7 @@ class SortieType extends AbstractType
                 'placeholder' => 'Liste des Utilisateur',
                 'label' => false,
 
-                'empty_data'=>[],
+
                 'mapped' => false,
                 'required' => false,
                 'multiple'=>'multiple',

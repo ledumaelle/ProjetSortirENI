@@ -80,6 +80,22 @@ class SortieController extends AbstractController
                 $etat = $etatRepository->findOneByLibelle('Ouverte');
             }
 
+            $listUser=$form->get('userInscrit');
+
+            $logger->info($listUser);
+            foreach ($listUser as $inscrit){
+                $logger->info($inscrit);
+
+                $inscription = new Inscription();
+                $inscription->setDateInscription(new DateTime());
+                $inscription->setParticipant($inscrit);
+                $inscription->setDateCreated();
+                $inscription->setSortie($sortie);
+                $sortie->addInscription($inscription);
+                $entityManager->persist($inscription);
+
+            }
+
             $sortie->setEtat($etat);
             $sortie->setOrganisateur($user);
             $sortie->setSiteOrganisateur($user->getCampus());
