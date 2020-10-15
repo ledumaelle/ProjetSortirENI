@@ -102,7 +102,7 @@ class SortieType extends AbstractType
 
                 ])
                 ->add('isprivate', CheckboxType::class, [
-                    'label' => 'Sortie privé',
+                    'label' => 'Sortie privée',
                     'label_attr' => ['class' => 'form-check-label '],
                     'row_attr' => ['class' => 'form-check mb-4'],
                     'attr' => ['class' => 'form-check-input'],

@@ -180,7 +180,14 @@
     <script>
         const ville = $('#sortie_ville');
         const lieu = $('#sortie_lieu');
+        const dateInscr = $('#sortie_dateLimiteInscription');
         $(document).ready(function () {
+            dateInscr.attr('type', 'date');
+
+            dateInscr.on('blur', function () {
+                dateInscr.attr('type', 'date');
+            });
+
             if (ville.data('ville-selected') === '') {
                 ville.prop('selectedIndex', 0);
             } else {
