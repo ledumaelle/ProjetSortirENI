@@ -1,0 +1,197 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        {{ form_start(form, {'class': 'md-form'}) }}
+
+        {{ form_errors(form) }}
+
+        <div class="form-row">
+            <div class="col">
+                <!-- nom -->
+                <div class="md-form">
+                    {{ form_widget(form.nom) }}
+
+                    {{ form_label(form.nom) }}
+
+                    <small>{{ form_help(form.nom) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(form.nom) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <!-- campus -->
+                <div class="md-form">
+                    {{ form_widget(form.siteOrganisateur) }}
+
+                    {{ form_label(form.siteOrganisateur) }}
+
+                    <small>{{ form_help(form.siteOrganisateur) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(form.siteOrganisateur) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODO: à voir -->
+        <div class="form-row">
+            <div class="col">
+                <!-- date debut -->
+                <span id="labelDateHeureDebut">Date et heure de début</span>
+                {{ form_row(form.dateHeureDebut) }}
+            </div>
+            <div class="col">
+                <!-- date limite inscription -->
+                <span id="labelDateLimite">Date limite d'inscription</span>
+                {{ form_row(form.dateLimiteInscription) }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col">
+                <!-- duree -->
+                <div class="md-form">
+                    {{ form_widget(form.duree) }}
+
+                    {{ form_label(form.duree) }}
+
+                    <small>{{ form_help(form.duree) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(form.duree) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <!-- limite inscription -->
+                <div class="md-form">
+                    {{ form_widget(form.nbInscriptionsMax) }}
+
+                    {{ form_label(form.nbInscriptionsMax) }}
+
+                    <small>{{ form_help(form.nbInscriptionsMax) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(form.nbInscriptionsMax) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-12">
+                <!-- infos sortie -->
+                <div class="md-form">
+                    {{ form_widget(form.infosSortie) }}
+
+                    {{ form_label(form.infosSortie) }}
+
+                    <small>{{ form_help(form.infosSortie) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(form.infosSortie) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col">
+                <!-- ville -->
+                <div class="md-form">
+                    {{ form_widget(form.ville) }}
+
+                    {{ form_label(form.ville) }}
+
+                    <small>{{ form_help(form.ville) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(form.ville) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <!-- lieu -->
+                <div class="md-form">
+                    {{ form_widget(form.lieu) }}
+
+                    {{ form_label(form.lieu) }}
+
+                    <small>{{ form_help(form.lieu) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(form.lieu) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 align-items-end pt-3">
+                <a href="{{ path('lieu_create') }}" class="btn light-blue darken-3 text-white btn-rounded"><i
+                            class="fas fa-plus mr-1"></i>Lieu</a>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="md-form">
+                {{ form_widget(form.isprivate) }}
+
+                {{ form_label(form.isprivate) }}
+
+                <small>{{ form_help(form.isprivate) }}</small>
+
+                <div class="form-error">
+                    {{ form_errors(form.isprivate) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row mb-4 flex justify-content-center">
+            <div class="col-sm-2 mr-5">
+                <button class="btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block"
+                        type="submit">
+                    Enregistrer
+                </button>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
+                        type="submit">Publier
+                </button>
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+        <!--Grid column-->
+    </div>
+
+    <script>
+        const ville = $('#sortie_ville');
+        $(document).ready(function () {
+            $("#sortie_ville").prop('selectedIndex', 0);
+            changeVille();
+            ville.change(function () {
+                changeVille()
+            });
+        });
+
+        function changeVille() {
+            let firstIndex = null;
+            $('#sortie_lieu option').each(function (index) {
+                if ($(this).data('ville') != ville.val()) {
+                    $(this).hide()
+                } else {
+                    $(this).show()
+                    if (null === firstIndex) {
+                        firstIndex = index;
+                    }
+                }
+            });
+            $("#sortie_lieu").prop('selectedIndex', firstIndex);
+        }
+    </script>
+{% endblock %}
+
+

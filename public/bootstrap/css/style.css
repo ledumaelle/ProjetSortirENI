@@ -65,3 +65,19 @@ body {
 .dropdown .dropdown-menu.dropdown-info .dropdown-item:hover {
     background-color: #01579b !important;
 }
+
+#sortie_lieu,
+#sortie_ville,
+#sortie_dateHeureDebut,
+#sortie_dateLimiteInscription {
+    border-radius: 0;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+#labelDateLimite,
+#labelDateHeureDebut {
+    font-size: 0.85rem;
+    color: #757575;
+}
