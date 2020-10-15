@@ -59,7 +59,7 @@ class SortieController extends AbstractController
     public function create(Request $request, LoggerInterface $logger, ParticipantRepository $participantRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager)
     {
         $sortie = new Sortie();
-        $date = new DateTime();
+        $date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
         $date->setTime($date->format('H'), $date->format('i'), null);
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($date);
