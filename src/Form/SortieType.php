@@ -165,12 +165,16 @@ class SortieType extends AbstractType
                         ];
                     },
                 ])
-                     ->add('Enregistrer', SubmitType::class, [
-                         'attr' => ['class' => 'btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
-                     ])
-                     ->add('Publier', SubmitType::class, [
-                         'attr' => ['class' => 'btn green darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
-                     ]);
+                    ->add('Enregistrer', SubmitType::class, [
+                        'attr' => [
+                            'class' => 'btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block'
+                        ],
+                    ])
+                    ->add('Publier', SubmitType::class, [
+                        'attr' => [
+                            'class' => 'btn green darken-3 text-white btn-rounded waves-effect my-4 btn-block'
+                        ],
+                    ]);
             } else {
                 $form->add('lieu', EntityType::class, [
                     'class' => Lieu::class,
@@ -197,10 +201,16 @@ class SortieType extends AbstractType
                     },
                 ])
                      ->add('Enregistrer', SubmitType::class, [
-                         'attr' => ['class' => 'btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
+                         'attr' => [
+                             'class' => 'btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block',
+                             'id' => 'btn_enregistrer'
+                         ],
                      ])
                      ->add('Publier', SubmitType::class, [
-                         'attr' => ['class' => 'btn green darken-3 text-white btn-rounded waves-effect my-4 btn-block'],
+                         'attr' => [
+                             'class' => 'btn green darken-3 text-white btn-rounded waves-effect my-4 btn-block',
+                             'id' => 'btn_publier'
+                         ],
                      ]);
             }
         };

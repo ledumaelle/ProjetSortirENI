@@ -10,6 +10,7 @@ use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=CampusRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Campus
 {

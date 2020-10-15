@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -60,41 +61,45 @@ class SortieController extends AbstractController
         $sortie->setDateHeureDebut(new DateTime());
         $sortie->setDateLimiteInscription(new DateTime());
 
-        $userName = $this->getUser()
+        $mail = $this->getUser()
                          ->getUsername();
 
         /** @var Participant $user */
-        $user = $participantRepository->findOneByMail($userName);
+        $user = $participantRepository->findOneByMail($mail);
 
-        $form = $this->createForm(SortieType::class, $sortie, ['user' => $user]);
+        try {
 
-        $form->handleRequest($request);
+            $form = $this->createForm(SortieType::class, $sortie, ['user' => $user]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            $form->handleRequest($request);
 
+            $messageSuccess = "";
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()
-                                                                    ->getName()) {
+                if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()
+                                                                        ->getName()) {
 
-                $etat = $etatRepository->findOneByLibelle('Créée');
-            } else {
-                $etat = $etatRepository->findOneByLibelle('Ouverte');
+                    $etat = $etatRepository->find(Etat::CREEE);
+                    $messageSuccess = "La sortie a bien été créée mais est en attente de publication.";
+                } else {
+
+                    $etat = $etatRepository->find(Etat::OUVERTE);
+                    $messageSuccess = "La sortie a bien été créée et publiée.";
+                }
+
+                $sortie->setEtat($etat);
+                $sortie->setOrganisateur($user);
+                $sortie->setSiteOrganisateur($user->getCampus());
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+                $this->addFlash("success", $messageSuccess);
+
+                return $this->redirectToRoute('app_homepage');
             }
+        } catch(Exception $exception) {
 
-            $sortie->setEtat($etat);
-            $sortie->setOrganisateur($user);
-            $sortie->setSiteOrganisateur($user->getCampus());
-
-            try {
-                $sortie->setDateCreated();
-            } catch (\Exception $e) {
-                $logger->error($e);
-            }
-
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-            $this->addFlash("success", "La sortie a bien été créée");
-
+            $this->addFlash("danger", "Erreur lors de la création de la visite.");
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -125,37 +130,41 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_homepage');
         }
 
-        $userName = $this->getUser()
+        $mail = $this->getUser()
                          ->getUsername();
 
-        $user = $participantRepository->findOneByMail($userName);
+        $user = $participantRepository->findOneByMail($mail);
 
-        $form = $this->createForm(SortieType::class, $sortie, ['user' => $user]);
 
-        $form->handleRequest($request);
+        try {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()
-                                                                    ->getName()) {
-                $etat = $etatRepository->findOneByLibelle('Créée');
-            } else {
-                $etat = $etatRepository->findOneByLibelle('Ouverte');
+            $form = $this->createForm(SortieType::class, $sortie, ['user' => $user]);
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()
+                        ->getName()) {
+                    $etat = $etatRepository->find(Etat::CREEE);
+                } else {
+                    $etat = $etatRepository->find(Etat::OUVERTE);
+                }
+
+                $sortie->setEtat($etat);
+                $sortie->setOrganisateur($user);
+                $sortie->setSiteOrganisateur($user->getCampus());
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+                $this->addFlash("success", "La sortie a bien été modifiée");
+
+                return $this->redirectToRoute('app_homepage');
             }
+        }
+        catch(Exception $exception) {
 
-            $sortie->setEtat($etat);
-            $sortie->setOrganisateur($user);
-            $sortie->setSiteOrganisateur($user->getCampus());
-
-            try {
-                $sortie->setDateCreated();
-            } catch (\Exception $e) {
-                $logger->error($e);
-            }
-
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-            $this->addFlash("success", "La sortie a bien été modifiée");
-
+            $this->addFlash("error", "Erreur lors de la modification de la visite.");
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -182,16 +191,14 @@ class SortieController extends AbstractController
     public function inscriptionSortie(Sortie $sortie, SortieRepository $sortieRepository, ParticipantRepository $participantRepo, EntityManagerInterface $entityManager)
     {
 
-
-        $userName = $this->getUser()
+        $mail = $this->getUser()
                          ->getUsername();
 
-        $user = $participantRepo->findOneByMail($userName);
+        $user = $participantRepo->findOneByMail($mail);
 
         foreach ($sortie->getInscriptions() as $inscription) {
 
-            if ($inscription->getParticipant() == $user) {
-
+            if ($inscription->getParticipant() === $user) {
 
                 $this->addFlash("warning", "Vous êtes déjà inscrit pour cette sortie");
 
@@ -199,21 +206,29 @@ class SortieController extends AbstractController
             }
         }
 
-        $newInscription = new Inscription();
+        try {
 
-        $newInscription->setDateCreated();
-        $newInscription->setDateInscription(new DateTime());
-        $newInscription->setParticipant($user);
 
-        $sortie->addInscription($newInscription);
+            $newInscription = new Inscription();
 
-        $entityManager->persist($sortie);
-        $entityManager->persist($newInscription);
-        $entityManager->flush();
+            $newInscription->setDateInscription(new DateTime());
+            $newInscription->setParticipant($user);
 
-        $sortieRepository->updateEtatSorties();
+            $sortie->addInscription($newInscription);
 
-        $this->addFlash("success", "Votre inscription a bien été prise en compte");
+            $entityManager->persist($sortie);
+            $entityManager->persist($newInscription);
+            $entityManager->flush();
+
+            $sortieRepository->updateEtatSorties();
+
+            $this->addFlash("success", "Votre inscription a bien été prise en compte.");
+
+        }
+        catch(Exception $exception) {
+
+            $this->addFlash("danger", "Erreur lors de l'inscription à la visite.");
+        }
 
         return $this->redirectToRoute('app_homepage');
     }
@@ -232,32 +247,42 @@ class SortieController extends AbstractController
      */
     public function desisteSortie(Sortie $sortie, ParticipantRepository $participantRepo, SortieRepository $sortieRepository, EntityManagerInterface $entityManager) {
 
+        try {
 
-        $userName = $this->getUser()
-                         ->getUsername();
+            $mail = $this->getUser()
+                             ->getUsername();
 
-        $user = $participantRepo->findOneByMail($userName);
+            $user = $participantRepo->findOneByMail($mail);
 
-        foreach ($sortie->getInscriptions() as $inscription) {
+            $participantInscrit = false;
+            foreach ($sortie->getInscriptions() as $inscription) {
 
-            if ($inscription->getParticipant() == $user) {
+                if ($inscription->getParticipant() === $user) {
 
+                    $participantInscrit = true;
 
-                $sortie->removeInscription($inscription);
+                    $sortie->removeInscription($inscription);
 
-                $entityManager->persist($sortie);
-                $entityManager->persist($inscription);
-                $entityManager->flush();
+                    $entityManager->persist($sortie);
+                    $entityManager->persist($inscription);
+                    $entityManager->flush();
 
-                $this->addFlash("success", "Votre désistement a bien été pris en compte");
+                    $this->addFlash("success", "Votre désistement a bien été pris en compte");
 
-                return $this->redirectToRoute('app_homepage');
+                    $sortieRepository->updateEtatSorties();
+                }
             }
+
+            if (!$participantInscrit) {
+
+                $this->addFlash("warning", "Vous n'êtes pas inscrit pour cette sortie");
+            }
+
         }
+        catch(Exception $exception) {
 
-        $sortieRepository->updateEtatSorties();
-
-        $this->addFlash("warning", "Vous n'êtes pas inscrit pour cette sortie");
+            $this->addFlash("error", "Erreur lors du désistement à la visite.");
+        }
 
         return $this->redirectToRoute('app_homepage');
     }
@@ -277,6 +302,7 @@ class SortieController extends AbstractController
      */
     public function annulerSortie($id, SortieRepository $repo, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager, Request $request)
     {
+
         $sortie = $repo->find($id);
 
         if(empty($sortie)) {
@@ -290,42 +316,46 @@ class SortieController extends AbstractController
         $user = $participantRepo->findOneByMail($mail);
 
         if ($sortie->getOrganisateur() !== $user && !$user->isAdmin()) {
-            $this->addFlash("warning", "Vous n'êtes pas organisateur pour cette sortie");
+
+            $this->addFlash("warning", "Vous n'êtes pas organisateur pour cette sortie.");
 
             return $this->redirectToRoute('app_homepage');
+
         } else if ($sortie->getEtat()
                           ->getId() == Etat::ANNULEE) {
 
-            $this->addFlash("warning", "La sortie a déjà été annulée");
+            $this->addFlash("warning", "La sortie a déjà été annulée.");
 
             return $this->redirectToRoute('app_homepage');
+
         } else if ($sortie->getDateHeureDebut() < new DateTime()) {
 
-            $this->addFlash("warning", "La sortie a déjà commencé et ne peut plus être annulée");
+            $this->addFlash("warning", "La sortie a déjà commencé et ne peut plus être annulée.");
 
             return $this->redirectToRoute('app_homepage');
         }
 
-        $formAnnulation = $this->createForm(AnnulationType::class, $sortie);
+        try {
 
-        $formAnnulation->handleRequest($request);
+            $formAnnulation = $this->createForm(AnnulationType::class, $sortie);
 
-        if ($formAnnulation->isSubmitted() && $formAnnulation->isValid()) {
+            $formAnnulation->handleRequest($request);
 
-            try {
+            if ($formAnnulation->isSubmitted() && $formAnnulation->isValid()) {
 
                 $etat = $etatRepo->find(Etat::ANNULEE);
                 $sortie->setEtat($etat);
 
                 $entityManager->persist($sortie);
                 $entityManager->flush();
-                $this->addFlash("success", "La sortie a bien été annulée");
+                $this->addFlash("success", "La sortie a bien été annulée.");
 
-            } catch (Exception $exception) {
-
-                $this->addFlash("error", $exception->getMessage());
+                return $this->redirectToRoute('app_homepage');
             }
 
+        } catch(Exception $exception) {
+
+            $this->addFlash("danger", "Erreur lors de l'annulation de la visite.");
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -342,15 +372,17 @@ class SortieController extends AbstractController
      * @Route("/{id}",
      *     name="show_sortie",
      *     requirements={"id": "\d+"})
-     * @param Sortie                 $sortie
-     * @param ParticipantRepository  $participantRepo
-     * @param EtatRepository         $etatRepo
+     * @param $id
+     * @param SortieRepository $repo
+     * @param ParticipantRepository $participantRepo
+     * @param EtatRepository $etatRepo
      * @param EntityManagerInterface $entityManager
      * @return Response
-     * @throws Exception
      */
-    public function showSortie(Sortie $sortie, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
+    public function showSortie($id, SortieRepository $repo, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
     {
+        $sortie = $repo->find($id);
+
         if (empty($sortie)) {
             throw $this->createNotFoundException("Sortie non trouvée.");
         }
@@ -393,11 +425,75 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
             'private'=>$private
         ]);
-
     }
 
+    /**
+     * @Route("/publish/{id}",
+     *     name="sortie_publish",
+     *     requirements={"id": "\d+"})
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @param SortieRepository $repo
+     * @param EtatRepository $etatRepository
+     * @return RedirectResponse
+     */
+    public function publier($id, EntityManagerInterface $entityManager, SortieRepository $repo, EtatRepository $etatRepository) {
 
+        $sortie = $repo->find($id);
 
+        if(empty($sortie)) {
+            throw $this->createNotFoundException("Sortie non trouvée.");
+        }
+
+        try {
+
+            $etat = $etatRepository->find(Etat::OUVERTE);
+            $sortie->setEtat($etat);
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash("success", "La sortie a bien été publiée.");
+
+        } catch(Exception $exception) {
+
+            $this->addFlash("danger", "Erreur lors de l'affichage de la visite.");
+        }
+
+        return $this->redirectToRoute('app_homepage');
+    }
+
+    /**
+     * @Route("/delete/{id}",
+     *     name="sortie_delete",
+     *     requirements={"id": "\d+"})
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @param SortieRepository $repo
+     * @return RedirectResponse
+     */
+    public function delete($id, EntityManagerInterface $entityManager, SortieRepository $repo) {
+
+        $sortie = $repo->find($id);
+
+        if(empty($sortie)) {
+            throw $this->createNotFoundException("Sortie non trouvée.");
+        }
+
+        try {
+
+            $entityManager->remove($sortie);
+            $entityManager->flush();
+
+            $this->addFlash("success", "La sortie a bien été supprimée.");
+
+        } catch(Exception $exception) {
+
+            $this->addFlash("danger", "Erreur lors de l'affichage de la visite.");
+        }
+
+        return $this->redirectToRoute('app_homepage');
+    }
 
 }
 

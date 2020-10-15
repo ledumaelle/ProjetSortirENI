@@ -158,7 +158,7 @@
             </div>
             {% if isUpdate|default(false) %}
                 <div class="col-sm-2 mr-5">
-                    <a href="{{ path('sortie_annuler', {'id':sortieId}) }}"
+                    <a href="{{ path('sortie_delete', { 'id' : sortieId }) }}"
                        class="btn danger-color-dark text-white btn-rounded waves-effect my-4 btn-block">Supprimer</a>
                 </div>
             {% endif %}

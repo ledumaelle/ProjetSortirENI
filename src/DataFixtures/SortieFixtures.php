@@ -139,7 +139,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $date = $faker->dateTimeBetween("now","+1 months");
         $sortie->setDateHeureDebut($date);
         $sortie->setDateLimiteInscription($faker->dateTimeBetween("-15 days", $date));
-        $sortie->setNbInscriptionsMax(4);
+        $sortie->setNbInscriptionsMax(3);
         $sortie->setEtat($this->getReference(EtatFixtures::ETAT_OUVERTE));
         $sortie->setOrganisateur($this->getReference(ParticipantFixtures::THOMAS));
         $sortie->setDuree(4);

@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Sortie
 {

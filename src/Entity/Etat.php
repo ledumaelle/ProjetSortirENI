@@ -8,6 +8,7 @@ use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=EtatRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Etat
 {

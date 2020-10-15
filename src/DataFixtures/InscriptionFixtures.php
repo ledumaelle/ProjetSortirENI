@@ -139,14 +139,6 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
         // ------------------------ SORTIE JARDINAGE
         $sortie = $this->getReference(SortieFixtures::SORTIE_JARDINAGE);
 
-        $inscriptionMaelleToJardinage = new Inscription();
-        $inscriptionMaelleToJardinage->setDateInscription($sortie->getDateHeureDebut());
-        $inscriptionMaelleToJardinage->setParticipant($maelle);
-        $inscriptionMaelleToJardinage->setSortie($sortie);
-        $inscriptionMaelleToJardinage->setDateCreated();
-
-        $manager->persist($inscriptionMaelleToJardinage);
-
         $inscriptionAngeliqueToJardinage = new Inscription();
         $inscriptionAngeliqueToJardinage->setDateInscription($sortie->getDateHeureDebut());
         $inscriptionAngeliqueToJardinage->setParticipant($angelique);
@@ -171,7 +163,6 @@ class InscriptionFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->persist($inscriptionThomasToJardinage);
 
-        $sortie->addInscription($inscriptionMaelleToJardinage);
         $sortie->addInscription($inscriptionAngeliqueToJardinage);
         $sortie->addInscription($inscriptionJulienToJardinage);
         $sortie->addInscription($inscriptionThomasToJardinage);

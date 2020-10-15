@@ -16,6 +16,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("mail")
  * @UniqueEntity("pseudo")
  * @Vich\Uploadable
