@@ -103,30 +103,28 @@
         <div class="form-row">
             <div class="col">
                 <!-- ville -->
-                <div class="md-form">
-                    {{ form_widget(form.ville) }}
+                <span id="labelVille">Date et heure de début</span>
+                {{ form_widget(form.ville) }}
 
-                    {{ form_label(form.ville) }}
+                {{ form_label(form.ville) }}
 
-                    <small>{{ form_help(form.ville) }}</small>
+                <small>{{ form_help(form.ville) }}</small>
 
-                    <div class="form-error">
-                        {{ form_errors(form.ville) }}
-                    </div>
+                <div class="form-error">
+                    {{ form_errors(form.ville) }}
                 </div>
             </div>
             <div class="col-5">
                 <!-- lieu -->
-                <div class="md-form">
-                    {{ form_widget(form.lieu) }}
+                <span id="labelLieu">Lieu</span>
+                {{ form_widget(form.lieu) }}
 
-                    {{ form_label(form.lieu) }}
+                {{ form_label(form.lieu) }}
 
-                    <small>{{ form_help(form.lieu) }}</small>
+                <small>{{ form_help(form.lieu) }}</small>
 
-                    <div class="form-error">
-                        {{ form_errors(form.lieu) }}
-                    </div>
+                <div class="form-error">
+                    {{ form_errors(form.lieu) }}
                 </div>
             </div>
             <div class="col-1 align-items-end pt-3">
@@ -172,7 +170,10 @@
         {{ form_end(form) }}
         <!--Grid column-->
     </div>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
     <script>
         const ville = $('#sortie_ville');
         const lieu = $('#sortie_lieu');
@@ -212,7 +213,7 @@
                 if ($(this).data('ville') !== parseInt(ville.val())) {
                     $(this).hide()
                 } else {
-                    $(this).show()
+                    $(this).show();
                     if (null === firstIndex) {
                         firstIndex = index;
                     }
@@ -222,5 +223,3 @@
         }
     </script>
 {% endblock %}
-
-
