@@ -25,15 +25,17 @@
                         <div class="input-file-container">
                             <input class="input-file" type="file" name="csvFile"
                                    id="csvFile" accept=".csv"/>
-                            <label for="my-file" class="input-file-trigger btn green darken-3 text-white btn-rounded"
+                            <label for="csvFile" class="input-file-trigger btn green darken-3 text-white btn-rounded"
                                    tabindex="0">
                                 Choisir une liste d'utilisateurs (.csv)
                             </label>
                         </div>
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                        <button class="btn btn-rounded light-blue darken-3 text-white lighten-2 btn-md mt-4"
-                                type="submit">Importer
-                        </button>
+                        <div class="form-row flex justify-content-center">
+                            <button class="btn btn-rounded light-blue darken-3 text-white lighten-2 btn-md mt-4"
+                                    type="submit">Importer
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
