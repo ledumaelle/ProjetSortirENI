@@ -150,7 +150,7 @@
             </div>
         </div>
 
-        <div class=" mb-4 form-row ">
+        <div class=" mb-4 form-row " id="listPrivate">
 
             <div class="col">
                 {{ form_widget(form.userAll) }}
@@ -202,6 +202,8 @@
 
         const $addButton = $('#addButton');
         const $removeButton = $('#removeButton');
+        const $isPrivate = $('#sortie_isprivate');
+        const $listPrivate= $('#listPrivate');
 
         $(document).ready(function () {
             dateInscr.attr('type', 'date');
@@ -232,6 +234,14 @@
             ville.change(function () {
                 changeVille()
             });
+
+
+            if($isPrivate.is(":checked")){
+                $listPrivate.show();
+            }else {
+                $listPrivate.hide();
+            }
+
         });
         function changeVille() {
             let firstIndex = null;
@@ -271,10 +281,22 @@
             userInscrit.append(user);
         });
 
+
+        $isPrivate.click(function (){
+
+            if($isPrivate.is(":checked")){
+                $listPrivate.show();
+            }else {
+                $listPrivate.hide();
+            }
+        });
+
         function select(){
             $('#sortie_userInscrit option').prop('selected',true);
 
         }
+
+
 
     </script>
 {% endblock %}

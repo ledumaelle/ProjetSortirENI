@@ -183,33 +183,35 @@ class SortieController extends AbstractController
                     $etat = $etatRepository->find(Etat::OUVERTE);
                 }
 
-                $listUser=$form->get('userInscrit')->getViewData();
+
+                if($sortie->getIsPrivate()) {
+                    $listUser = $form->get('userInscrit')->getViewData();
 
 
+                    foreach ($listUser as $idInscrit) {
 
-                foreach ($listUser as $idInscrit){
+                        $inscrit = $participantRepository->findOneById($idInscrit);
 
-                    $inscrit=$participantRepository->findOneById($idInscrit);
+                        $inscription = new Inscription();
+                        $inscription->setDateInscription(new DateTime());
+                        $inscription->setParticipant($inscrit);
+                        $inscription->setDateCreated();
+                        $inscription->setSortie($sortie);
+                        $sortie->addInscription($inscription);
+                        $entityManager->persist($inscription);
 
-                    $inscription = new Inscription();
-                    $inscription->setDateInscription(new DateTime());
-                    $inscription->setParticipant($inscrit);
-                    $inscription->setDateCreated();
-                    $inscription->setSortie($sortie);
-                    $sortie->addInscription($inscription);
-                    $entityManager->persist($inscription);
-
-                }
-
-                $listUser2=$form->get('userAll')->getViewData();
-                foreach ($listUser2 as $idInscrit) {
-
-                    foreach ($sortie->getInscriptions() as $inscription){
-                        if($inscription->getParticipant()->getId()==$idInscrit){
-                            $sortie->getInscriptions()->removeElement($inscription);
-                        }
                     }
 
+                    $listUser2 = $form->get('userAll')->getViewData();
+                    foreach ($listUser2 as $idInscrit) {
+
+                        foreach ($sortie->getInscriptions() as $inscription) {
+                            if ($inscription->getParticipant()->getId() == $idInscrit) {
+                                $sortie->getInscriptions()->removeElement($inscription);
+                            }
+                        }
+
+                    }
                 }
 
 
