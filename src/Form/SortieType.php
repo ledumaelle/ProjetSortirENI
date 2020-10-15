@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Form;
-
 
 use App\Entity\Campus;
 use App\Entity\Lieu;
@@ -29,7 +27,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
 {
-
     protected $em;
 
     function __construct(EntityManagerInterface $em)
@@ -46,153 +43,152 @@ class SortieType extends AbstractType
         $builder->add('nom', TextType::class, [
             'attr' => [
                 'class' => 'form-control mb-4',
-                'placeholder' => 'Nom de sortie'
             ],
-            'label' => false
-        ])->add('dateHeureDebut', DateTimeType::class, [
-            'attr' => [
-                'class' => 'form-control mb-4',
-            ],
-            'widget' => 'single_text',
-            'label' => 'Date et heure de la sortie',
-        ])->add('dateLimiteInscription', DateType::class, [
-            'attr' => [
-                'class' => 'form-control mb-4',
-            ],
-            'widget' => 'single_text',
-            'label' => 'Date limite d\'inscription ',
+            'label' => 'Nom de sortie',
         ])
-            ->add('duree', IntegerType::class, [
-                'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Durée de sortie (minutes)'
-                ],
-                'label' => false
-            ])->add('nbInscriptionsMax', IntegerType::class, [
-                'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Nombres de places'
-                ],
-                'label' => false
-            ])->add('infosSortie', TextareaType::class, [
-                'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Infos de la sortie'
-                ],
-                'label' => false
+                ->add('dateHeureDebut', DateTimeType::class, [
+                    'attr' => [
+                        'class' => 'form-control datepicker',
+                    ],
+                    'widget' => 'single_text',
+                    'label' => false,
+                ])
+                ->add('dateLimiteInscription', DateType::class, [
+                    'attr' => [
+                        'class' => 'form-control datepicker',
+                    ],
+                    'widget' => 'single_text',
+                    'label' => false,
+                ])
+                ->add('duree', IntegerType::class, [
+                    'attr' => [
+                        'class' => 'form-control mb-4',
+                    ],
+                    'label' => 'Durée de sortie (minutes)',
+                ])
+                ->add('nbInscriptionsMax', IntegerType::class, [
+                    'attr' => [
+                        'class' => 'form-control mb-4',
+                    ],
+                    'label' => 'Nombres de places',
+                ])
+                ->add('infosSortie', TextareaType::class, [
+                    'attr' => [
+                        'class' => 'md-textarea form-control',
+                    ],
+                    'label' => 'Infos de la sortie',
 
-            ])->add('isprivate', CheckboxType::class, [
-                'label' => 'Sortie privé',
-                'label_attr' => ['class' => 'form-check-label '],
-                'row_attr' => ['class' => 'form-check mb-4'],
-                'attr' => ['class' => 'form-check-input'],
-                'required' => false
+                ])
+                ->add('isprivate', CheckboxType::class, [
+                    'label' => 'Sortie privé',
+                    'label_attr' => ['class' => 'form-check-label '],
+                    'row_attr' => ['class' => 'form-check mb-4'],
+                    'attr' => ['class' => 'form-check-input'],
+                    'required' => false,
 
-            ])->add('siteOrganisateur', EntityType::class, [
-                'class' => Campus::class,
-                'choice_label' => 'nom',
-                'label' => 'Campus',
-                'required' => true,
-                'disabled' => true,
-                'attr' => [
-                    'class' => 'browser-default custom-select mb-4'
-                ],
-                'query_builder' => function (EntityRepository $er) use ($user) {
-                    return $er->createQueryBuilder('c')->where('c.id=' . $user->getCampus()->getId());
-                }
-            ])->add('ville', EntityType::class, [
-                'class' => Ville::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Sélectionnez une ville',
-                'required' => true,
-                'label' => false,
-                'mapped' => false,
-                'required' => false,
-                'attr' => [
-                    'class' => 'browser-default custom-select mb-4',
+                ])
+                ->add('siteOrganisateur', EntityType::class, [
+                    'class' => Campus::class,
+                    'choice_label' => 'nom',
+                    'label' => 'Campus',
+                    'required' => true,
+                    'disabled' => true,
+                    'attr' => [
+                        'class' => 'mdb-select md-form',
+                    ],
+                    'query_builder' => function(EntityRepository $er) use ($user) {
+                        return $er->createQueryBuilder('c')
+                                  ->where('c.id=' . $user->getCampus()
+                                                         ->getId());
+                    },
+                ])
+                ->add('ville', EntityType::class, [
+                    'class' => Ville::class,
+                    'choice_label' => 'nom',
+                    'required' => true,
+                    'label' => false,
+                    'mapped' => false,
+                    'attr' => [
+                        'class' => 'browser-default custom-select mb-4',
 
-                ],
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->orderBy('c.nom', "ASC");
-                }
-            ]);
+                    ],
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('c')
+                                  ->orderBy('c.nom', "ASC");
+                    },
+                ]);
 
-        $formModifier = function (Form $form, Ville $ville = null) {
+        $formModifier = function(Form $form, Ville $ville = null) {
 
             if ($ville == null) {
                 $form->add('lieu', EntityType::class, [
                     'class' => Lieu::class,
                     'choice_label' => 'nom',
-                    'placeholder' => 'Sélectionnez un lieu',
                     'required' => true,
                     'label' => false,
                     'row_attr' => ['class' => 'flex-grow-1'],
                     'attr' => [
                         'class' => 'browser-default custom-select mb-4',
-                        'onChange' => 'changeLieu'
+                        'onChange' => 'changeLieu',
                     ],
-                    'query_builder' => function (EntityRepository $er) {
+                    'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('c')
-                            ->orderBy('c.nom', "ASC");
-                    }
-                ])->add('Enregistrer', SubmitType::class, [
-                    'attr' => ['class' => 'btn btn-primary btn-rounded waves-effect waves-light']
-                ])->add('Publier', SubmitType::class, [
-                    'attr' => ['class' => 'btn btn-primary btn-rounded waves-effect waves-light']
+                                  ->orderBy('c.nom', "ASC");
+                    },
+                    'choice_attr' => function($choice) {
+                        return [
+                            "data-ville" => $choice->getVille()
+                                                   ->getId(),
+                        ];
+                    },
                 ]);
             } else {
                 $form->add('lieu', EntityType::class, [
                     'class' => Lieu::class,
                     'choice_label' => 'nom',
-                    'placeholder' => 'Sélectionnez un lieu',
                     'required' => true,
                     'label' => false,
                     'row_attr' => ['class' => 'flex-grow-1'],
                     'attr' => [
                         'class' => 'browser-default custom-select mb-4',
-                        'onChange' => 'changeLieu'
+                        'onChange' => 'changeLieu',
                     ],
-                    'query_builder' => function (EntityRepository $er) use ($ville) {
-                        return $er->createQueryBuilder('c')->where('c.ville=?1')->setParameters(array(1 => $ville))
-                            ->orderBy('c.nom', "ASC");
-                    }
-                ])->add('Enregistrer', SubmitType::class, [
-                    'attr' => ['class' => 'btn btn-primary btn-rounded waves-effect waves-light']
-                ])->add('Publier', SubmitType::class, [
-                    'attr' => ['class' => 'btn btn-primary btn-rounded waves-effect waves-light']
+                    'query_builder' => function(EntityRepository $er) use ($ville) {
+                        return $er->createQueryBuilder('c')
+                                  ->where('c.ville=?1')
+                                  ->setParameters([1 => $ville])
+                                  ->orderBy('c.nom', "ASC");
+                    },
+                    'choice_attr' => function($choice) {
+                        return [
+                            "data-ville" => $choice->getVille()
+                                                   ->getId(),
+                        ];
+                    },
                 ]);
             }
-
         };
 
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($formModifier) {
+            // this would be your entity, i.e. VilleMeetup
+            $data = $event->getData();
 
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier) {
-                // this would be your entity, i.e. VilleMeetup
-                $data = $event->getData();
+            $formModifier($event->getForm(), $data->getVille());
+        });
 
-                $formModifier($event->getForm(), $data->getVille());
-            }
-        );
+        $builder->get('ville')
+                ->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) use ($formModifier) {
+                    // It's important here to fetch $event->getForm()->getData(), as
+                    // $event->getData() will get you the client data (that is, the ID)
+                    $ville = $event->getForm()
+                                   ->getData();
 
-        $builder->get('ville')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($formModifier) {
-                // It's important here to fetch $event->getForm()->getData(), as
-                // $event->getData() will get you the client data (that is, the ID)
-                $ville = $event->getForm()->getData();
-
-                // since we've added the listener to the child, we'll have to pass on
-                // the parent to the callback functions!
-                $formModifier($event->getForm()->getParent(), $ville);
-            }
-        );
-
-
+                    // since we've added the listener to the child, we'll have to pass on
+                    // the parent to the callback functions!
+                    $formModifier($event->getForm()
+                                        ->getParent(), $ville);
+                });
     }
-
 
     protected function addElements(Form $form, Ville $ville = null)
     {
@@ -202,18 +198,17 @@ class SortieType extends AbstractType
         $form->add('ville', EntityType::class, [
             'class' => Ville::class,
             'choice_label' => 'nom',
-            'placeholder' => 'Sélectionnez une ville',
             'required' => true,
             'label' => false,
             'mapped' => false,
             'attr' => [
                 'class' => 'browser-default custom-select',
-                'onChange' => 'changeVille()'
+                'onChange' => 'changeVille()',
             ],
-            'query_builder' => function (EntityRepository $er) {
+            'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('c')//->where('c.campus=?1')->setParameters(array(1=>$user->getCampus()))
-                ->orderBy('c.nom', "ASC");
-            }
+                          ->orderBy('c.nom', "ASC");
+            },
         ]);
 
         // Cities are empty, unless we actually supplied a ville
@@ -221,40 +216,50 @@ class SortieType extends AbstractType
             $form->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
-                'placeholder' => 'Sélectionnez un lieu',
                 'required' => true,
                 'label' => false,
                 'attr' => [
                     'class' => 'browser-default custom-select',
-                    'onChange' => 'changeLieu'
+                    'onChange' => 'changeLieu',
                 ],
-                'query_builder' => function (EntityRepository $er) use ($ville) {
-                    return $er->createQueryBuilder('c')->where('c.ville=?1')->setParameters(array(1 => $ville))
-                        ->orderBy('c.nom', "ASC");
-                }
-            ])->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-lg btn-info']]);
+                'query_builder' => function(EntityRepository $er) use ($ville) {
+                    return $er->createQueryBuilder('c')
+                              ->where('c.ville=?1')
+                              ->setParameters([1 => $ville])
+                              ->orderBy('c.nom', "ASC");
+                },
+                'choice_attr' => function($choice) {
+                    return [
+                        "data-ville" => $choice->getVille()
+                                               ->getId(),
+                    ];
+                },
+            ])
+                 ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-lg btn-info']]);
         } else {
             $form->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
-                'placeholder' => 'Sélectionnez un lieu',
                 'required' => true,
                 'label' => false,
                 'attr' => [
                     'class' => 'browser-default custom-select',
-                    'onChange' => 'changeLieu'
+                    'onChange' => 'changeLieu',
                 ],
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('c')
-                        ->orderBy('c.nom', "ASC");
-                }
-            ])->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-lg btn-info']]);
-
+                              ->orderBy('c.nom', "ASC");
+                },
+                'choice_attr' => function($choice) {
+                    return [
+                        "data-ville" => $choice->getVille()
+                                               ->getId(),
+                    ];
+                },
+            ])
+                 ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-lg btn-info']]);
         }
-
-
     }
-
 
     function onPreSubmit(FormEvent $event)
     {
@@ -262,10 +267,10 @@ class SortieType extends AbstractType
         $data = $event->getData();
 
         // Note that the data is not yet hydrated into the entity.
-        $ville = $this->em->getRepository(Ville::class)->find($data['ville']);
+        $ville = $this->em->getRepository(Ville::class)
+                          ->find($data['ville']);
         $this->addElements($form, $ville);
     }
-
 
     function onPreSetData(FormEvent $event)
     {
@@ -277,7 +282,6 @@ class SortieType extends AbstractType
         $this->addElements($form, null);
     }
 
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
@@ -287,5 +291,4 @@ class SortieType extends AbstractType
         ));
         $resolver->setAllowedTypes('user', Participant::class);
     }
-
 }

@@ -66,6 +66,22 @@ body {
     background-color: #01579b !important;
 }
 
+#sortie_lieu,
+#sortie_ville,
+#sortie_dateHeureDebut,
+#sortie_dateLimiteInscription {
+    border-radius: 0;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+#labelDateLimite,
+#labelDateHeureDebut {
+    font-size: 0.85rem;
+    color: #757575;
+}
+
 .annulee {
     background: linear-gradient(45deg, #fff 23.75%, #F1948A 23.75%, #F1948A 26.25%, #fff 26.25%, #fff 73.75%, #F1948A 73.75%, #F1948A 76.25%, #fff 76.25%);
     background-size: 200px 200px;
