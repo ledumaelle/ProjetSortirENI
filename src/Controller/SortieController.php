@@ -166,6 +166,8 @@ class SortieController extends AbstractController
         $date = $sortie->getDateHeureDebut();
         $date->setTime($date->format('H'), $date->format('i'), null);
         $sortie->setDateHeureDebut($date);
+
+
         try {
 
             $form = $this->createForm(SortieType::class, $sortie, ['user' => $user]);
@@ -180,6 +182,36 @@ class SortieController extends AbstractController
                 } else {
                     $etat = $etatRepository->find(Etat::OUVERTE);
                 }
+
+                $listUser=$form->get('userInscrit')->getViewData();
+
+
+
+                foreach ($listUser as $idInscrit){
+
+                    $inscrit=$participantRepository->findOneById($idInscrit);
+
+                    $inscription = new Inscription();
+                    $inscription->setDateInscription(new DateTime());
+                    $inscription->setParticipant($inscrit);
+                    $inscription->setDateCreated();
+                    $inscription->setSortie($sortie);
+                    $sortie->addInscription($inscription);
+                    $entityManager->persist($inscription);
+
+                }
+
+                $listUser2=$form->get('userAll')->getViewData();
+                foreach ($listUser2 as $idInscrit) {
+
+                    foreach ($sortie->getInscriptions() as $inscription){
+                        if($inscription->getParticipant()->getId()==$idInscrit){
+                            $sortie->getInscriptions()->removeElement($inscription);
+                        }
+                    }
+
+                }
+
 
                 $sortie->setEtat($etat);
                 $sortie->setOrganisateur($user);
