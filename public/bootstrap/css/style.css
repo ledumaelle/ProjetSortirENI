@@ -1,4 +1,4 @@
-.md-outline.select-wrapper+label {
+.md-outline.select-wrapper + label {
     top: .5em !important;
     z-index: 2 !important;
 }
@@ -18,7 +18,68 @@
 }
 
 .sortie_passee {
-    background-color: #E7E7DD;
+    background-color: #eeeeee;
+}
+
+.btn-outline-default,
+.btn-outline-default:hover,
+.btn-outline-default:not([disabled]):not(.disabled):active {
+    border-color: #2e7d32 !important;
+    color: #2e7d32 !important;
+}
+
+.btn-outline-info,
+.btn-outline-info:hover,
+.btn-outline-info:not([disabled]):not(.disabled):active {
+    cursor: initial;
+    border-color: #3949ab !important;
+    color: #3949ab !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: 300;
+    font-size: 1rem;
+    font-family: Roboto, sans-serif;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+}
+
+.picker__date-display {
+    background-color: #0d47a1 !important;
+}
+
+.picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {
+    background-color: #0d47a1 !important;
+}
+
+body {
+    padding-bottom: 70px;
+}
+
+.page-item.active .page-link.waves-effect.waves-effect {
+    background-color: #01579b;
+}
+
+.dropdown .dropdown-menu.dropdown-info .dropdown-item:hover {
+    background-color: #01579b !important;
+}
+
+#sortie_lieu,
+#sortie_ville,
+#sortie_dateHeureDebut,
+#sortie_dateLimiteInscription {
+    border-radius: 0;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+#labelDateLimite,
+#labelDateHeureDebut {
+    font-size: 0.85rem;
+    color: #757575;
 }
 
 .annulee {

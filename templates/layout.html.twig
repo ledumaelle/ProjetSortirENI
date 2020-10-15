@@ -28,7 +28,7 @@
     <!--Navbar -->
     <nav class="mb-1 navbar navbar-expand-lg navbar-dark light-blue darken-4">
         <img src="{{ asset('image/favicon.png') }}" alt="Bucket-List" class="img-fluid mr-2" width="64px" height="64px">
-        <a class="navbar-brand" href="#">Sortir.com</a>
+        <a class="navbar-brand" href="{{ path("app_homepage") }}">Sortir.com</a>
         {% if isMobile|default(false) == false %}
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent-333"

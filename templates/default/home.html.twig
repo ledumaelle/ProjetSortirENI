@@ -5,12 +5,11 @@
 
         {% if false == isMobile %}
             <form method="get" id="filterForm" action="{{ path('app_homepage') }}">
+                <h4> Filtrer les sorties </h4>
                 <div class="row">
                     <div class="col-md-6">
-                        <h4> Filtrer les sorties </h4>
                         <div class="row">
                             <div class="col-md-6 select-outline">
-
                                 <select class="mdb-select md-form" searchable="Rechercher..." id="selectCampus"
                                         name="campus">
                                     <option value="" disabled selected>Sélectionnez le campus</option>
@@ -24,19 +23,19 @@
                                     {% endfor %}
                                 </select>
                             </div>
+                            <div class="col-md-6">
+                                <div class="md-form">
+                                    <i class="fas fa-search prefix"></i>
+                                    <input type="text" id="nomSortie" class="form-control" name="nomSortie"
+                                           value="{{ nomSortie }}">
+                                    <label for="searchSortie">Rechercher une sortie</label>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="md-form">
-                            <i class="fas fa-search prefix"></i>
-                            <input type="text" id="nomSortie" class="form-control" name="nomSortie"
-                                   value="{{ nomSortie }}">
-                            <label for="searchSortie">Rechercher une sortie</label>
-                        </div>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="md-form">
-                                    <i class="far fa-calendar-alt prefix"></i>
+                                    <i class="far fa-calendar-alt prefix indigo-text"></i>
                                     <input type="text" id="dateDebut" placeholder="Sélectionner une date"
                                            class="form-control datepicker" name="dateDebut" value="{{ dateDebut }}">
                                     <label for="dateDebut">Date début</label>
@@ -44,64 +43,70 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="md-form">
-                                    <i class="far fa-calendar-alt prefix"></i>
+                                    <i class="far fa-calendar-alt prefix indigo-text"></i>
                                     <input type="text" id="dateFin" placeholder="Sélectionner une date"
                                            class="form-control datepicker" name="dateFin" value="{{ dateFin }}">
                                     <label for="dateFin">Date fin</label>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                     <div class="col-md-6">
-                        <div class="form-check">
-                            {% if (isOrganisateur) %}
-                                <input type="checkbox" class="form-check-input" id="organisateurCheck"
-                                       name="isOrganisateur" checked>
-                            {% else %}
-                                <input type="checkbox" class="form-check-input" id="organisateurCheck"
-                                       name="isOrganisateur">
-                            {% endif %}
-                            <label class="form-check-label" for="organisateurCheck">Sorties dont je suis
-                                l'organisateur</label>
+                        <div class="row h-100">
+                            <div class="col-md-12 form-check">
+                                {% if (isOrganisateur) %}
+                                    <input type="checkbox" class="form-check-input" id="organisateurCheck"
+                                           name="isOrganisateur" checked>
+                                {% else %}
+                                    <input type="checkbox" class="form-check-input" id="organisateurCheck"
+                                           name="isOrganisateur">
+                                {% endif %}
+                                <label class="form-check-label" for="organisateurCheck">Sorties dont je suis
+                                    l'organisateur</label>
+                            </div>
+                            <div class="col-md-12 form-check">
+                                {% if (isInscrit) %}
+                                    <input type="checkbox" class="form-check-input" id="inscritCheck" name="isInscrit"
+                                           checked>
+                                {% else %}
+                                    <input type="checkbox" class="form-check-input" id="inscritCheck" name="isInscrit">
+                                {% endif %}
+                                <label class="form-check-label" for="inscritCheck">Sorties auxquelles je suis
+                                    inscrit/e</label>
+                            </div>
+                            <div class="col-md-12 form-check">
+                                {% if (isNotInscrit) %}
+                                    <input type="checkbox" class="form-check-input" id="inscritKOCheck"
+                                           name="isNotInscrit"
+                                           checked>
+                                {% else %}
+                                    <input type="checkbox" class="form-check-input" id="inscritKOCheck"
+                                           name="isNotInscrit">
+                                {% endif %}
+                                <label class="form-check-label" for="inscritKOCheck">Sorties auxquelles je ne suis pas
+                                    inscrit/e</label>
+                            </div>
+                            <div class="col-md-12 form-check">
+                                {% if (isSortiesPassees) %}
+                                    <input type="checkbox" class="form-check-input" id="sortiesPasseesCheck"
+                                           name="isSortiesPassees" checked>
+                                {% else %}
+                                    <input type="checkbox" class="form-check-input" id="sortiesPasseesCheck"
+                                           name="isSortiesPassees">
+                                {% endif %}
+                                <label class="form-check-label" for="sortiesPasseesCheck">Sorties passées</label>
+                            </div>
+                            <div class="text-right w-100">
+                                <button type="submit" class="btn blue darken-4 text-white btn-rounded"
+                                        id="btnRecherche">
+                                    Rechercher
+                                </button>
+                                <a role="button" class="btn btn-outline-default waves-effect btn-rounded"
+                                   id="btnReset"
+                                   href="{{ path('app_homepage') }}">Effacer</a>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            {% if (isInscrit) %}
-                                <input type="checkbox" class="form-check-input" id="inscritCheck" name="isInscrit"
-                                       checked>
-                            {% else %}
-                                <input type="checkbox" class="form-check-input" id="inscritCheck" name="isInscrit">
-                            {% endif %}
-                            <label class="form-check-label" for="inscritCheck">Sorties auxquelles je suis
-                                inscrit/e</label>
-                        </div>
-                        <div class="form-check">
-                            {% if (isNotInscrit) %}
-                                <input type="checkbox" class="form-check-input" id="inscritKOCheck" name="isNotInscrit"
-                                       checked>
-                            {% else %}
-                                <input type="checkbox" class="form-check-input" id="inscritKOCheck" name="isNotInscrit">
-                            {% endif %}
-                            <label class="form-check-label" for="inscritKOCheck">Sorties auxquelles je ne suis pas
-                                inscrit/e</label>
-                        </div>
-                        <div class="form-check">
-                            {% if (isSortiesPassees) %}
-                                <input type="checkbox" class="form-check-input" id="sortiesPasseesCheck"
-                                       name="isSortiesPassees" checked>
-                            {% else %}
-                                <input type="checkbox" class="form-check-input" id="sortiesPasseesCheck"
-                                       name="isSortiesPassees">
-                            {% endif %}
-                            <label class="form-check-label" for="sortiesPasseesCheck">Sorties passées</label>
-                        </div>
-
-                        <br>
-                        <button type="submit" class="btn btn-secondary btn-rounded" id="btnRecherche">Rechercher
-                        </button>
-                        <a role="button" class="btn btn-outline-default waves-effect btn-rounded" id="btnReset"
-                           href="{{ path('app_homepage') }}">Effacer</a>
-
                     </div>
 
                 </div>
@@ -110,15 +115,15 @@
 
         {% if (nbSorties > 0) %}
             {# total items count #}
-            <div class="row flex mb-3">
+            <div class="row flex mb-3 h-100 align-items-end">
                 {% if false == isMobile %}
                     <div class="justify-content-start col-md-10">
-                        <a href="{{ path('sortie_create') }}" class="btn btn-primary btn-rounded"><i
+                        <a href="{{ path('sortie_create') }}" class="btn light-blue darken-3 btn-rounded white-text"><i
                                     class="fas fa-plus mr-1"></i> Créer une sortie</a>
                     </div>
                 {% endif %}
                 <div class="count col-md-2 text-right">
-                    <h5 class="text-primary"> Total : {{ nbSorties }} </h5>
+                    <span class="btn btn-outline-info shadow-none"> Total : {{ nbSorties }} </span>
                 </div>
             </div>
             <table class="table" id="participantsTable">
@@ -141,9 +146,7 @@
                 </thead>
                 <tbody>
                 {% for sortie in sorties %}
-                    <tr class="{{ sortie.dateHeureDebut|date('Y-m-d') < "now"|date('Y-m-d') ? 'sortie_passee' : '' }}
-                                {{ sortie.organisateur == app.user ? 'organisateur' : '' }}
-                                {{ sortie.etat.id == 6 ? 'annulee' : '' }}">
+                    <tr class="{{ sortie.etat.id == 5 ? 'sortie_passee' : sortie.etat.id == 6 ? 'ban ' : '' }} {{ sortie.organisateur == app.user ? 'organisateur' : '' }}">
                         <th scope="row">
                             {% if false == isMobile %}
                                 {{ sortie.nom }}
@@ -152,16 +155,17 @@
                             {% endif %}</th>
                         <th>
                             {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date("d/m/Y")  : '' }}
-
-                            {% if (sortie.dateHeureDebut|date('Y-m-d') == "now"|date('Y-m-d')) %}
-                                <a href="#" class="indigo-text mx-2 text-secondary material-tooltip-main"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="Attention dernière chance de vous inscrire aujourd'hui"><i
-                                            class="fas fa-exclamation-triangle red-text"></i></a>
-                            {% endif %}
                         </th>
                         {% if false == isMobile %}
-                            <th> {{ sortie.dateLimiteInscription is empty ? "" : sortie.dateLimiteInscription|date("d/m/Y") }} </th>
+                            <th> {{ sortie.dateLimiteInscription is empty ? "" : sortie.dateLimiteInscription|date("d/m/Y") }}
+                                {% if false == (sortie.dateLimiteInscription is empty)
+                                    and (sortie.dateLimiteInscription|date('Y-m-d') == "now"|date('Y-m-d'))
+                                    and (sortie.etat.id == 2 or sortie.etat.id == 3) %}
+                                    <a href="#" class="indigo-text mx-2 text-secondary material-tooltip-main"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="Attention dernière chance de vous inscrire aujourd'hui"><i
+                                                class="fas fa-exclamation-triangle red-text"></i></a>
+                                {% endif %}</th>
                         {% endif %}
                         <th> {{ sortie.lieu ? sortie.lieu.ville ? sortie.lieu.ville.nom : '' }} </th>
                         {% if false == isMobile %}
@@ -183,7 +187,7 @@
                             <th>
                                 <strong>
                                     <a href="{{ path('participant_show', {id: sortie.organisateur.id }) }}"
-                                       class="indigo-text mx-2 text-secondary material-tooltip-main"
+                                       class="indigo-text mx-2 material-tooltip-main"
                                        data-toggle="tooltip"
                                        data-placement="top" title="Afficher le profil">
                                         {% if sortie.organisateur and sortie.organisateur.imageName %}
@@ -208,11 +212,11 @@
                                 <!-- MODIFIER LA SORTIE / PUBLIER LA SORTIE -->
                                 {% if sortie.organisateur == app.user and sortie.etat.id == 1 %}
                                     <a href="{{ path('update_sortie', {id: sortie.id}) }}"
-                                       class="btn-floating btn-default mr-2 btn-sm material-tooltip-main"
+                                       class="btn-floating amber darken-3 mr-2 btn-sm material-tooltip-main"
                                        data-toggle="tooltip" data-placement="top" title="Modifier la sortie">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <a href="#" class="btn-floating btn-success mr-2 btn-sm material-tooltip-main"
+                                    <a href="#" class="btn-floating green darken-1 mr-2 btn-sm material-tooltip-main"
                                        data-toggle="tooltip" data-placement="top" title="Publier la sortie">
                                         <i class="fas fa-arrow-up"></i>
                                     </a>
@@ -243,7 +247,7 @@
                                 {% endif %}
 
                                 <!-- ANNULER LA SORTIE -->
-                                {% if (sortie.organisateur == app.user or is_granted("ROLE_ADMIN")) and (sortie.etat.id == 2 or sortie.etat.id == 3) %}
+                                {% if ((sortie.organisateur == app.user or is_granted("ROLE_ADMIN")) and (sortie.etat.id == 2 or sortie.etat.id == 3)) %}
                                     <a href="{{ path('annul_sortie', {id: sortie.id}) }}"
                                        class="btn-floating btn-danger mr-2 btn-sm material-tooltip-main"
                                        data-toggle="tooltip" data-placement="top" title="Annuler la sortie">
