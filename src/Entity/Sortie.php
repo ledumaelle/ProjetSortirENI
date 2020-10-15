@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -109,6 +110,25 @@ class Sortie
 
 
     private $ville;
+
+    private $inscritAjax=[];
+
+
+    /**
+     * @return mixed
+     */
+    public function getInscritAjax()
+    {
+        return $this->inscritAjax;
+    }
+
+    /**
+     * @param mixed $inscritAjax
+     */
+    public function setInscritAjax($inscritAjax): void
+    {
+        array_push($this->inscritAjax,$inscritAjax);
+    }
 
 
     public function __construct()

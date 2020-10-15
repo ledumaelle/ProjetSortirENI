@@ -1,7 +1,5 @@
 {% extends 'layout.html.twig' %}
 
-
-
 {% block body %}
 
     <div class="container-fluid">
@@ -150,21 +148,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-row mb-4 flex justify-content-center">
-            <div class="col-sm-2 mr-5">
-                <button class="btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block"
-                        type="submit">
-                    Enregistrer
-                </button>
-            </div>
-            <div class="col-sm-2">
-                <button class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
-                        type="submit">Publier
-                </button>
-            </div>
-        </div>
-
         <div class=" mb-4 d-flex flex-row align-items-baseline ">
             <div class="msel-from-wrapper" style="display: table-cell;">
                 {{ form_widget(form.userAll) }}
@@ -177,32 +160,69 @@
                 {{ form_widget(form.userInscrit) }}
             </div>
         </div>
-        <div class=" mb-4">
-            {{ form_widget(form.Enregistrer) }}
-            {{ form_widget(form.Publier) }}
+
+        <div class="form-row mb-4 flex justify-content-center">
+            <div class="col-sm-2 mr-5">
+                <button onclick="select()" class="btn light-blue darken-3 text-white btn-rounded waves-effect my-4 btn-block"
+                        type="submit">
+                    Enregistrer
+                </button>
+            </div>
+            <div class="col-sm-2">
+                <button onclick="select()" class="btn btn-outline-default waves-effect btn-rounded my-4 btn-block" type="button"
+                        type="submit">Publier
+                </button>
+            </div>
         </div>
 
-    {{ form_end(form) }}
-</div>
 
+
+        {{ form_end(form) }}
+        <!--Grid column-->
+    </div>
 
     <script>
         const ville = $('#sortie_ville');
+
+        const $addButton = $('#addButton');
+        const $removeButton = $('#removeButton');
+
         $(document).ready(function () {
+
+
+
             $("#sortie_ville").prop('selectedIndex', 0);
             changeVille();
             ville.change(function () {
                 changeVille()
             });
         });
+        function changeVille() {
+            let firstIndex = null;
+            $('#sortie_lieu option').each(function (index) {
+                if ($(this).data('ville') != ville.val()) {
+                    $(this).hide()
+                } else {
+                    $(this).show()
+                    if (null === firstIndex) {
+                        firstIndex = index;
+                    }
+                }
+            });
+            $("#sortie_lieu").prop('selectedIndex', firstIndex);
+        }
 
         $addButton.click(function (){
 
-            var user = $('#sortie_userAll :selected');
-            console.log(user)
+            var $user = $('#sortie_userAll :selected');
+
+
+
+
+            console.log($user)
             var userInscrit = $('#sortie_userInscrit')
-           // var user = userAll.options[userAll.selectedIndex].value;
-            userInscrit.append(user);
+            // var user = userAll.options[userAll.selectedIndex].value;
+            userInscrit.append($user);
         });
 
         $removeButton.click(function (){
@@ -213,11 +233,13 @@
             // var user = userAll.options[userAll.selectedIndex].value;
             userInscrit.append(user);
         });
+        function select(){
+            $('#sortie_userInscrit option').prop('selected',true);
 
+        }
 
     </script>
-
 {% endblock %}
-{% block javascripts %}{% endblock %}
+
 
 

@@ -32,14 +32,17 @@ class SortieController extends AbstractController
     /** @var KernelInterface */
     protected $kernel;
 
+    private $logger;
+
     /**
      * SortieController constructor.
      *
      * @param KernelInterface $kernel
      */
-    public function __construct(KernelInterface $kernel)
+    public function __construct(KernelInterface $kernel,LoggerInterface $logger)
     {
         $this->kernel = $kernel;
+        $this->logger=$logger;
     }
 
     /**
@@ -72,6 +75,9 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
 
+
+
+
             if ($form->getClickedButton() && 'Enregistrer' === $form->getClickedButton()
                                                                     ->getName()) {
 
@@ -80,11 +86,13 @@ class SortieController extends AbstractController
                 $etat = $etatRepository->findOneByLibelle('Ouverte');
             }
 
-            $listUser=$form->get('userInscrit');
+            $listUser=$form->get('userInscrit')->getViewData();
 
-            $logger->info($listUser);
-            foreach ($listUser as $inscrit){
-                $logger->info($inscrit);
+
+
+            foreach ($listUser as $idInscrit){
+
+                $inscrit=$participantRepository->findOneById($idInscrit);
 
                 $inscription = new Inscription();
                 $inscription->setDateInscription(new DateTime());
