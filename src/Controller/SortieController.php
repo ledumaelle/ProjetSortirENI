@@ -380,7 +380,8 @@ class SortieController extends AbstractController
      */
     public function showSortie($id, SortieRepository $repo, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
     {
-        $isMobile = new Mobile_Detect();
+        $detect = new Mobile_Detect();
+        $isMobile = $detect->isMobile();
         $sortie = $repo->find($id);
 
         if (empty($sortie)) {
