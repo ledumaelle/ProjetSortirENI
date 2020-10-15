@@ -6,6 +6,7 @@ use App\Entity\Etat;
 use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\AnnulationType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
@@ -228,8 +229,7 @@ class SortieController extends AbstractController
      * @return Response
      * @throws Exception
      */
-    public function desisteSortie(Sortie $sortie, ParticipantRepository $participantRepo, SortieRepository $sortieRepository, EntityManagerInterface $entityManager)
-    {
+    public function desisteSortie(Sortie $sortie, ParticipantRepository $participantRepo, SortieRepository $sortieRepository, EntityManagerInterface $entityManager) {
 
 
         $userName = $this->getUser()
@@ -264,48 +264,75 @@ class SortieController extends AbstractController
     /**
      *
      * @Route("/cancel/{id}",
-     *     name="annul_sortie",
+     *     name="sortie_annuler",
      *     requirements={"id": "\d+"})
-     * @param Sortie                 $sortie
-     * @param ParticipantRepository  $participantRepo
-     * @param EtatRepository         $etatRepo
+     * @param $id
+     * @param SortieRepository $repo
+     * @param ParticipantRepository $participantRepo
+     * @param EtatRepository $etatRepo
      * @param EntityManagerInterface $entityManager
+     * @param Request $request
      * @return Response
-     * @throws Exception
      */
-    public function annulerSortie(Sortie $sortie, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
+    public function annulerSortie($id, SortieRepository $repo, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager, Request $request)
     {
+        $sortie = $repo->find($id);
 
-        $userName = $this->getUser()
+        if(empty($sortie)) {
+            throw $this->createNotFoundException("Sortie non trouvée.");
+        }
+
+        $mail = $this->getUser()
                          ->getUsername();
 
         /** @var Participant $user */
-        $user = $participantRepo->findOneByMail($userName);
+        $user = $participantRepo->findOneByMail($mail);
 
-        if ($sortie->getOrganisateur() !== $user || !$user->isAdmin()) {
+        if ($sortie->getOrganisateur() !== $user && !$user->isAdmin()) {
             $this->addFlash("warning", "Vous n'êtes pas organisateur pour cette sortie");
 
             return $this->redirectToRoute('app_homepage');
         } else if ($sortie->getEtat()
-                          ->getLibelle() == 'Annulée') {
+                          ->getId() == Etat::ANNULEE) {
+
             $this->addFlash("warning", "La sortie a déjà été annulée");
 
             return $this->redirectToRoute('app_homepage');
         } else if ($sortie->getDateHeureDebut() < new DateTime()) {
-            $this->addFlash("warning", "La sortie a déjà commencée et ne peut plus être annulée");
+
+            $this->addFlash("warning", "La sortie a déjà commencé et ne peut plus être annulée");
 
             return $this->redirectToRoute('app_homepage');
         }
 
-        $etat = $etatRepo->findOneByLibelle('Annulée');
-        $sortie->setEtat($etat);
-        $entityManager->persist($sortie);
+        $formAnnulation = $this->createForm(AnnulationType::class, $sortie);
 
-        $entityManager->flush();
+        $formAnnulation->handleRequest($request);
 
-        $this->addFlash("success", "La sortie a bien été annulée");
+        if ($formAnnulation->isSubmitted() && $formAnnulation->isValid()) {
 
-        return $this->redirectToRoute('app_homepage');
+            try {
+
+                $etat = $etatRepo->find(Etat::ANNULEE);
+                $sortie->setEtat($etat);
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+                $this->addFlash("success", "La sortie a bien été annulée");
+
+            } catch (Exception $exception) {
+
+                $this->addFlash("error", $exception->getMessage());
+            }
+
+            return $this->redirectToRoute('app_homepage');
+        }
+
+        return $this->render('sortie/annulation.html.twig', [
+            'formAnnulation' => $formAnnulation->createView(),
+            'sortie' => $sortie
+        ]);
+
     }
 
 
@@ -323,8 +350,6 @@ class SortieController extends AbstractController
      */
     public function showSortie(Sortie $sortie, ParticipantRepository $participantRepo, EtatRepository $etatRepo, EntityManagerInterface $entityManager)
     {
-
-
         //si prive et user  affiche
         //si prive et pas user masque
         //sinon affich

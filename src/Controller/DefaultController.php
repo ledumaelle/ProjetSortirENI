@@ -22,10 +22,10 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/home", name="app_homepage")
-     * @param SortieRepository      $repo
-     * @param PaginatorInterface    $paginator
-     * @param Request               $request
-     * @param CampusRepository      $campusRepository
+     * @param SortieRepository $repo
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param CampusRepository $campusRepository
      * @param ParticipantRepository $participantRepository
      * @return Response
      * @throws Exception
@@ -33,7 +33,7 @@ class DefaultController extends AbstractController
     public function index(SortieRepository $repo, PaginatorInterface $paginator, Request $request, CampusRepository $campusRepository, ParticipantRepository $participantRepository)
     {
         $userName = $this->getUser()
-                         ->getUsername();
+            ->getUsername();
         /** @var Participant $user */
         $user = $participantRepository->findOneBy(["mail" => $userName]);
 
@@ -41,13 +41,12 @@ class DefaultController extends AbstractController
             throw $this->createNotFoundException("User non trouvé.");
         }
 
-        //$repo->updateEtatSorties();
+        $repo->updateEtatSorties();
         $mobileDetect = new Mobile_Detect();
         $isMobile = $mobileDetect->isMobile();
-        $repo->updateEtatSorties();
 
         $campus = $campusRepository->getAll()
-                                   ->getResult();
+            ->getResult();
         $nbSorties = 0;
         //Appliquer les filtres
         $params = $request->query->all();
@@ -57,7 +56,7 @@ class DefaultController extends AbstractController
             $nbSorties = count($sorties);
         } else {
             $campus = $campusRepository->getAll()
-                                       ->getResult();
+                ->getResult();
 
             $params['participant_id'] = $user->getId();
 

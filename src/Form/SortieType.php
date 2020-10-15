@@ -281,7 +281,9 @@ class SortieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Sortie::class, 'user' => null
+            'data_class' => Sortie::class,
+            'user' => null,
+            'validation_groups' => ['Default', 'createForm'],
         ));
         $resolver->setAllowedTypes('user', Participant::class);
     }

@@ -244,7 +244,7 @@
 
                                 <!-- ANNULER LA SORTIE -->
                                 {% if (sortie.organisateur == app.user or is_granted("ROLE_ADMIN")) and (sortie.etat.id == 2 or sortie.etat.id == 3) %}
-                                    <a href="{{ path('annul_sortie', {id: sortie.id}) }}"
+                                    <a href="{{ path('sortie_annuler', {id: sortie.id}) }}"
                                        class="btn-floating btn-danger mr-2 btn-sm material-tooltip-main"
                                        data-toggle="tooltip" data-placement="top" title="Annuler la sortie">
                                         <i class="fas fa-ban"></i>

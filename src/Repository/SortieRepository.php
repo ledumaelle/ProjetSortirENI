@@ -40,23 +40,6 @@ class SortieRepository extends ServiceEntityRepository
         $this->kernel = $kernel;
     }
 
-    // /**
-    //  * @return Sortie[] Returns an array of Sortie objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
     public function getSorties($params = [])
     {
         $qb = $this->createQueryBuilder('s')
@@ -70,8 +53,16 @@ class SortieRepository extends ServiceEntityRepository
                    ->addSelect('lieu')
                    ->leftJoin('s.inscriptions', 'inscriptions')
                    ->addSelect('inscriptions')
+                    ->join('inscriptions.participant', 'participants')
+                    ->addSelect('participants')
                    ->andWhere('s.dateHeureDebut > :dateMoinsDunMois')
                    ->setParameter('dateMoinsDunMois', (new DateTime('now'))->sub(new DateInterval('P1M')));
+
+
+        $qb->andWhere("s.isPrivate = true")
+            ->andWhere("participants.id = :participant_id OR s.organisateur = :participant_id")
+            ->setParameter('participant_id',$params['participant_id'])
+            ->orWhere("s.isPrivate = false");
 
         if (isset($params['nomSortie'])) {
             $qb->andWhere('s.nom like :nomSortie')

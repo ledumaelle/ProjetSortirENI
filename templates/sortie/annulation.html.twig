@@ -1,0 +1,78 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+
+        <div class="row col-md-8 col-lg-8 mx-auto mb-5 flex justify-content-center">
+            <h3 class="font-weight-bold">Annuler une sortie</h3>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-8 col-lg-8 mx-auto">
+
+                    <!-- Form -->
+                    <form class="disabled">
+
+                        <div class="md-form mt-0">
+                            <input type="text" id="materialRegisterFormFirstNom" class="form-control" value="{{ sortie.nom }}">
+                            <label for="materialRegisterFormFirstNom">Nom</label>
+                        </div>
+
+                        <div class="md-form">
+                            <i class="far fa-calendar-alt prefix"></i>
+                            <input type="text" id="dateDebut" placeholder="Sélectionner une date"
+                                   class="form-control datepicker" name="dateDebut" value="{{ sortie.dateHeureDebut|date('d/m/Y') }}">
+                            <label for="dateDebut">Date début</label>
+                        </div>
+
+                        <!-- Campus -->
+                        <div class="md-form mt-0">
+                            <input type="text" id="materialRegisterFormSiteOrganisateur" class="form-control" value="{{ sortie.siteOrganisateur.nom }}">
+                            <label for="materialRegisterFormSiteOrganisateur">Campus</label>
+                        </div>
+
+                        <!-- Lieu -->
+                        <div class="md-form mt-0">
+                            <input type="text" id="materialRegisterForLieu" class="form-control" value="{{ sortie.lieu.nom }} {{ sortie.lieu.rue }} {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}">
+                            <label for="materialRegisterForLieu">Lieu</label>
+                        </div>
+
+                    </form>
+                    <!-- Form -->
+
+
+
+                {{ form_start(formAnnulation, {'class': 'md-form'}) }}
+
+                {{ form_errors(formAnnulation) }}
+
+                <div class="md-form mt-0">
+                    {{ form_widget(formAnnulation.motifAnnulation) }}
+
+                    {{ form_label(formAnnulation.motifAnnulation) }}
+
+                    <small>{{ form_help(formAnnulation.motifAnnulation) }}</small>
+
+                    <div class="form-error">
+                        {{ form_errors(formAnnulation.motifAnnulation) }}
+                    </div>
+                </div>
+
+                    <div class="row justify-content-center flex">
+                        <div class="mr-2">
+                            <button class="btn btn-primary btn-rounded waves-effect my-4 btn-block" type="submit">Enregistrer</button>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-default btn-rounded waves-effect my-4 btn-block" type="button" onclick="history.go(-1)">Retour</button>
+                        </div>
+                    </div>
+
+                    {{ form_end(formAnnulation) }}
+                </div>
+                <!--Grid column-->
+        </div>
+    </div>
+{% endblock %}
+
