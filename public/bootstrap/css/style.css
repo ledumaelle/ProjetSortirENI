@@ -93,3 +93,8 @@ body {
 .body {
     padding-bottom: 70px;
 }
+
+.btn-arrow {
+    padding-top: 25px;
+    padding-right: 25px;
+}

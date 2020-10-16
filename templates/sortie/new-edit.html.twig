@@ -150,20 +150,38 @@
             </div>
         </div>
 
-        <div class=" mb-4 form-row " id="listPrivate">
+        <div class="mb-4 form-row " id="listPrivate">
 
             <div class="col">
-                {{ form_widget(form.userAll) }}
+                <div class="md-form">
+                    {{ form_widget(form.userAll) }}
+                </div>
             </div>
 
 
-                <div class="col-1 pt-3">
-                    <button type="button" id="addButton" class="btn btn-default " > -></button>
-                    <button type="button" id="removeButton" class="btn btn-default "  ><- </button>
+            <div class="col-1 btn-arrow">
+                <div class="row text-center">
+                    <button type="button" id="addButton"
+                            class="btn btn-rounded light-blue darken-3 mr-2 btn-sm material-tooltip-main text-white">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
+                <div class="row text-center">
+                    <button type="button" id="removeButton"
+                            class="btn btn-rounded light-blue darken-3 mr-2 btn-sm material-tooltip-main text-white">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
 
             <div class="col-5">
-                {{ form_widget(form.userInscrit) }}
+
+                <div class="col">
+                    <div class="md-form">
+                        {{ form_widget(form.userInscrit) }}
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -203,7 +221,7 @@
         const $addButton = $('#addButton');
         const $removeButton = $('#removeButton');
         const $isPrivate = $('#sortie_isprivate');
-        const $listPrivate= $('#listPrivate');
+        const $listPrivate = $('#listPrivate');
 
         $(document).ready(function () {
             dateInscr.attr('type', 'date');
@@ -236,13 +254,14 @@
             });
 
 
-            if($isPrivate.is(":checked")){
+            if ($isPrivate.is(":checked")) {
                 $listPrivate.show();
-            }else {
+            } else {
                 $listPrivate.hide();
             }
 
         });
+
         function changeVille() {
             let firstIndex = null;
             $('#sortie_lieu option').each(function (index) {
@@ -259,11 +278,9 @@
         }
 
 
-        $addButton.click(function (){
+        $addButton.click(function () {
 
             var $user = $('#sortie_userAll :selected');
-
-
 
 
             console.log($user);
@@ -272,7 +289,7 @@
             userInscrit.append($user);
         });
 
-        $removeButton.click(function (){
+        $removeButton.click(function () {
 
             var user = $('#sortie_userInscrit :selected');
             console.log(user);
@@ -282,20 +299,19 @@
         });
 
 
-        $isPrivate.click(function (){
+        $isPrivate.click(function () {
 
-            if($isPrivate.is(":checked")){
+            if ($isPrivate.is(":checked")) {
                 $listPrivate.show();
-            }else {
+            } else {
                 $listPrivate.hide();
             }
         });
 
-        function select(){
-            $('#sortie_userInscrit option').prop('selected',true);
+        function select() {
+            $('#sortie_userInscrit option').prop('selected', true);
 
         }
-
 
 
     </script>
